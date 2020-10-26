@@ -68,11 +68,13 @@ namespace PhotoPromoApp
 
             app.UseRouting();
 
+            //app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             // Add the image processing middleware.

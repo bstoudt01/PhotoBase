@@ -55,11 +55,25 @@ export function PhotoProvider(props) {
                 //throw new Error("Unauthorized");
             }));
 
-
+    const addPhoto = (photo) =>
+        getToken().then((token) =>
+            fetch(`${apiUrl}`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(photo)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                //throw new Error("Unauthorized");
+            }));
 
     return (
-        <CategoryContext.Provider value={{ getToken, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto }}>
+        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto }}>
             {props.children}
-        </CategoryContext.Provider>
+        </PhotoContext.Provider>
     );
 }

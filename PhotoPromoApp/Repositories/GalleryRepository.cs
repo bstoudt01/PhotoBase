@@ -18,7 +18,10 @@ namespace PhotoPromo.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     // get id and name from gallery table or return it based on name spelling in descending order
-                    cmd.CommandText = "SELECT Id, [Name] FROM Gallery WHERE userProfileId = @id  ";
+                    cmd.CommandText = @"
+                        SELECT g.Id, g.[Name], g.UserProfileId  
+                        FROM Gallery g 
+                        WHERE g.userProfileId = @id  ";
                     cmd.Parameters.AddWithValue("@id", userProfileId);
 
                     //execute sql command, builds sql data reader and retruns a reader object 
@@ -32,8 +35,10 @@ namespace PhotoPromo.Repositories
                     {
                         galleries.Add(new Gallery()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("Name")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+
                         });
                     }
 
@@ -55,7 +60,10 @@ namespace PhotoPromo.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, [Name] FROM Gallery WHERE Id = @Id";
+                    cmd.CommandText = @"
+                        SELECT g.Id, g.[Name], g.UserProfileId  
+                        FROM Gallery g
+                        WHERE Id = @Id";
 
                     cmd.Parameters.AddWithValue("@Id", id);
                     var reader = cmd.ExecuteReader();
@@ -68,6 +76,7 @@ namespace PhotoPromo.Repositories
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("Name")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                         };
 
                     }

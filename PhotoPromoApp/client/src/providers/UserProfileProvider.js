@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
-import { Spinner } from "reactstrap";
+import { Spinner } from "react-bootstrap";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
@@ -34,7 +34,6 @@ export function UserProfileProvider(props) {
             .then((signInResponse) => getUserProfile(signInResponse.user.uid))
             .then((userProfile) => {
                 sessionStorage.setItem("userProfile", JSON.stringify(userProfile));
-                sessionStorage.setItem("userProfileId", JSON.stringify(userProfile.id));
                 setIsLoggedIn(true);
             });
     };
@@ -128,7 +127,6 @@ export function UserProfileProvider(props) {
     };
 
     const reactivateUserProfile = (userId) => {
-
         return getToken().then((token) =>
             fetch(`${apiUrl}/reactivate/${userId}`, {
                 method: "PUT",
@@ -152,7 +150,6 @@ export function UserProfileProvider(props) {
     };
 
     const editUserProfileType = (id, user) => {
-
         return getToken().then((token) =>
             fetch(`${apiUrl}/edit/${id}`, {
                 method: "PUT",

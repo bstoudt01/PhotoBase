@@ -8,5 +8,7 @@ namespace PhotoPromo.Repositories
         List<Photo> GetAllPhotosByUserProfileId(int userProfileId);
         List<Photo> GetPhotosByGalleryId(int galleryId);
         Photo GetSinglePhotobyId(int id);
+
+        void Add(Photo photo);
     }
 }

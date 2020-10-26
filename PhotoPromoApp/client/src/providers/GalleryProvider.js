@@ -14,8 +14,6 @@ export function GalleryProvider(props) {
     const [galleries, setGalleries] = useState([]);
     const [gallery, setGallery] = useState([]);
 
-    const [photosByGallery, setPhotosByGallery] = useState([]);
-
 
 
 
@@ -46,10 +44,57 @@ export function GalleryProvider(props) {
                 //throw new Error("Unauthorized");
             }));
 
+    const addGallery = (gallery) =>
+        getToken().then((token) =>
+            fetch("/api/gallery", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(gallery)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
+
+    const updateGallery = (updatedGallery) =>
+        getToken().then((token) =>
+            fetch(`/api/gallery/${updatedGallery.id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedGallery)
+
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
 
 
+    const deleteCategory = (deletedCategory) =>
+        getToken().then((token) =>
+            fetch(`/api/category/${deletedCategory.id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(deletedCategory)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
     return (
-        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery }}>
+        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery }}>
             {props.children}
         </GalleryContext.Provider>
     );
