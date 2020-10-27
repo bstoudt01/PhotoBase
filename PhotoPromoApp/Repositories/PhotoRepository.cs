@@ -46,7 +46,7 @@ namespace PhotoPromo.Repositories
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
 
@@ -110,7 +110,7 @@ namespace PhotoPromo.Repositories
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {
@@ -172,7 +172,7 @@ namespace PhotoPromo.Repositories
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {

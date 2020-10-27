@@ -53,7 +53,7 @@ CREATE TABLE [Photo] (
   [Id] integer PRIMARY KEY IDENTITY,
   [Name] nvarchar(50) NOT NULL,
   [PhotoLocation] nvarchar(255) NOT NULL,
-  [IsPublic] integer DEFAULT (0),
+  [IsPublic] bit NOT NULL,
   [UserProfileId] integer NOT NULL,
   [GalleryId] integer NOT NULL,
   [Attribute] nvarchar(255) NOT NULL,

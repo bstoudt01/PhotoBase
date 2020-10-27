@@ -49,7 +49,6 @@ namespace PhotoPromo.Controllers
         [HttpPost]
         public IActionResult Post(Photo photo)
         {
-            photo.IsPublic =Convert.ToInt32(photo.IsPublic);
             photo.ResolutionLevel = 300;
             
             _photoRepository.Add(photo);

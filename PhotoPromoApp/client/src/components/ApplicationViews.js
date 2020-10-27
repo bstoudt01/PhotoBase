@@ -36,7 +36,7 @@ export default function ApplicationViews(props) {
                     {isLoggedIn ? <EditGallery /> : <Redirect to="/Login" />}
                 </Route>
 
-                <Route exact path="/gallery/detials/:id">
+                <Route exact path="/gallery/details/:id">
                     {isLoggedIn ? <PhotoListByGallery /> : <Redirect to="/Login" />}
                 </Route>
 

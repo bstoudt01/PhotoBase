@@ -30,6 +30,7 @@ export default function Gallery({ gallery }) {
         }
 
         updateGallery(newGallery)
+
     };
 
     const handleDeleteGallery = (e) => {

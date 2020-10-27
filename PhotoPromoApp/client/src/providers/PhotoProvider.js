@@ -55,23 +55,40 @@ export function PhotoProvider(props) {
                 //throw new Error("Unauthorized");
             }));
 
-    const addPhoto = (photoFormData) =>
+    const addPhoto = (photo) =>
         getToken().then((token) =>
             fetch(`${apiUrl}`,
                 {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     },
-                    body: photoFormData
-                })
-                .then((response) => response.json())
-                .then((result) => {
-                    console.log('Success:', result);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
+                    body: JSON.stringify(photo)
+                }).then(resp => {
+                    if (resp.ok) {
+                        return resp.json();
+                    }
+                    //debugger
+                    throw new Error("Unauthorized");
                 }));
+    // const addPhoto = (photoFormData) =>
+    //     getToken().then((token) =>
+    //         fetch(`${apiUrl}`,
+    //             {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 },
+    //                 body: photoFormData
+    //             })
+    //             .then((response) => response.json())
+    //             .then((result) => {
+    //                 console.log('Success:', result);
+    //             })
+    //             .catch((error) => {
+    //                 console.error('Error:', error);
+    //             }));
 
     return (
         <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto }}>

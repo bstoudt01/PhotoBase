@@ -4,30 +4,23 @@ import { GalleryContext } from "../../providers/GalleryProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { Card, Button, Col, Row, Image, Form } from "react-bootstrap";
 import GalleryOption from "../Gallery/GalleryOption";
+import { ImageContext } from "../../providers/ImageProvider";
 export default function AddPhoto() {
     const { activeUser } = useContext(UserProfileContext);
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
     const { addPhoto, setPhotoFormData } = useContext(PhotoContext);
+    const { addImage } = useContext(ImageContext);
     const [imageName, setImageName] = useState();
     const [imageGalleryId, setImageGalleryId] = useState();
     const [imageFile, setImageFile] = useState();
     const [imageAttribute, setImageAttribute] = useState();
-    const [imageToSubmit, setImageToSubmit] = useState([]);
+    const [photoToSubmit, setphotoToSubmit] = useState("");
     const [checked, setChecked] = useState(false);
     const handleClick = () => setChecked(!checked)
-    const handleAddPhoto = () => {
-        // const newImage = {
-        //     name: imageName,
-        //     galleryId: imageGalleryId,
-        //     imageLocation: imageFile,
-        //     isPublic: checked,
-        //     attribute: imageAttribute,
-        //     userProfileId: activeUser.id
-        // }
-        // debugger
-        // addPhoto(newImage);
-        //setImageToSubmit(newImage)
 
+
+    const handleAddPhoto = (e) => {
+        e.preventDefault();
 
         // const formData = new FormData();
         // formData.append("Name", imageName);
@@ -38,33 +31,48 @@ export default function AddPhoto() {
         // formData.append("UserProfileId", activeUser.id);
         // debugger
         // addPhoto(formData);
+        const file = document.querySelector('input[type="file"]').files[0];
 
-        debugger
+        const fileType = file.name.split('.').pop();
+        const newImageName = `${new Date().getTime()}.${fileType}`
         const formData = new FormData();
-        formData.append("Name", imageName);
-        formData.append("GalleryId", imageGalleryId);
-        formData.append("PhotoLocation", imageFile, imageFile.name);
-        formData.append("IsPublic", checked);
-        formData.append("Attribute", imageAttribute);
-        formData.append("UserProfileId", activeUser.id);
-        // setPhotoFormData(formData);
-        addPhoto(formData);
 
-        // addPhoto(formData);
+        formData.append('file', file, newImageName);
+
+        //setPhotoFormData(formData);
+        const newPhoto = {
+            Name: imageName,
+            PhotoLocation: imageName,
+            IsPublic: checked,
+            Attribute: imageAttribute,
+
+            GalleryId: parseInt(imageGalleryId),
+            UserProfileId: activeUser.id
+        }
+        addImage(formData);
+
+        addPhoto(newPhoto);
+        //addImage(formData).then((resp) => { if (resp.ok) { return (addPhoto(newImage)) } else { return console.log("broken") } });
+        //addImage(formData).then((resp) => { if (resp.ok) { return resp.json().then(addPhoto(newImage)) } });
+
+
     };
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
 
     }, []);
+
+
     return (
         <Col>
             <Card body>
                 <Row>
                     <Col>
-                        <Form onSubmit={handleAddPhoto}>
-
+                        {/* <Form onSubmit={handleAddPhoto} type="multipart/form-data"> */}
+                        <Form onSubmit={handleAddPhoto} >
                             <Form.Group>
                                 <Form.File id="imageFile" label="Add Image" onChange={(e) => setImageFile(e.target.files[0])} />
+
                             </Form.Group>
                             <Form.Group controlId="imageName">
                                 <Form.Label>Name: </Form.Label>

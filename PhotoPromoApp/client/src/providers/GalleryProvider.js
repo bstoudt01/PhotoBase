@@ -94,7 +94,7 @@ export function GalleryProvider(props) {
                 throw new Error("Unauthorized");
             }));
     return (
-        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery, deleteGallery }}>
+        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery, deleteGallery, setGalleries }}>
             {props.children}
         </GalleryContext.Provider>
     );

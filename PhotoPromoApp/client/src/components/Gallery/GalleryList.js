@@ -20,9 +20,9 @@ export default function GalleryList() {
                     <Button type="button" href={`/gallery/add`}>Add Gallery</Button>
                 </Row>
                 <section>
-                    {galleries.map(g =>
+                    {galleries ? galleries.map(g =>
                         < Gallery key={g.id} gallery={g} />
-                    )}
+                    ) : null}
                 </section>
             </Col>
         </Container>
