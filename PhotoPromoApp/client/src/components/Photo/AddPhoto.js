@@ -7,7 +7,7 @@ import GalleryOption from "../Gallery/GalleryOption";
 export default function AddPhoto() {
     const { activeUser } = useContext(UserProfileContext);
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
-    const { addPhoto } = useContext(PhotoContext);
+    const { addPhoto, setPhotoFormData } = useContext(PhotoContext);
     const [imageName, setImageName] = useState();
     const [imageGalleryId, setImageGalleryId] = useState();
     const [imageFile, setImageFile] = useState();
@@ -16,16 +16,16 @@ export default function AddPhoto() {
     const [checked, setChecked] = useState(false);
     const handleClick = () => setChecked(!checked)
     const handleAddPhoto = () => {
-        const newImage = {
-            name: imageName,
-            galleryId: imageGalleryId,
-            imageLocation: imageFile,
-            isPublic: checked,
-            attribute: imageAttribute,
-            userProfileId: activeUser.id
-        }
-        debugger
-        addPhoto(newImage);
+        // const newImage = {
+        //     name: imageName,
+        //     galleryId: imageGalleryId,
+        //     imageLocation: imageFile,
+        //     isPublic: checked,
+        //     attribute: imageAttribute,
+        //     userProfileId: activeUser.id
+        // }
+        // debugger
+        // addPhoto(newImage);
         //setImageToSubmit(newImage)
 
 
@@ -36,6 +36,20 @@ export default function AddPhoto() {
         // formData.append("IsPublic", checked);
         // formData.append("Attribute", imageAttribute);
         // formData.append("UserProfileId", activeUser.id);
+        // debugger
+        // addPhoto(formData);
+
+        debugger
+        const formData = new FormData();
+        formData.append("Name", imageName);
+        formData.append("GalleryId", imageGalleryId);
+        formData.append("PhotoLocation", imageFile, imageFile.name);
+        formData.append("IsPublic", checked);
+        formData.append("Attribute", imageAttribute);
+        formData.append("UserProfileId", activeUser.id);
+        // setPhotoFormData(formData);
+        addPhoto(formData);
+
         // addPhoto(formData);
     };
     useEffect(() => {

@@ -10,45 +10,30 @@ export default function Register() {
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [displayName, setDisplayName] = useState();
+  const [company, setCompany] = useState();
   const [email, setEmail] = useState();
-  const [imageLocation, setImageLocation] = useState(" ");
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [facebookUserId, setFacebookUserId] = useState();
+  const [logoLocation, setLogoLocation] = useState();
   const [imageName, setImageName] = useState();
 
   const registerClick = (e) => {
+    debugger
     e.preventDefault();
     if (password && password !== confirmPassword) {
       alert("Passwords don't match. Do better.");
     } else {
-      const userProfile = { firstName, lastName, displayName, imageLocation, email };
+      const userProfile = { firstName, lastName, displayName, company, email, facebookUserId };
       register(userProfile, password)
         .then(() => history.push("/"));
     }
   };
-  const checkUploadResult = (resultEvent) => {
-    if (resultEvent.event === 'success') {
-
-      setImageLocation(resultEvent.info.secure_url)
-      setImageName(resultEvent.info.original_filename + `.${resultEvent.info.format}`)
-
-    }
-  }
 
 
-
-  const showWidget = (event) => {
-    let widget = window.cloudinary.createUploadWidget({
-      cloudName: "dgllrw1m3",
-      uploadPreset: "kxr8ogeo"
-    },
-      (error, result) => { checkUploadResult(result) })
-
-    widget.open()
-  }
 
   return (
-    <Col sm="12" md={{ size: 6, offset: 3 }}>
+    <Col>
 
       <Form onSubmit={registerClick}>
         <fieldset>
@@ -65,13 +50,16 @@ export default function Register() {
             <Form.Control id="displayName" type="text" onChange={e => setDisplayName(e.target.value)} />
           </Form.Group>
           <Form.Group>
-            <Form.Label htmlFor="email">Email</Form.Label>
-            <Form.Control id="email" type="text" onChange={e => setEmail(e.target.value)} />
+            <Form.Label htmlFor="companyName">Company Name</Form.Label>
+            <Form.Control id="companyName" type="text" onChange={e => setCompany(e.target.value)} />
           </Form.Group>
           <Form.Group>
-            <div>
-              <Button onClick={showWidget}>Upload Photo</Button> <p>{imageName}</p>
-            </div>
+            <Form.Label htmlFor="facebookUserId">Facebook Business Account Info</Form.Label>
+            <Form.Control id="facebookUserId" type="text" onChange={e => setFacebookUserId(e.target.value)} />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label htmlFor="email">Email</Form.Label>
+            <Form.Control id="email" type="text" onChange={e => setEmail(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="password">Password</Form.Label>
@@ -81,8 +69,15 @@ export default function Register() {
             <Form.Label htmlFor="confirmPassword">Confirm Password</Form.Label>
             <Form.Control id="confirmPassword" type="password" onChange={e => setConfirmPassword(e.target.value)} />
           </Form.Group>
+          {/* <Form.File id="logoLocation" custom>
+            <Form.File.Input isValid onChange={e => setLogoLogin(e.target.value)}/>
+            <Form.File.Label data-browse="Button text">
+              Custom file input
+            </Form.File.Label>
+            <Form.Control.Feedback type="valid">You did it!</Form.Control.Feedback>
+          </Form.File> */}
           <Form.Group>
-            <Button>Register</Button>
+            <Button type="submit">Register</Button>
           </Form.Group>
         </fieldset>
       </Form>

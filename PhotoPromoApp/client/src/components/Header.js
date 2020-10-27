@@ -20,7 +20,7 @@ export default function Header() {
   return (
     <>
       <div>
-        <Navbar bg="light" expand="md">
+        <Navbar bg="light" expand="md" >
           <Navbar.Brand tag={RRNavLink} to="/">Tabloid</Navbar.Brand>
           <Navbar.Toggle onClick={toggle} />
           <Accordion >
