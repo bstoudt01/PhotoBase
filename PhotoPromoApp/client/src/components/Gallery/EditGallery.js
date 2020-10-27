@@ -18,7 +18,7 @@ export default function EditGallery() {
             name: Name,
             userProfileId: gallery.userProfileId
         }
-        debugger
+
         updateGallery(newGallery)
     };
     useEffect(() => {

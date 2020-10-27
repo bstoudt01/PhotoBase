@@ -78,15 +78,15 @@ export function GalleryProvider(props) {
             }));
 
 
-    const deleteCategory = (deletedCategory) =>
+    const deleteGallery = (deletedGallery) =>
         getToken().then((token) =>
-            fetch(`/api/category/${deletedCategory.id}`, {
+            fetch(`/api/gallery/${deletedGallery.id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(deletedCategory)
+                body: JSON.stringify(deletedGallery)
             }).then(resp => {
                 if (resp.ok) {
                     return resp.json();
@@ -94,7 +94,7 @@ export function GalleryProvider(props) {
                 throw new Error("Unauthorized");
             }));
     return (
-        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery }}>
+        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery, deleteGallery }}>
             {props.children}
         </GalleryContext.Provider>
     );

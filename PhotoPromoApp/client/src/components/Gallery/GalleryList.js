@@ -1,17 +1,17 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
 import Gallery from "./Gallery";
 import { Button, Col, Container, Row } from "react-bootstrap";
+
+
 export default function GalleryList() {
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
 
-
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
     }, []);
-
     return (
         <Container>
             <Col>
@@ -21,8 +21,7 @@ export default function GalleryList() {
                 </Row>
                 <section>
                     {galleries.map(g =>
-
-                        <Gallery key={g.id} gallery={g} />
+                        < Gallery key={g.id} gallery={g} />
                     )}
                 </section>
             </Col>
