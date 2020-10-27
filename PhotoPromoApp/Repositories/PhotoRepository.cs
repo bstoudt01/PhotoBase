@@ -3,6 +3,7 @@ using PhotoPromo.Models;
 using PhotoPromo.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace PhotoPromo.Repositories
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
 
@@ -109,7 +110,7 @@ namespace PhotoPromo.Repositories
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {
@@ -167,11 +168,11 @@ namespace PhotoPromo.Repositories
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("PhotoName")),
-                            PhotoLocation = reader.GetString(reader.GetOrdinal("PhotoLocation")),
+                            PhotoLocation = Path.GetFullPath(reader.GetString(reader.GetOrdinal("PhotoLocation"))),
                             Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
                             ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
-                            IsPublic = reader.GetInt32(reader.GetOrdinal("IsPublic")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {
@@ -208,6 +209,31 @@ namespace PhotoPromo.Repositories
 
         //Random Image for Public Use
         //public Photo GetRandomImage {}
+
+        public void Add(Photo photo)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Photo ([Name], UserProfileId, PhotoLocation, Attribute, ResolutionLevel, IsPublic, GalleryId )
+                        OUTPUT INSERTED.ID
+                        VALUES (@Name, @UserProfileId, @PhotoLocation, @Attribute, @ResolutionLevel, @IsPublic, @GalleryId)";
+                    //After the SQL String is declared we place the expected values in a comand that adds values to paramaters by passing through the SQL @Values
+                    cmd.Parameters.AddWithValue("@Name", photo.Name);
+                    cmd.Parameters.AddWithValue("@UserProfileId", photo.UserProfileId);
+                    cmd.Parameters.AddWithValue("@PhotoLocation", photo.PhotoLocation);
+                    cmd.Parameters.AddWithValue("@Attribute", photo.Attribute);
+                    cmd.Parameters.AddWithValue("@ResolutionLevel", photo.ResolutionLevel);
+                    cmd.Parameters.AddWithValue("@IsPublic", photo.IsPublic);
+                    cmd.Parameters.AddWithValue("@GalleryId", photo.GalleryId);
+
+                    photo.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
 
     }
 }

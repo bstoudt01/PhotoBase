@@ -20,12 +20,12 @@ namespace PhotoPromo.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT up.Id, Up.FirebaseUserId, Up.FacebookUserId, up.FirstName, up.LastName, up.DisplayName, 
+                        SELECT up.Id, up.FirebaseUserId, up.FacebookUserId, up.FirstName, up.LastName, up.DisplayName, 
                                up.Email, up.Company, up.LogoLocation, up.UserTypeId, up.IsDeactivated,
                                ut.[Name] AS UserTypeName
                           FROM UserProfile up
                                LEFT JOIN UserType ut on up.UserTypeId = ut.Id
-                         WHERE FirebaseUserId = @FirebaseuserId AND up.IsDeactivated != 1";
+                         WHERE up.FirebaseUserId = @FirebaseuserId AND up.IsDeactivated != 1";
 
                     DbUtils.AddParameter(cmd, "@FirebaseUserId", firebaseUserId);
 

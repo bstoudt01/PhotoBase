@@ -13,7 +13,7 @@ namespace PhotoPromo.Models
 
         public string PhotoLocation { get; set; }
 
-        public int IsPublic { get; set; }
+        public bool IsPublic { get; set; }
 
         public string Attribute { get; set; }
 

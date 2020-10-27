@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PhotoPromo.Models;
 using PhotoPromo.Repositories;
 
 namespace PhotoPromo.Controllers
@@ -41,6 +42,17 @@ namespace PhotoPromo.Controllers
         public IActionResult GetSingleById(int id)
         {
             return Ok(_photoRepository.GetSinglePhotobyId(id));
+        }
+
+        //Post Photo
+        //Photo
+        [HttpPost]
+        public IActionResult Post(Photo photo)
+        {
+            photo.ResolutionLevel = 300;
+            
+            _photoRepository.Add(photo);
+            return CreatedAtAction(nameof(GetSingleById), new { id = photo.Id }, photo);
         }
 
 
