@@ -42,6 +42,7 @@ export default function Header() {
 
 
                 <>
+
                   <Nav.Item>
                     <Nav.Link href="/image/add">Add Image</Nav.Link>
                   </Nav.Item>

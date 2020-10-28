@@ -3,7 +3,7 @@ import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { Card, Button, Col, Row, Image, Form } from "react-bootstrap";
-import GalleryOption from "../Gallery/GalleryOption";
+import GalleryOption from "./AddPhotoGalleryOption";
 import { ImageContext } from "../../providers/ImageProvider";
 export default function AddPhoto() {
     const { activeUser } = useContext(UserProfileContext);
@@ -42,13 +42,14 @@ export default function AddPhoto() {
         //setPhotoFormData(formData);
         const newPhoto = {
             Name: imageName,
-            PhotoLocation: imageName,
+            PhotoLocation: newImageName,
             IsPublic: checked,
             Attribute: imageAttribute,
 
             GalleryId: parseInt(imageGalleryId),
             UserProfileId: activeUser.id
         }
+        debugger
         addImage(formData);
 
         addPhoto(newPhoto);

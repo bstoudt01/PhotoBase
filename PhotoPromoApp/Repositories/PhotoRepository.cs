@@ -112,6 +112,7 @@ namespace PhotoPromo.Repositories
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
                             IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             Gallery = new Gallery
                             {
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
@@ -234,6 +235,66 @@ namespace PhotoPromo.Repositories
                 }
             }
         }
+
+
+        //Edit photo
+        public void Update(Photo photo)
+        {
+
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Photo
+                            SET [Name] = @Name,
+                                UserProfileId = @UserProfileId, 
+                                PhotoLocation = @PhotoLocation,
+                                Attribute = @Attribute,
+                                ResolutionLevel = @ResolutionLevel, 
+                                IsPublic = @IsPublic,
+                                GalleryId = @GalleryId
+                            WHERE Id = @Id";
+
+                    cmd.Parameters.AddWithValue("@Id", photo.Id);
+                    cmd.Parameters.AddWithValue("@Name", photo.Name);
+                    cmd.Parameters.AddWithValue("@UserProfileId", photo.UserProfileId);
+                    cmd.Parameters.AddWithValue("@PhotoLocation", photo.PhotoLocation);
+                    cmd.Parameters.AddWithValue("@Attribute", photo.Attribute);
+                    cmd.Parameters.AddWithValue("@ResolutionLevel", photo.ResolutionLevel);
+                    cmd.Parameters.AddWithValue("@IsPublic", photo.IsPublic);
+                    cmd.Parameters.AddWithValue("@GalleryId", photo.GalleryId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+        }
+
+
+        //Delete Photo
+        public void Delete(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Photo
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+        }
+
 
     }
 }

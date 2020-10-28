@@ -60,7 +60,7 @@ namespace PhotoPromo.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, Gallery gallery)
+        public IActionResult Update(int id, Gallery gallery)
         {
             //var currentUserProfile = GetCurrentUserProfile();
 
