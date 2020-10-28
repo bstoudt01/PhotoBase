@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { Card, Button, Col, Row, CardImg, Modal, Form } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
-
+import { PhotoContext } from "../../providers/PhotoProvider";
 export default function Photo({ photo }) {
     const { activeUser } = useContext(UserProfileContext);
 
     const { getImageUrl, deleteImage } = useContext(ImageContext);
+    const { deletePhoto } = useContext(PhotoContext);
     const imageUrl = getImageUrl(photo.photoLocation);
 
     const [isOpen, setIsOpen] = React.useState(false);
@@ -18,6 +19,13 @@ export default function Photo({ photo }) {
         setIsOpen(false);
     };
 
+    const handleDelete = () => {
+        debugger
+        //deletePhoto(photo).then((resp) => { if (resp.ok) { return (deleteImage(photo)) } else { return console.log("broken") } });
+        deleteImage(photo)
+        // debugger
+        deletePhoto(photo);
+    }
 
     return (
         <Col>
@@ -35,7 +43,7 @@ export default function Photo({ photo }) {
                     }
                     {photo != null ?
                         <Col>
-                            <Button varient="primary" onClick={showModal}>Edit</Button>
+                            <Button varient="primary" onClick={showModal}>Delete</Button>
                             <Modal show={isOpen} onHide={hideModal}>
                                 <Modal.Header>
                                     <Modal.Title>{photo.name}</Modal.Title>
@@ -45,8 +53,8 @@ export default function Photo({ photo }) {
 
 
                                     <Form.Group controlId="galleryName">
-                                        <Form.Label> Name: </Form.Label>
-                                        <Form.Control type="text" defaultValue={photo.name} onClick={e => deleteImage(photo.photoLocation)} />
+                                        <Form.Label> Name: {photo.name} </Form.Label>
+                                        <Button onClick={handleDelete} />
                                     </Form.Group>
 
 

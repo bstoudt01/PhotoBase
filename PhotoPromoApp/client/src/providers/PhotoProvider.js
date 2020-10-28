@@ -90,8 +90,25 @@ export function PhotoProvider(props) {
     //                 console.error('Error:', error);
     //             }));
 
+
+    const deletePhoto = (deletedPhoto) =>
+        getToken().then((token) =>
+            fetch(`${apiUrl}/${deletedPhoto.id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(deletedPhoto)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
+
     return (
-        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto }}>
+        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, deletePhoto }}>
             {props.children}
         </PhotoContext.Provider>
     );

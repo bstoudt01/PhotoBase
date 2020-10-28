@@ -55,6 +55,14 @@ namespace PhotoPromo.Controllers
             return CreatedAtAction(nameof(GetSingleById), new { id = photo.Id }, photo);
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            _photoRepository.Delete(id);
 
-    }
+            return Ok(id);
+        }
+
+
+        }
 }

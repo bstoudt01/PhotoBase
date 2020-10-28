@@ -88,22 +88,30 @@ namespace PhotoPromoApp.Controllers
         [HttpDelete("{fileName}")]
         public IActionResult deletefile(string fileName)
         {
-            string _imageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", fileName);
-            if ((System.IO.File.Exists(_imageToBeDeleted)))
+            string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_"+fileName);
+            string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_"+fileName);
+
+            if ((System.IO.File.Exists(_highResImageToBeDeleted)))
             {
-                System.IO.File.Delete(_imageToBeDeleted);
+                System.IO.File.Delete(_highResImageToBeDeleted);
             }
-            return RedirectToAction("index", new { deleted = fileName });
+            if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_lowResImageToBeDeleted);
+            }
+            return Ok();
         }
 
         [HttpGet("{imageUrl}")]
         public IActionResult Get(string imageUrl)
         {
+            if (imageUrl != null) { 
             imageUrl = "high_" + imageUrl;   
             var path = Path.Combine(_webhost.WebRootPath, "images/", imageUrl);
 
             var imageFileStream = System.IO.File.OpenRead(path);
             return File(imageFileStream, "image/jpeg");
+            } return NoContent();
         }
     }
 }

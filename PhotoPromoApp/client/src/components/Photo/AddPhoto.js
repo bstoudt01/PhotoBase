@@ -49,6 +49,7 @@ export default function AddPhoto() {
             GalleryId: parseInt(imageGalleryId),
             UserProfileId: activeUser.id
         }
+        debugger
         addImage(formData);
 
         addPhoto(newPhoto);

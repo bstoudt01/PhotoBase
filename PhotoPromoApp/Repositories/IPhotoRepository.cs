@@ -10,5 +10,7 @@ namespace PhotoPromo.Repositories
         Photo GetSinglePhotobyId(int id);
 
         void Add(Photo photo);
+
+        void Delete(int id);
     }
 }

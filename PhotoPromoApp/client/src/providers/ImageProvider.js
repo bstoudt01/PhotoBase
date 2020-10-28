@@ -26,7 +26,7 @@ export const ImageProvider = (props) => {
 
     const deleteImage = (deletedImage) =>
         getToken().then((token) =>
-            fetch(`/api/image/${deletedImage.name}`, {
+            fetch(`/api/image/${deletedImage.photoLocation}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ export const ImageProvider = (props) => {
                 body: JSON.stringify(deletedImage)
             }).then(resp => {
                 if (resp.ok) {
-                    return resp.json();
+                    return;
                 }
                 throw new Error("Unauthorized");
             }));
