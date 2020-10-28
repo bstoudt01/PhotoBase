@@ -55,6 +55,29 @@ namespace PhotoPromo.Controllers
             return CreatedAtAction(nameof(GetSingleById), new { id = photo.Id }, photo);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Photo photo)
+        {
+            //var currentUserProfile = GetCurrentUserProfile();
+
+            //if (currentUserProfile.UserType.Name != "Admin")
+            //{
+            //    return Unauthorized();
+            //}
+            //if (category == null)
+            //{
+
+            //    return NotFound();
+
+            //}
+            //if (id != category.Id)
+            //{
+            //    return BadRequest();
+            //}
+            _photoRepository.Update(photo);
+            return Ok(photo);
+        }
+
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
@@ -62,6 +85,8 @@ namespace PhotoPromo.Controllers
 
             return Ok(id);
         }
+
+
 
 
         }

@@ -1,23 +1,48 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
-import { Card, Button, Col, Row, CardImg, Modal, Form } from "react-bootstrap";
+import { Card, Button, Col, Row, CardImg, Modal, Form, Image } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 export default function Photo({ photo }) {
     const { activeUser } = useContext(UserProfileContext);
-
     const { getImageUrl, deleteImage } = useContext(ImageContext);
-    const { deletePhoto } = useContext(PhotoContext);
+    const { deletePhoto, updatePhoto } = useContext(PhotoContext);
+
+    const [photoToUpdate, setPhotoToUpdate] = useState(photo)
+    const [updateIsOpen, setUpdateIsOpen] = useState(false);
+    const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+
     const imageUrl = getImageUrl(photo.photoLocation);
 
-    const [isOpen, setIsOpen] = React.useState(false);
-    const showModal = () => {
-        setIsOpen(true);
+    const showDeleteModal = (e) => {
+        setDeleteIsOpen(true);
+    };
+
+    const showUpdateModal = (e) => {
+        setUpdateIsOpen(true);
     };
 
     const hideModal = () => {
-        setIsOpen(false);
+        setUpdateIsOpen(false);
+        setDeleteIsOpen(false);
     };
+
+
+    const handleFieldChange = (e) => {
+
+        const stateToChange = { ...photoToUpdate };
+
+        stateToChange[e.target.id] = e.target.value;
+
+        setPhotoToUpdate(stateToChange);
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        debugger
+        updatePhoto(photoToUpdate);
+    };
+
 
     const handleDelete = () => {
         debugger
@@ -27,45 +52,80 @@ export default function Photo({ photo }) {
         deletePhoto(photo);
     }
 
+
+
     return (
-        <Col>
-            <Card body>
+        <Col xs={6} lg={3} >
+            <Card body >
                 <Row>
                     <Col>
-                        <strong>{photo.name}</strong>
-                        {/* <Image src={photo.photoLocation}></Image> */}
+                        <Row>
+                            <strong>{photo.name}</strong>
+                            {/* <Image src={photo.photoLocation}></Image> */}
+                        </Row>
 
+                        {photo.photoLocation === "" || photo.photoLocation === null ?
+                            <Row>
+                                <Image />
+                            </Row>
+                            :
+                            <Row>
+                                <Image src={imageUrl} alt={photo.name} fluid />
+                            </Row>
+                        }
+                        {photo != null ?
+                            <Row>
+                                {/* UPDATE PHOTO MODAL */}
+                                <>
+                                    <Button id="showModalEditButton" varient="primary" onClick={showUpdateModal}>Edit</Button>
+                                    <Modal id="editModal" show={updateIsOpen} onHide={hideModal}>
+                                        <Modal.Header>
+                                            <Modal.Title>{photo.name}</Modal.Title>
+                                        </Modal.Header>
+                                        {/* <Modal.Body>asdfasdf</Modal.Body> */}
+                                        <Form onSubmit={handleUpdate}>
+                                            <Form.Group controlId="name">
+                                                <Form.Label>Name: </Form.Label>
+                                                <Form.Control type="text" defaultValue={photo.name} onChange={handleFieldChange} />
+                                            </Form.Group>
+                                            <Form.Group controlId="attribute">
+                                                <Form.Label>Attribute: </Form.Label>
+                                                <Form.Control type="text" defaultValue={photo.attribute} onChange={handleFieldChange} />
+                                            </Form.Group>
+                                            <Form.Group controlId="galleryId">
+                                                <Form.Label>GalleryId: </Form.Label>
+                                                <Form.Control type="text" defaultValue={photo.galleryId} onChange={handleFieldChange} />
+                                            </Form.Group>
+                                            <Form.Group>
+                                                <Button type="submit" onClick={hideModal}>Submit</Button>
+                                            </Form.Group>
+                                        </Form>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={hideModal}>Cancel</Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                                </>
+
+                                {/* DELETE PHOTO MODAL */}
+                                <>
+                                    <Button id="showModalDeleteButton" varient="primary" onClick={showDeleteModal}>Delete</Button>
+                                    <Modal id="deleteModal" show={deleteIsOpen} onHide={hideModal}>
+                                        <Modal.Header>
+                                            <Modal.Title>{photo.name}</Modal.Title>
+                                        </Modal.Header>
+                                        <Form>
+                                            <Form.Group controlId="photoName">
+                                                <Button onClick={handleDelete} >Confirm Delete</Button>
+                                            </Form.Group>
+                                        </Form>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={hideModal}>Cancel</Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                                </>
+                            </ Row >
+                            : null}
                     </Col>
-                    {photo.photoLocation === "" || photo.photoLocation === null ?
-                        <CardImg />
-                        :
-                        <CardImg src={imageUrl} alt={photo.title} />
-                    }
-                    {photo != null ?
-                        <Col>
-                            <Button varient="primary" onClick={showModal}>Delete</Button>
-                            <Modal show={isOpen} onHide={hideModal}>
-                                <Modal.Header>
-                                    <Modal.Title>{photo.name}</Modal.Title>
-                                </Modal.Header>
-                                {/* <Modal.Body>asdfasdf</Modal.Body> */}
-                                <Form>
-
-
-                                    <Form.Group controlId="galleryName">
-                                        <Form.Label> Name: {photo.name} </Form.Label>
-                                        <Button onClick={handleDelete} />
-                                    </Form.Group>
-
-
-
-                                </Form>
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={hideModal}>Cancel</Button>
-                                </Modal.Footer>
-                            </Modal>
-                        </Col>
-                        : null}
                 </Row>
             </Card >
         </Col >

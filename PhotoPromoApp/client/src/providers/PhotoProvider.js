@@ -90,6 +90,22 @@ export function PhotoProvider(props) {
     //                 console.error('Error:', error);
     //             }));
 
+    const updatePhoto = (updatedPhoto) =>
+        getToken().then((token) =>
+            fetch(`${apiUrl}/${updatedPhoto.id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedPhoto)
+
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                //throw new Error("Unauthorized");
+            }));
 
     const deletePhoto = (deletedPhoto) =>
         getToken().then((token) =>
@@ -108,7 +124,7 @@ export function PhotoProvider(props) {
             }));
 
     return (
-        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, deletePhoto }}>
+        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
             {props.children}
         </PhotoContext.Provider>
     );
