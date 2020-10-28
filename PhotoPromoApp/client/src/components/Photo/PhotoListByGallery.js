@@ -25,7 +25,6 @@ export default function PhotoListByGallery() {
                 </Row>
                 <section >
                     {photosByGallery != null ? photosByGallery.map(p =>
-
                         <Photo key={p.id} photo={p} />
                     ) : <section>EMPTY</section>}
                 </section>

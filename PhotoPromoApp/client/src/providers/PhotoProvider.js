@@ -104,7 +104,7 @@ export function PhotoProvider(props) {
                 if (resp.ok) {
                     return resp.json();
                 }
-                //throw new Error("Unauthorized");
+                throw new Error("Unauthorized");
             }));
 
     const deletePhoto = (deletedPhoto) =>

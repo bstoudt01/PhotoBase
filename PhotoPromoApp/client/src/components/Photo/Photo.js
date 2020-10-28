@@ -26,7 +26,17 @@ export default function Photo({ photo }) {
         setUpdateIsOpen(false);
         setDeleteIsOpen(false);
     };
-
+    function TryParseInt(str, defaultValue) {
+        var retValue = defaultValue;
+        if (str !== null) {
+            if (str.length > 0) {
+                if (!isNaN(str)) {
+                    retValue = parseInt(str);
+                }
+            }
+        }
+        return retValue;
+    }
 
     const handleFieldChange = (e) => {
 
@@ -36,8 +46,18 @@ export default function Photo({ photo }) {
 
         setPhotoToUpdate(stateToChange);
     };
+    const handleIntFieldChange = (e) => {
+
+        const stateToChange = { ...photoToUpdate };
+
+        stateToChange[e.target.id] = parseInt(e.target.value);
+
+        setPhotoToUpdate(stateToChange);
+
+    };
 
     const handleUpdate = (e) => {
+
         e.preventDefault();
         debugger
         updatePhoto(photoToUpdate);
@@ -94,7 +114,7 @@ export default function Photo({ photo }) {
                                             </Form.Group>
                                             <Form.Group controlId="galleryId">
                                                 <Form.Label>GalleryId: </Form.Label>
-                                                <Form.Control type="text" defaultValue={photo.galleryId} onChange={handleFieldChange} />
+                                                <Form.Control type="text" defaultValue={photo.galleryId} onChange={handleIntFieldChange} />
                                             </Form.Group>
                                             <Form.Group>
                                                 <Button type="submit" onClick={hideModal}>Submit</Button>
