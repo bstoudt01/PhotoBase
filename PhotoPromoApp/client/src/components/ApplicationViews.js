@@ -8,7 +8,7 @@ import PhotoListByGallery from "./Photo/PhotoListByGallery";
 import AddPhoto from "./Photo/AddPhoto";
 import AddGallery from "./Gallery/AddGallery";
 import EditGallery from "./Gallery/EditGallery";
-
+import SinglePhoto3rdParty from "./Photo/SinglePhoto3rdParty";
 export default function ApplicationViews(props) {
     const { isLoggedIn, activeUser, userTypeId } = useContext(UserProfileContext);
     const [refresh, setRefresh] = useState(false);
@@ -45,6 +45,11 @@ export default function ApplicationViews(props) {
                 </Route>
                 <Route exact path="/gallery/add">
                     {isLoggedIn ? <AddGallery /> : <Redirect to="/Login" />}
+                </Route>
+
+
+                <Route exact path="/image/:photoId/:height/:width/:userId">
+                    <SinglePhoto3rdParty />
                 </Route>
 
 

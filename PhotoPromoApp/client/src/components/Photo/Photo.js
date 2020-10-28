@@ -5,14 +5,14 @@ import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 export default function Photo({ photo }) {
     const { activeUser } = useContext(UserProfileContext);
-    const { getImageUrl, deleteImage } = useContext(ImageContext);
+    const { getImageName, deleteImage } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 
     const [photoToUpdate, setPhotoToUpdate] = useState(photo)
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
 
-    const imageUrl = getImageUrl(photo.photoLocation);
+    const imageName = getImageName(photo.photoLocation);
 
     const showDeleteModal = (e) => {
         setDeleteIsOpen(true);
@@ -26,17 +26,7 @@ export default function Photo({ photo }) {
         setUpdateIsOpen(false);
         setDeleteIsOpen(false);
     };
-    function TryParseInt(str, defaultValue) {
-        var retValue = defaultValue;
-        if (str !== null) {
-            if (str.length > 0) {
-                if (!isNaN(str)) {
-                    retValue = parseInt(str);
-                }
-            }
-        }
-        return retValue;
-    }
+
 
     const handleFieldChange = (e) => {
 
@@ -90,7 +80,7 @@ export default function Photo({ photo }) {
                             </Row>
                             :
                             <Row>
-                                <Image src={imageUrl} alt={photo.name} fluid />
+                                <Image src={imageName} alt={photo.name} fluid />
                             </Row>
                         }
                         {photo != null ?
