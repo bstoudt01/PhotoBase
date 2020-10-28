@@ -6,6 +6,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using PhotoPromoApp.ImageHandlers;
 using System;
+using SixLabors.ImageSharp.Advanced;
 
 namespace PhotoPromoApp.Controllers
 {
@@ -35,8 +36,11 @@ namespace PhotoPromoApp.Controllers
                         string FileName = "low_"+file.FileName;
                         int originalWidth = lowResCopy.Width;
                         int originalHeight = lowResCopy.Height;
+                        double metaVR = lowResCopy.Metadata.VerticalResolution;
+                        
                         Console.WriteLine(FileName, "filename");
                         Console.WriteLine(file.FileName, "file.filename");
+                        double metaHR = lowResCopy.Metadata.HorizontalResolution;
                         //int maxWidth = 500;
                         //if (originalWidth > maxWidth)
                         //{
@@ -79,10 +83,25 @@ namespace PhotoPromoApp.Controllers
             return Ok();
         }
 
+
+
+        [HttpDelete("{fileName}")]
+        public IActionResult deletefile(string fileName)
+        {
+            string _imageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", fileName);
+            if ((System.IO.File.Exists(_imageToBeDeleted)))
+            {
+                System.IO.File.Delete(_imageToBeDeleted);
+            }
+            return RedirectToAction("index", new { deleted = fileName });
+        }
+
         [HttpGet("{imageUrl}")]
         public IActionResult Get(string imageUrl)
         {
+            imageUrl = "high_" + imageUrl;   
             var path = Path.Combine(_webhost.WebRootPath, "images/", imageUrl);
+
             var imageFileStream = System.IO.File.OpenRead(path);
             return File(imageFileStream, "image/jpeg");
         }

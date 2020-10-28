@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { Card, Button, Col, Row } from "react-bootstrap";
 
-export default function GalleryOption({ gallery }) {
+export default function AddPhotoGalleryOption({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
 
     return (

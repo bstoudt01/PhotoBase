@@ -23,6 +23,23 @@ export const ImageProvider = (props) => {
                 throw new Error("Image Upload Failed.")
             }));
 
+
+    const deleteImage = (deletedImage) =>
+        getToken().then((token) =>
+            fetch(`/api/image/${deletedImage.name}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(deletedImage)
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
+
     const getImageUrl = (imageUrl) => {
         const getUrl = `/api/image/${imageUrl}`
         return (getUrl)
@@ -32,7 +49,7 @@ export const ImageProvider = (props) => {
 
 
     return (
-        <ImageContext.Provider value={{ getImageUrl, addImage }}>
+        <ImageContext.Provider value={{ getImageUrl, addImage, deleteImage }}>
             {props.children}
         </ImageContext.Provider>
     );

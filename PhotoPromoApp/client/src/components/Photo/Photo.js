@@ -1,13 +1,22 @@
 import React, { useContext } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
-import { Card, Button, Col, Row, CardImg } from "react-bootstrap";
+import { Card, Button, Col, Row, CardImg, Modal, Form } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 
 export default function Photo({ photo }) {
     const { activeUser } = useContext(UserProfileContext);
 
-    const { getImageUrl } = useContext(ImageContext);
+    const { getImageUrl, deleteImage } = useContext(ImageContext);
     const imageUrl = getImageUrl(photo.photoLocation);
+
+    const [isOpen, setIsOpen] = React.useState(false);
+    const showModal = () => {
+        setIsOpen(true);
+    };
+
+    const hideModal = () => {
+        setIsOpen(false);
+    };
 
 
     return (
@@ -20,10 +29,35 @@ export default function Photo({ photo }) {
 
                     </Col>
                     {photo.photoLocation === "" || photo.photoLocation === null ?
-                        <CardImg top />
+                        <CardImg />
                         :
-                        <CardImg top src={imageUrl} alt={photo.title} />
+                        <CardImg src={imageUrl} alt={photo.title} />
                     }
+                    {photo != null ?
+                        <Col>
+                            <Button varient="primary" onClick={showModal}>Edit</Button>
+                            <Modal show={isOpen} onHide={hideModal}>
+                                <Modal.Header>
+                                    <Modal.Title>{photo.name}</Modal.Title>
+                                </Modal.Header>
+                                {/* <Modal.Body>asdfasdf</Modal.Body> */}
+                                <Form>
+
+
+                                    <Form.Group controlId="galleryName">
+                                        <Form.Label> Name: </Form.Label>
+                                        <Form.Control type="text" defaultValue={photo.name} onClick={e => deleteImage(photo.photoLocation)} />
+                                    </Form.Group>
+
+
+
+                                </Form>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={hideModal}>Cancel</Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </Col>
+                        : null}
                 </Row>
             </Card >
         </Col >
