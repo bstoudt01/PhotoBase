@@ -140,6 +140,7 @@ namespace PhotoPromoApp.Controllers
             return NoContent();
         }
 
+
         [HttpGet("unique/{photoId}/{width}/{height}/{userId}")]
         public IActionResult GetPublic(string photoId, string width, string height, string userId)
         {
@@ -147,58 +148,111 @@ namespace PhotoPromoApp.Controllers
             if (photoId != null)
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
-
+                //Locate File by Name assoicated with Photo.Id
                 Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
                 //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-               
 
-
-
+                //Locate File by locating the index of last directory call
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
                 if (index1 != -1)
                 {
-                    string imageName = publicPhoto.PhotoLocation.Substring(index1+1);
+                    //assign varialbe the file name pulled from  the file location 
+                    string imageName = publicPhoto.PhotoLocation.Substring(index1 + 1);
+                    // use the "high_" quality image uploaded
                     var highResImage = imageName.Insert(0, "high_");
                     var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
                     var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
 
+                    //Create Image instance from openRead fileStream path
                     using Image image = Image.Load(imageFileStream);
                     {
-                        using (Image lowResCopy = image.Clone(x => x.Resize(image.Width / 2, image.Height / 2)
-                                    //more sizing options
-                                )
-                            )//close out lowResCopy method
+                        //declare the image to be a custom size
+                        string FileName = "custom_" + imageName;
+                        int customWidth = Convert.ToInt32(width);
+                        var divisor = image.Width / customWidth;
+                            var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
 
-                        {
-                            // copy.Save(outStream);
-                            string FileName = "reallylow_" + imageName;
-                            int originalWidth = lowResCopy.Width;
-                            int originalHeight = lowResCopy.Height;
-                            double metaVR = lowResCopy.Metadata.VerticalResolution;
+                        //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
+                            //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
+                        image.Mutate(x => x.Resize(customWidth, newHeight));
 
-                            Console.WriteLine(FileName, "filename");
-                            Console.WriteLine(imageName, "imageName");
-                            double metaHR = lowResCopy.Metadata.HorizontalResolution;
-                            //int maxWidth = 500;
-                            //if (originalWidth > maxWidth)
-                            //{
-                            //    int newHeight = maxWidth * originalHeight;
-                            //    newHeight /= originalWidth;
+                        //Save the mutated file to the assigned path using the assigned file name
+                        image.Save(savedImagePath + FileName);
 
-                            //    copy.Mutate(i => i.Resize(maxWidth, newHeight));
-                            //}
-
-                            lowResCopy.Save(savedImagePath + FileName);
-                            var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
-                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                            return File(NewimageFileStream, "image/jpeg");
-                        }
+                        //Load image and return to user
+                        var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
+                        var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                        return File(NewimageFileStream, "image/jpeg");
 
                     }
                 }
             }
             return NoContent();
         }
+
+
+
+
+        //working by photoId, other paramatesr are note used yet
+        //[HttpGet("unique/{photoId}/{width}/{height}/{userId}")]
+        //public IActionResult GetPublic(string photoId, string width, string height, string userId)
+        //{
+
+        //    if (photoId != null)
+        //    {
+        //        var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
+
+        //        Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
+        //        //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
+
+
+
+
+        //        int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
+        //        if (index1 != -1)
+        //        {
+        //            string imageName = publicPhoto.PhotoLocation.Substring(index1+1);
+        //            var highResImage = imageName.Insert(0, "high_");
+        //            var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
+        //            var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
+
+        //            using Image image = Image.Load(imageFileStream);
+        //            {
+        //                using (Image lowResCopy = image.Clone(x => x.Resize(image.Width / 2, image.Height / 2)
+        //                            //more sizing options
+        //                        )
+        //                    )//close out lowResCopy method
+
+        //                {
+        //                    // copy.Save(outStream);
+        //                    string FileName = "reallylow_" + imageName;
+        //                    int originalWidth = lowResCopy.Width;
+        //                    int originalHeight = lowResCopy.Height;
+        //                    double metaVR = lowResCopy.Metadata.VerticalResolution;
+
+        //                    Console.WriteLine(FileName, "filename");
+        //                    Console.WriteLine(imageName, "imageName");
+        //                    double metaHR = lowResCopy.Metadata.HorizontalResolution;
+        //                    //int maxWidth = 500;
+        //                    //if (originalWidth > maxWidth)
+        //                    //{
+        //                    //    int newHeight = maxWidth * originalHeight;
+        //                    //    newHeight /= originalWidth;
+
+        //                    //    copy.Mutate(i => i.Resize(maxWidth, newHeight));
+        //                    //}
+
+        //                    lowResCopy.Save(savedImagePath + FileName);
+        //                    var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
+        //                    var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+        //                    return File(NewimageFileStream, "image/jpeg");
+        //                }
+
+        //            }
+        //        }
+        //    }
+        //    return NoContent();
+        //}
 
     }
 

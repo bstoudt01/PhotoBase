@@ -55,6 +55,7 @@ export const ImageProvider = (props) => {
         }
     };
     const getImageId = (imageId) => {
+        debugger
         if (imageId != undefined || imageId != null) {
             const getId = `${apiUrl}/${imageId}`
 

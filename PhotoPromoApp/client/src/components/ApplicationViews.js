@@ -9,20 +9,28 @@ import AddPhoto from "./Photo/AddPhoto";
 import AddGallery from "./Gallery/AddGallery";
 import EditGallery from "./Gallery/EditGallery";
 import SinglePhoto from "./Photo/SinglePhoto";
-import SinglePhoto3rdParty from "./Photo/SinglePhoto3rdParty";
+import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
 import Header from "./Header";
 import { ImageProvider } from "../providers/ImageProvider";
 export default function ApplicationViews(props) {
     const { isLoggedIn, activeUser, userTypeId } = useContext(UserProfileContext);
     const [refresh, setRefresh] = useState(false);
+    // const [isNotSPARoute, setIsNotSPARoute] = useState(false)
 
-    //Set "false" to Not render navigation bar
-    const SPAHeader = <Header isSPARoute={true} />
+    //Set  SPAHeader "false" to Not render navigation bar
+
+    // const SPARoute = (isNotSPARoute) => { if (SPARoute) { < Header isSPARoute={false} /> } else { < Header isSPARoute={true} /> } }
+
     return (
         <main>
+
+
+            {/* {isNotSPARoute ? <Header isSPARoute={true} /> : <Header isSPARoute={false} />} */}
+
             <Switch>
                 {/* Register and Login Public Routes */}
                 <Route exact path="/" >
+
                     <Login />
                 </Route>
 
@@ -31,6 +39,7 @@ export default function ApplicationViews(props) {
                 </Route>
 
                 <Route path="/register">
+                    {/* <Header isSPARoute={false} /> */}
                     <Register />
                 </Route>
                 {/* Authenticated Routes */}
@@ -62,10 +71,11 @@ export default function ApplicationViews(props) {
                 {/* Matching of PhotoId to UserId is used to confirm that the imageId belongs to that user 
                 to avoid incorrect images being displayed, This is not a secure practice just a quality standard  */}
 
-                {/* User-specific Photo including HxW resolution */}
-                <Route exact path="/image/:photoId/:height/:width/:userId" >
-                    {!SPAHeader}
-                    <SinglePhoto3rdParty />
+                {/* User-specific Photo including width by height resolution */}
+                <Route exact path="/image/:photoId/:width/:heigt/:userId" >
+                    {/* {!SPAHeader} */}
+                    <Header isSPARoute={false} />                    < SinglePhotoThirdParty />
+
                 </Route>
 
                 {/* Random Public Photo including HxW resolution, this will include logo placed on image ( create copy with logo on image upload) */}

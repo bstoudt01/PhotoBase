@@ -9,6 +9,7 @@ import {
   Accordion
 } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import { ImageProvider } from '../providers/ImageProvider';
 
 
 
@@ -19,7 +20,6 @@ const SPAHeader = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   const [refresh, setRefresh] = useState(false);
-
 
   return (
     <>
@@ -64,7 +64,8 @@ const SPAHeader = () => {
 
 }
 
-const Header = ({ isSPARoute }) => {
+const Header = ({ isSPARoute = true }) => {
+
   if (isSPARoute) {
     return (<SPAHeader />);
   }
@@ -72,4 +73,4 @@ const Header = ({ isSPARoute }) => {
 }
 
 
-export default Header;
+export default SPAHeader;
