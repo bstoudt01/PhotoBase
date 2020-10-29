@@ -4,39 +4,40 @@ import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { Card, Button, Col, Row, CardImg, Modal, Form, Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
-export default function SinglePhoto3rdParty() {
+export default function SinglePhoto() {
     const { activeUser } = useContext(UserProfileContext);
     const { getImageUrl, getSingleImage3rdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId, getUniquePublicPhoto, getImageId } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 
 
-    const { photoId, width, height, userId } = useParams();
-    const imageParams = { photoId, width, height, userId }
+    const { id, width, height, userId } = useParams();
+    const imageId = getImageId(id);
+    // useEffect(() => {
 
-    const imageId = getSingleImage3rdParty(imageParams);
-    useEffect(() => {
+    //     setPublicPhotoId(photoId);
+    //     setPublicPhotoWidth(width);
+    //     setPublicPhotoHeight(height);
+    //     setPublicPhotoUserId(userId);
 
-        // setPublicPhotoId(photoId);
-        // setPublicPhotoWidth(width);
-        // setPublicPhotoHeight(height);
-        // setPublicPhotoUserId(userId);
-
-        //  getSingleImage3rdParty(imageParams);
+    //     let imageParams = { photoId, width, height, userId }
 
 
-    }, []);
+    // }, []);
 
 
     return (
-        <Container>
-            {imageId === "" || imageId === null ?
-                <Image />
-                :
+        <>
+            <Container>
 
-                <Image src={imageId} alt="singleImage" fluid />
+                {imageId === "" || imageId === null || imageId === undefined ?
+                    <Image />
+                    :
 
-            }
-        </Container>
+                    <Image src={imageId} alt="singleImage" fluid />
+                }
+
+            </Container>
+        </>
 
     );
 }
