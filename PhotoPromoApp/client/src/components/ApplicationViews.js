@@ -10,15 +10,19 @@ import AddGallery from "./Gallery/AddGallery";
 import EditGallery from "./Gallery/EditGallery";
 import SinglePhoto from "./Photo/SinglePhoto";
 import SinglePhoto3rdParty from "./Photo/SinglePhoto3rdParty";
+import Header from "./Header";
+import { ImageProvider } from "../providers/ImageProvider";
 export default function ApplicationViews(props) {
     const { isLoggedIn, activeUser, userTypeId } = useContext(UserProfileContext);
     const [refresh, setRefresh] = useState(false);
 
+    //Set "false" to Not render navigation bar
+    const SPAHeader = <Header isSPARoute={true} />
     return (
         <main>
             <Switch>
                 {/* Register and Login Public Routes */}
-                <Route exact path="/">
+                <Route exact path="/" >
                     <Login />
                 </Route>
 
@@ -54,12 +58,13 @@ export default function ApplicationViews(props) {
                     {isLoggedIn ? <SinglePhoto /> : <Redirect to="/Login" />}
                 </Route>
 
-                {/* Public Image Routes */}
+                {/* Public Image Routes, none include the Navbar*/}
                 {/* Matching of PhotoId to UserId is used to confirm that the imageId belongs to that user 
                 to avoid incorrect images being displayed, This is not a secure practice just a quality standard  */}
 
                 {/* User-specific Photo including HxW resolution */}
-                <Route exact path="/image/:photoId/:height/:width/:userId">
+                <Route exact path="/image/:photoId/:height/:width/:userId" >
+                    {!SPAHeader}
                     <SinglePhoto3rdParty />
                 </Route>
 

@@ -10,12 +10,16 @@ import {
 } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
-export default function Header() {
+
+
+//export default function Header() {
+const SPAHeader = () => {
   const { isLoggedIn, logout, activeUser, userTypeId } = useContext(UserProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   const [refresh, setRefresh] = useState(false);
+
 
   return (
     <>
@@ -59,3 +63,13 @@ export default function Header() {
   );
 
 }
+
+const Header = ({ isSPARoute }) => {
+  if (isSPARoute) {
+    return (<SPAHeader />);
+  }
+  return (<div></div>);
+}
+
+
+export default Header;
