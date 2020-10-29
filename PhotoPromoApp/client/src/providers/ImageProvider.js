@@ -55,7 +55,7 @@ export const ImageProvider = (props) => {
         }
     };
     const getImageId = (imageId) => {
-        debugger
+
         if (imageId != undefined || imageId != null) {
             const getId = `${apiUrl}/${imageId}`
 
@@ -65,8 +65,8 @@ export const ImageProvider = (props) => {
     //if useparams doesnt work. remove it and try with strings from a searchh
     const decoder = new TextDecoder('utf-8')
 
-    const getSingleImage3rdParty = (imageParams) => {
-        debugger
+    const getSingleImageThirdParty = (imageParams) => {
+
         if (imageParams != undefined) {
 
             const get3rdParty = `${apiUrl}/unique/${imageParams.photoId}/${imageParams.width}/${imageParams.height}/${imageParams.userId}`
@@ -122,7 +122,7 @@ export const ImageProvider = (props) => {
 
 
     return (
-        <ImageContext.Provider value={{ getImageId, getImageName, addImage, deleteImage, getSingleImage3rdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId }}>
+        <ImageContext.Provider value={{ getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId }}>
             {props.children}
         </ImageContext.Provider>
     );

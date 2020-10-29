@@ -34,29 +34,65 @@ namespace PhotoPromoApp.Controllers
             {
                 using Image image = Image.Load(file.OpenReadStream());
                 {
-                    using (Image lowResCopy = image.Clone(x => x.Resize(image.Width / 5, image.Height / 5)))
+                    //2.8 MP 3:2
+                    //Low Resolution Image Encoder
+                    int maxWidthLowRes = 2048;
+                    int newHeight = 0;
+                    if (image.Width > maxWidthLowRes)
                     {
-                        // copy.Save(outStream);
-                        string FileName = "low_"+file.FileName;
-                        int originalWidth = lowResCopy.Width;
-                        int originalHeight = lowResCopy.Height;
-                        double metaVR = lowResCopy.Metadata.VerticalResolution;
-                        
-                        Console.WriteLine(FileName, "filename");
-                        Console.WriteLine(file.FileName, "file.filename");
-                        double metaHR = lowResCopy.Metadata.HorizontalResolution;
-                        //int maxWidth = 500;
-                        //if (originalWidth > maxWidth)
-                        //{
-                        //    int newHeight = maxWidth * originalHeight;
-                        //    newHeight /= originalWidth;
+                        var divisor = image.Width / maxWidthLowRes;
+                        //newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
 
-                        //    copy.Mutate(i => i.Resize(maxWidth, newHeight));
-                        //}
-                        
-                        lowResCopy.Save(savedImagePath + FileName);
+                        using (Image lowResCopy = image.Clone(x => x.Resize(maxWidthLowRes, newHeight)))
+                        {
+                            string FileName = "low_" + file.FileName;
+                            int originalWidth = lowResCopy.Width;
+                            int originalHeight = lowResCopy.Height;
+                            double metaVR = lowResCopy.Metadata.VerticalResolution;
+
+                            double metaHR = lowResCopy.Metadata.HorizontalResolution;
+
+                            lowResCopy.Save(savedImagePath + FileName);
+                        }
+
                     }
-                    using (Image highResCopy = image.Clone(x => x.Resize(image.Width / 2, image.Height / 2)))
+                    else
+                    {
+
+
+
+                        using (Image lowResCopy = image.Clone(x => x.Resize(image.Width, image.Height)))
+                        {
+                            string FileName = "low_" + file.FileName;
+                            int originalWidth = lowResCopy.Width;
+                            int originalHeight = lowResCopy.Height;
+                            double metaVR = lowResCopy.Metadata.VerticalResolution;
+
+                            double metaHR = lowResCopy.Metadata.HorizontalResolution;
+
+                            lowResCopy.Save(savedImagePath + FileName);
+                        }
+                    }
+
+                    //24 MP 3:2
+                    //High Resolution Image Encoder
+                    int maxWidthHighRes = 6016;
+                    if (image.Width > maxWidthHighRes)
+                    {
+                        var divisor = image.Width / maxWidthHighRes;
+                        newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+
+
+
+                    }
+                    else
+                    {
+                        maxWidthHighRes = image.Width;
+                        var divisor = image.Width / maxWidthHighRes;
+                        newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+
+                    }
+                    using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
                     {
                         // copy.Save(outStream);
                         string FileName = "high_" + file.FileName;
@@ -140,7 +176,8 @@ namespace PhotoPromoApp.Controllers
             return NoContent();
         }
 
-
+        //Creates image sized similar to user requests, to keep aspect ratio of the image the same
+        //Returns image with requested width but not necesarily height
         [HttpGet("unique/{photoId}/{width}/{height}/{userId}")]
         public IActionResult GetPublic(string photoId, string width, string height, string userId)
         {
@@ -166,24 +203,28 @@ namespace PhotoPromoApp.Controllers
                     //Create Image instance from openRead fileStream path
                     using Image image = Image.Load(imageFileStream);
                     {
-                        //declare the image to be a custom size
-                        string FileName = "custom_" + imageName;
                         int customWidth = Convert.ToInt32(width);
-                        var divisor = image.Width / customWidth;
+                        if (image.Width >= customWidth)
+                        {
+
+                            //declare the image to be a custom size
+                            string FileName = "custom_" + imageName;
+                            //handle keeping aspect ratio by declaring a newHeight that matches the custom width
+                            var divisor = image.Width / customWidth;
                             var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
 
-                        //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
+                            //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
                             //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
-                        image.Mutate(x => x.Resize(customWidth, newHeight));
+                            image.Mutate(x => x.Resize(customWidth, newHeight));
 
-                        //Save the mutated file to the assigned path using the assigned file name
-                        image.Save(savedImagePath + FileName);
+                            //Save the mutated file to the assigned path using the assigned file name
+                            image.Save(savedImagePath + FileName);
 
-                        //Load image and return to user
-                        var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
-                        var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                        return File(NewimageFileStream, "image/jpeg");
-
+                            //Load image and return to user
+                            var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
+                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                            return File(NewimageFileStream, "image/jpeg");
+                        }
                     }
                 }
             }

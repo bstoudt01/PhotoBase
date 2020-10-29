@@ -19,6 +19,7 @@ function App() {
           <GalleryProvider>
             <PhotoProvider>
               <Header />
+
               {/* <Row>
               <Col xs={2} id="sidebar-wrapper">
                 <Sidebar />

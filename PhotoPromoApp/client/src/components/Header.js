@@ -64,13 +64,13 @@ const SPAHeader = () => {
 
 }
 
-const Header = ({ isSPARoute = true }) => {
+const Header = ({ isNavRoute }) => {
 
-  if (isSPARoute) {
+  if (isNavRoute) {
     return (<SPAHeader />);
   }
   return (<div></div>);
 }
 
 
-export default SPAHeader;
+export default Header;

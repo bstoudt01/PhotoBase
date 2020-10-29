@@ -6,14 +6,14 @@ import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 export default function SinglePhotoThirdParty() {
     const { activeUser } = useContext(UserProfileContext);
-    const { getImageUrl, getSingleImage3rdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId, getUniquePublicPhoto, getImageId } = useContext(ImageContext);
+    const { getImageUrl, getSingleImageThirdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId, getUniquePublicPhoto, getImageId } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 
 
     const { photoId, width, height, userId } = useParams();
     const imageParams = { photoId, width, height, userId }
 
-    const imageId = getSingleImage3rdParty(imageParams);
+    const imageId = getSingleImageThirdParty(imageParams);
     useEffect(() => {
 
         // setPublicPhotoId(photoId);
