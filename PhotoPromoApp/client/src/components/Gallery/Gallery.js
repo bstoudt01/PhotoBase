@@ -6,9 +6,8 @@ import { Card, Button, Col, Row, Form } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
-    const { updateGallery, deleteGallery, getAllGalleriesByUser } = useContext(GalleryContext);
-    const { getAllPhotosByGallery, photosByGallery } = useContext(PhotoContext);
-    const [isOpen, setIsOpen] = React.useState(false);
+    const { updateGallery, deleteGallery, getAllGalleriesByUser, galleryUpdated } = useContext(GalleryContext);
+    const { photosByGallery } = useContext(PhotoContext);
     const [updatedName, setUpdatedName] = useState();
 
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
@@ -25,7 +24,7 @@ export default function Gallery({ gallery }) {
     const hideModal = () => {
         setUpdateIsOpen(false);
         setDeleteIsOpen(false);
-        getAllGalleriesByUser(activeUser.id);
+        // getAllGalleriesByUser(activeUser.id);
     };
 
     const handleUpdateGallery = (e) => {
@@ -39,21 +38,18 @@ export default function Gallery({ gallery }) {
 
         updateGallery(newGallery)
         getAllGalleriesByUser(activeUser.id);
-
-
     };
 
     const handleDeleteGallery = (e) => {
         e.preventDefault();
-        //return id from category context
-        //return updated name from state of
-        //updateCategory({ id: category.id, name: categoryText.name })
-        deleteGallery(gallery);
-    }
 
+        deleteGallery(gallery);
+        getAllGalleriesByUser(activeUser.id);
+
+    }
     // useEffect(() => {
-    //     getAllPhotosByGallery(gallery.id)
-    // }, []);
+    //     getAllGalleriesByUser(activeUser.id);
+    // }, [galleryUpdated]);
 
     return (
         <Col>
@@ -62,6 +58,7 @@ export default function Gallery({ gallery }) {
                     <Col sm="9">
                         <Button variant="secondary" href={`/gallery/${gallery.id}`}><strong>{gallery.name}</strong></Button>
                     </Col>
+
                     {/* UPDATE GALLERY MODAL */}
                     {gallery.id != 1 ?
                         <Col>
@@ -71,7 +68,6 @@ export default function Gallery({ gallery }) {
                                 <Modal.Header>
                                     <Modal.Title>{gallery.name}</Modal.Title>
                                 </Modal.Header>
-                                {/* <Modal.Body>asdfasdf</Modal.Body> */}
                                 <Form onSubmit={handleUpdateGallery}>
 
 
@@ -93,7 +89,6 @@ export default function Gallery({ gallery }) {
                         : null}
 
                     {/* DELETE GALLERY MODAL */}
-
                     {photosByGallery.length != 0 ? null :
                         <Col>
                             <Button id="showModalDeleteButton" varient="primary" onClick={showDeleteModal}>Delete</Button>
@@ -103,8 +98,6 @@ export default function Gallery({ gallery }) {
                                 </Modal.Header>
                                 <Modal.Body>asdfasdf</Modal.Body>
                                 <Form onSubmit={handleDeleteGallery}>
-
-
                                     <Col sm="9">
                                         <strong>{gallery.name}</strong>
                                     </Col>
@@ -119,6 +112,7 @@ export default function Gallery({ gallery }) {
                             </Modal>
                         </Col>
                     }
+
                 </Row>
             </Card >
         </Col >

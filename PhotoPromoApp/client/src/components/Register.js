@@ -69,13 +69,6 @@ export default function Register() {
             <Form.Label htmlFor="confirmPassword">Confirm Password</Form.Label>
             <Form.Control id="confirmPassword" type="password" onChange={e => setConfirmPassword(e.target.value)} />
           </Form.Group>
-          {/* <Form.File id="logoLocation" custom>
-            <Form.File.Input isValid onChange={e => setLogoLogin(e.target.value)}/>
-            <Form.File.Label data-browse="Button text">
-              Custom file input
-            </Form.File.Label>
-            <Form.Control.Feedback type="valid">You did it!</Form.Control.Feedback>
-          </Form.File> */}
           <Form.Group>
             <Button type="submit">Register</Button>
           </Form.Group>

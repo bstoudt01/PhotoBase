@@ -4,30 +4,15 @@ import { useHistory } from "react-router-dom";
 
 import Header from "./Header";
 import ApplicationViews from "./ApplicationViews";
-export const WindowViewContex = createContext();
+export const WindowViewContext = createContext();
 
 export function WindowViewHandler(props) {
 
-
     const [showNavbar, setShowNavbar] = useState(true);
 
-
-    const handleNavBar = ({ showNavbar }) => {
-
-        if (showNavbar) {
-            return (
-                <>
-                    <Header />
-                    <ApplicationViews />
-                </>);
-        }
-        return (<ApplicationViews />);
-    }
-
-
     return (
-        <WindowViewContex.Provider value={{ setShowNavbar, showNavbar, handleNavBar }}>
+        <WindowViewContext.Provider value={{ setShowNavbar, showNavbar }}>
             {props.children}
-        </WindowViewContex.Provider>
+        </WindowViewContext.Provider>
     )
 }

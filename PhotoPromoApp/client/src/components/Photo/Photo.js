@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
-import { Card, Button, Col, Row, CardImg, Modal, Form, Image } from "react-bootstrap";
+import { Card, Button, Col, Row, Modal, Form, Image } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
@@ -15,7 +15,6 @@ export default function Photo({ photo }) {
     const imageName = getImageName(photo.photoLocation);
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
-    const [userGalleries, setUserGalleries] = useState();
     const [checked, setChecked] = useState(photo.isPublic);
     const handleClick = () => {
         setChecked(!checked)
@@ -81,7 +80,6 @@ export default function Photo({ photo }) {
     }
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
-        setUserGalleries(galleries)
     }, []);
 
 

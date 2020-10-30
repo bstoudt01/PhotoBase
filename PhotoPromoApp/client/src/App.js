@@ -2,13 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { UserProfileProvider } from "./providers/UserProfileProvider";
 import { GalleryProvider } from "./providers/GalleryProvider";
-import ApplicationViews from "./components/ApplicationViews";
-import Header from './components/Header';
 import { PhotoProvider } from './providers/PhotoProvider';
-import Sidebar from "./components/Sidebar";
-import { Row, Col } from 'react-bootstrap';
 import { ImageProvider } from './providers/ImageProvider';
 import { WindowViewHandler } from './components/WindowViewHandler';
+import { TopLevelView } from "./components/TopLevelView";
 function App() {
 
   return (
@@ -19,8 +16,9 @@ function App() {
           <GalleryProvider>
             <PhotoProvider>
               <WindowViewHandler >
+                <TopLevelView />
                 {/* <Header /> */}
-                <ApplicationViews />
+                {/* <ApplicationViews /> */}
               </WindowViewHandler>
             </PhotoProvider>
           </GalleryProvider>

@@ -7,16 +7,13 @@ import { UserProfileContext } from "./UserProfileProvider";
 export const GalleryContext = createContext();
 
 export function GalleryProvider(props) {
-    const apiUrl = "/api/gallery";
 
+    const apiUrl = "/api/gallery";
     const history = useHistory();
 
     const [galleries, setGalleries] = useState([]);
     const [gallery, setGallery] = useState([]);
-
-
-
-
+    const [galleryUpdated, setGalleryUpdated] = useState(false);
     const { getToken } = useContext(UserProfileContext);
 
     const getAllGalleriesByUser = (userProfileId) =>
@@ -27,7 +24,8 @@ export function GalleryProvider(props) {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setGalleries));
+                .then(setGalleries)
+                .then(setGalleryUpdated(!galleryUpdated)));
 
     const getSingleGallery = (id) =>
         getToken().then((token) =>
@@ -41,7 +39,7 @@ export function GalleryProvider(props) {
                     return resp.json().then(setGallery);
                 }
                 history.push("/gallery")
-                //throw new Error("Unauthorized");
+                throw new Error("Unauthorized");
             }));
 
     const addGallery = (gallery) =>
@@ -72,6 +70,8 @@ export function GalleryProvider(props) {
 
             }).then(resp => {
                 if (resp.ok) {
+                    // setGalleryUpdated(!galleryUpdated);
+
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
@@ -89,6 +89,7 @@ export function GalleryProvider(props) {
                 body: JSON.stringify(deletedGallery)
             }).then(resp => {
                 if (resp.ok) {
+                    // setGalleryUpdated(!galleryUpdated)
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
