@@ -10,19 +10,9 @@ export default function SinglePhoto() {
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 
 
-    const { id, width, height, userId } = useParams();
+    const { id } = useParams();
     const imageId = getImageId(id);
-    // useEffect(() => {
 
-    //     setPublicPhotoId(photoId);
-    //     setPublicPhotoWidth(width);
-    //     setPublicPhotoHeight(height);
-    //     setPublicPhotoUserId(userId);
-
-    //     let imageParams = { photoId, width, height, userId }
-
-
-    // }, []);
 
 
     return (

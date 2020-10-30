@@ -24,7 +24,7 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                                SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                                      g.Name AS GalleryName,
+                                      g.Name AS GalleryName, g.Id AS currentGalleryId,
                                       up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                                FROM Photo p
                                     LEFT JOIN Gallery g ON p.GalleryId = g.Id
@@ -52,6 +52,7 @@ namespace PhotoPromo.Repositories
 
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile
@@ -88,7 +89,7 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                              g.Name AS GalleryName,
+                              g.Name AS GalleryName, g.Id AS currentGalleryId,
                               up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                         FROM Photo p
                             LEFT JOIN Gallery g ON p.GalleryId = g.Id
@@ -115,6 +116,7 @@ namespace PhotoPromo.Repositories
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile
@@ -151,10 +153,10 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                              g.Name AS GalleryName,
+                              g.Name AS GalleryName, g.Id AS currentGalleryId,
                               up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                         FROM Photo p
-                            LEFT JOIN Gallery g ON p.GalleryId = g.Id
+                            LEFT JOIN Gallery g ON p.GalleryId = currentGalleryId
                             LEFT JOIN UserProfile up on p.UserProfileId = up.Id
                         WHERE p.Id = @id";
 
@@ -177,6 +179,7 @@ namespace PhotoPromo.Repositories
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile

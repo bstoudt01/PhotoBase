@@ -1,36 +1,69 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
 import {
-
   Navbar,
-
   Nav,
-
-  Accordion
+  Dropdown,
+  DropdownButton,
+  SplitButton,
+  ButtonGroup,
+  Button,
+  Col
 } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { ImageProvider } from '../providers/ImageProvider';
+import { GalleryContext } from "../providers/GalleryProvider"
 
 
 
 //export default function Header() {
 const SPAHeader = () => {
+  const { getAllGalleriesByUser, galleries, addGallery } = useContext(GalleryContext);
+
   const { isLoggedIn, logout, activeUser, userTypeId } = useContext(UserProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   const [refresh, setRefresh] = useState(false);
 
+
+  useEffect(() => {
+    if (activeUser != null) {
+      getAllGalleriesByUser(activeUser.id);
+    }
+  }, []);
+
+
   return (
     <>
       <div>
         <Navbar bg="light" expand="md" >
-          <Navbar.Brand tag={RRNavLink} to="/">Tabloid</Navbar.Brand>
+          <Col>
+            <Navbar.Brand tag={RRNavLink} href="/">PhotoBase</Navbar.Brand>
+
+            <p>The Place Where Photos Go To Live!</p>
+          </Col>
           <Navbar.Toggle onClick={toggle} />
-          <Accordion >
+          <Navbar.Collapse >
             <Nav className="mr-auto" navbar>
               { /* When isLoggedIn === true, we will render the Home link */}
+              {isLoggedIn &&
+                <>
+                  <Nav.Item>
+                    <Nav.Link href="/image/add">Add Image</Nav.Link>
+                  </Nav.Item>
+                  <Dropdown as={ButtonGroup}>
+                    <Button variant="success" href="/gallery">Galleries</Button>
 
+                    <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+                    <Dropdown.Menu>
+                      {galleries ? galleries.map(g =>
+                        <Dropdown.Item key={g.id} href={`/gallery/${g.id}`}>{g.name}</Dropdown.Item>
+                      ) : null}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              }
               {!isLoggedIn &&
                 <>
                   <Nav.Item>
@@ -41,22 +74,21 @@ const SPAHeader = () => {
                   </Nav.Item>
                 </>
               }
-              {
-                isLoggedIn &&
+            </Nav>
 
 
-                <>
+            {
+              isLoggedIn &&
+              <>
+                <Nav navbar>
 
-                  <Nav.Item>
-                    <Nav.Link href="/image/add">Add Image</Nav.Link>
-                  </Nav.Item>
                   <Nav.Item>
                     <Nav.Link onClick={logout}>Logout</Nav.Link>
                   </Nav.Item>
-                </>
-              }
-            </Nav>
-          </Accordion>
+                </Nav>
+              </>
+            }
+          </Navbar.Collapse>
         </Navbar>
       </div>
     </>

@@ -93,8 +93,6 @@ export const ImageProvider = (props) => {
             return (getId)
         }
     };
-    //if useparams doesnt work. remove it and try with strings from a searchh
-    const decoder = new TextDecoder('utf-8')
 
     const getSingleImageThirdParty = (imageParams) => {
 

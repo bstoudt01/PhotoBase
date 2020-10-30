@@ -10,6 +10,7 @@ import AddGallery from "./Gallery/AddGallery";
 import EditGallery from "./Gallery/EditGallery";
 import SinglePhoto from "./Photo/SinglePhoto";
 import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
+import Home from "./Home";
 import Header from "./Header";
 import { ImageProvider } from "../providers/ImageProvider";
 import { Navbar } from "react-bootstrap";
@@ -38,9 +39,11 @@ export default function ApplicationViews(props) {
 
                     <Switch>
                         {/* Register and Login Public Routes */}
-                        <Route exact path="/" >
-
-                            <Login />
+                        <Route exact path="/">
+                            {isLoggedIn ? <GalleryList /> : <Redirect to="/Home" />}
+                        </Route>
+                        <Route exact path="/home">
+                            <Home />
                         </Route>
 
                         <Route path="/login">

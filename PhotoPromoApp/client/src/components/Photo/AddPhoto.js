@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
-import { Card, Button, Col, Row, Image, Form } from "react-bootstrap";
+import { Card, Button, Col, Row, Image, Form, CardImg } from "react-bootstrap";
 import GalleryOption from "./AddPhotoGalleryOption";
 import { ImageContext } from "../../providers/ImageProvider";
+import "../../App.css"
 export default function AddPhoto() {
     const { activeUser } = useContext(UserProfileContext);
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
@@ -13,6 +14,7 @@ export default function AddPhoto() {
     const [imageName, setImageName] = useState();
     const [imageGalleryId, setImageGalleryId] = useState();
     const [imageAttribute, setImageAttribute] = useState();
+    const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
     const [checked, setChecked] = useState(false);
     const handleClick = () => setChecked(!checked)
 
@@ -23,6 +25,11 @@ export default function AddPhoto() {
         debugger
         console.log(event.target.files[0])
         var files = event.target.files
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreviewUrl(reader.result)
+        }
+        reader.readAsDataURL(files[0])
         //if (this.maxSelectFile(event) && this.checkMimeType(event)) {
         // if return true allow to setState
         setImageFile(event.target.files[0])
@@ -98,12 +105,18 @@ export default function AddPhoto() {
                                 {/* <Form.File id="imageFile" label="Add Image" onChange={(e) => setImageFile(e.target.files[0])} /> */}
 
                                 <Form.File id="imageFile" label="Add Image" onChange={onChangeHandler} />
+                                {imagePreviewUrl ? (
+                                    <Image src={imagePreviewUrl} className="imgPreview" />
+                                ) : (
+                                        <div className="previewText">Please select an Image for Preview</div>
+                                    )}
 
                             </Form.Group>
                             <Form.Group controlId="imageName">
                                 <Form.Label>Name: </Form.Label>
                                 <Form.Control type="text" placeholder="Photo Name" onChange={e => setImageName(e.target.value)} />
                             </Form.Group>
+
                             <Form.Group controlId="imageName">
                                 <Form.Label>Attribute: </Form.Label>
                                 <Form.Control type="text" placeholder="Taken by...." onChange={e => setImageAttribute(e.target.value)} />

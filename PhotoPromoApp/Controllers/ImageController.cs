@@ -40,7 +40,7 @@ namespace PhotoPromoApp.Controllers
                     int newHeight = 0;
                     if (image.Width > maxWidthLowRes)
                     {
-                    //saves image with width of 2048, height is determined by imagesharp to keep aspect ratio (set height to 0)
+                    //saves image with width of 1440, height is determined by imagesharp to keep aspect ratio (set height to 0)
 
                         using (Image lowResCopy = image.Clone(x => x.Resize(maxWidthLowRes, newHeight)))
                         {
