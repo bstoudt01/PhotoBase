@@ -14,7 +14,37 @@ export const ImageProvider = (props) => {
     const [publicPhotoHeight, setPublicPhotoHeight] = useState();
 
 
-    const addImage = (file) =>
+
+    // var productsToReturn = [];
+    // const addImagemultple = (file).map(singleFile => {
+    //     //create a promise for each API call
+    //     return new Promise((resolve, reject) => {
+    //         fetch(apiUrl, {
+    //             method: "POST",
+    //             body: singleFile,
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             },
+    //         }).then((err, res, body) => {
+    //             if (err) { reject(err) }
+    //             //call the resolve function which is passed to the executor                             //function passed to the promise
+    //             resolve(body)
+    //         })
+    //     })
+    // })
+    // Promise.all(requests).then((body) => {
+    //     //this gets called when all the promises have resolved/rejected.
+    //     body.forEach(res => {
+    //         if (res)
+    //             productsToReturn.push(JSON.parse(res).productInfo)
+    //     })
+    // }).catch(err => console.log(err))
+
+
+
+
+
+    const addImage = (file) => {
         getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
@@ -28,7 +58,8 @@ export const ImageProvider = (props) => {
                     return;
                 }
                 throw new Error("Image Upload Failed.")
-            }));
+            }))
+    };
 
 
     const deleteImage = (deletedImage) =>

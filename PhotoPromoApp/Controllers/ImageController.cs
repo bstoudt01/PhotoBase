@@ -34,44 +34,32 @@ namespace PhotoPromoApp.Controllers
             {
                 using Image image = Image.Load(file.OpenReadStream());
                 {
-                    //2.8 MP 3:2
+                    //1.4 MP 3:2
                     //Low Resolution Image Encoder
-                    int maxWidthLowRes = 2048;
+                    int maxWidthLowRes = 1440;
                     int newHeight = 0;
                     if (image.Width > maxWidthLowRes)
                     {
-                        var divisor = image.Width / maxWidthLowRes;
-                        //newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                    //saves image with width of 2048, height is determined by imagesharp to keep aspect ratio (set height to 0)
 
                         using (Image lowResCopy = image.Clone(x => x.Resize(maxWidthLowRes, newHeight)))
                         {
                             string FileName = "low_" + file.FileName;
-                            int originalWidth = lowResCopy.Width;
-                            int originalHeight = lowResCopy.Height;
-                            double metaVR = lowResCopy.Metadata.VerticalResolution;
-
-                            double metaHR = lowResCopy.Metadata.HorizontalResolution;
-
                             lowResCopy.Save(savedImagePath + FileName);
                         }
 
                     }
                     else
                     {
+                        //saves image with actual width and height
+                        string FileName = "low_" + file.FileName;
+                        image.Save(savedImagePath + FileName);
 
-
-
-                        using (Image lowResCopy = image.Clone(x => x.Resize(image.Width, image.Height)))
-                        {
-                            string FileName = "low_" + file.FileName;
-                            int originalWidth = lowResCopy.Width;
-                            int originalHeight = lowResCopy.Height;
-                            double metaVR = lowResCopy.Metadata.VerticalResolution;
-
-                            double metaHR = lowResCopy.Metadata.HorizontalResolution;
-
-                            lowResCopy.Save(savedImagePath + FileName);
-                        }
+                        //using (Image lowResCopy = image.Clone(x => x.Resize(image.Width, image.Height)))
+                        //{
+                        //    string FileName = "low_" + file.FileName;
+                        //    lowResCopy.Save(savedImagePath + FileName);
+                        //}
                     }
 
                     //24 MP 3:2
@@ -79,40 +67,18 @@ namespace PhotoPromoApp.Controllers
                     int maxWidthHighRes = 6016;
                     if (image.Width > maxWidthHighRes)
                     {
-                        var divisor = image.Width / maxWidthHighRes;
-                        newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
-
-
-
+                        using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
+                        {
+                            string FileName = "high_" + file.FileName;
+                            highResCopy.Save(savedImagePath + FileName);
+                        }
                     }
                     else
                     {
-                        maxWidthHighRes = image.Width;
-                        var divisor = image.Width / maxWidthHighRes;
-                        newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
-
-                    }
-                    using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
-                    {
-                        // copy.Save(outStream);
                         string FileName = "high_" + file.FileName;
-                        int originalWidth = highResCopy.Width;
-                        int originalHeight = highResCopy.Height;
-
-
-                        //int maxWidth = 500;
-                        //if (originalWidth > maxWidth)
-                        //{
-                        //    int newHeight = maxWidth * originalHeight;
-                        //    newHeight /= originalWidth;
-
-                        //    copy.Mutate(i => i.Resize(maxWidth, newHeight));
-                        //}
-                        //copy.Save(savedImagePath + fileName);
-                        highResCopy.Save(savedImagePath + FileName);
+                        image.Save(savedImagePath + FileName);
+                       
                     }
-
-
                 }
             }
             catch
@@ -130,6 +96,8 @@ namespace PhotoPromoApp.Controllers
         {
             string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_"+fileName);
             string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_"+fileName);
+            string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_" + fileName);
+
 
             if ((System.IO.File.Exists(_highResImageToBeDeleted)))
             {
@@ -138,6 +106,10 @@ namespace PhotoPromoApp.Controllers
             if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
             {
                 System.IO.File.Delete(_lowResImageToBeDeleted);
+            }
+            if ((System.IO.File.Exists(_customImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_customImageToBeDeleted);
             }
             return Ok();
         }
@@ -232,7 +204,12 @@ namespace PhotoPromoApp.Controllers
         }
 
 
-
+        
+        //using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
+        //{
+        //    string FileName = "high_" + file.FileName;
+        //    highResCopy.Save(savedImagePath + FileName);
+        //}
 
         //working by photoId, other paramatesr are note used yet
         //[HttpGet("unique/{photoId}/{width}/{height}/{userId}")]

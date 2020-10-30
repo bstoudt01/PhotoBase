@@ -13,6 +13,7 @@ import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
 import Header from "./Header";
 import { ImageProvider } from "../providers/ImageProvider";
 import { Navbar } from "react-bootstrap";
+import AddPhotoMultiple from "./Photo/AddPhotoMultiple";
 
 
 export default function ApplicationViews(props) {
@@ -68,6 +69,10 @@ export default function ApplicationViews(props) {
 
                         <Route exact path="/image/add">
                             {isLoggedIn ? <AddPhoto /> : <Redirect to="/Login" />}
+                        </Route>
+
+                        <Route exact path="/image/addmany">
+                            {isLoggedIn ? <AddPhotoMultiple /> : <Redirect to="/Login" />}
                         </Route>
 
                         <Route exact path="/image/:id">

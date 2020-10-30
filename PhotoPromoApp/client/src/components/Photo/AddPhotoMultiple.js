@@ -5,7 +5,7 @@ import { PhotoContext } from "../../providers/PhotoProvider";
 import { Card, Button, Col, Row, Image, Form } from "react-bootstrap";
 import GalleryOption from "./AddPhotoGalleryOption";
 import { ImageContext } from "../../providers/ImageProvider";
-export default function AddPhoto() {
+export default function AddPhotoMultiple() {
     const { activeUser } = useContext(UserProfileContext);
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
     const { addPhoto } = useContext(PhotoContext);
@@ -25,7 +25,7 @@ export default function AddPhoto() {
         var files = event.target.files
         //if (this.maxSelectFile(event) && this.checkMimeType(event)) {
         // if return true allow to setState
-        setImageFile(event.target.files[0])
+        setImageFile(event.target.files)
         //}
     }
 
@@ -57,14 +57,18 @@ export default function AddPhoto() {
     const handleAddPhoto = (e) => {
         e.preventDefault();
         debugger
-        //const file = document.querySelector('input[type="file"]').files[0];
+        const file = document.querySelector('input[type="file"]').files[0];
 
-        const fileType = imageFile.name.split('.').pop();
+        const fileType = file.name.split('.').pop();
         const newImageName = `${new Date().getTime()}.${fileType}`
         console.log(imageFile, "StateimageFile")
         const formData = new FormData();
-        // formData.append('file', file, newImageName);
-        formData.append('file', imageFile, newImageName);
+        for (var x = 0; x < imageFile.length; x++) {
+            formData.append('file', imageFile[x])
+        }
+        addImage(formData);
+
+        //formData.append('file', imageFile, newImageName);
 
 
         const newPhoto = {
@@ -77,7 +81,7 @@ export default function AddPhoto() {
             UserProfileId: activeUser.id
         }
         debugger
-        addImage(formData);
+        // addImage(formData);
 
         addPhoto(newPhoto);
 
@@ -97,7 +101,7 @@ export default function AddPhoto() {
                             <Form.Group>
                                 {/* <Form.File id="imageFile" label="Add Image" onChange={(e) => setImageFile(e.target.files[0])} /> */}
 
-                                <Form.File id="imageFile" label="Add Image" onChange={onChangeHandler} />
+                                <Form.File id="imageFile" label="Add Image" multiple onChange={onChangeHandler} />
 
                             </Form.Group>
                             <Form.Group controlId="imageName">
