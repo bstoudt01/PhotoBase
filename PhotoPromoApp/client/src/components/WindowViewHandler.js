@@ -3,7 +3,7 @@ import React, { useState, createContext, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import Header from "./Header";
-
+import ApplicationViews from "./ApplicationViews";
 export const WindowViewContex = createContext();
 
 export function WindowViewHandler(props) {
@@ -15,9 +15,13 @@ export function WindowViewHandler(props) {
     const handleNavBar = ({ showNavbar }) => {
 
         if (showNavbar) {
-            return (<Header />);
+            return (
+                <>
+                    <Header />
+                    <ApplicationViews />
+                </>);
         }
-        return (<div></div>);
+        return (<ApplicationViews />);
     }
 
 

@@ -15,16 +15,16 @@ function App() {
 
     <Router>
       <UserProfileProvider>
-        <WindowViewHandler>
-          <ImageProvider>
-            <GalleryProvider>
-              <PhotoProvider>
+        <ImageProvider>
+          <GalleryProvider>
+            <PhotoProvider>
+              <WindowViewHandler >
                 {/* <Header /> */}
                 <ApplicationViews />
-              </PhotoProvider>
-            </GalleryProvider>
-          </ImageProvider>
-        </WindowViewHandler>
+              </WindowViewHandler>
+            </PhotoProvider>
+          </GalleryProvider>
+        </ImageProvider>
       </UserProfileProvider>
     </Router>
 

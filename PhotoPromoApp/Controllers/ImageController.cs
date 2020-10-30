@@ -208,7 +208,7 @@ namespace PhotoPromoApp.Controllers
         //Get Random Image this is marked as "IsPublic" by photographer in custom size
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
         [HttpGet("random/{width}/{height}")]
-        public IActionResult GetRandomCustomImageByPublic( string width, string height, string userId)
+        public IActionResult GetRandomCustomImageByPublic( string width, string height)
         { 
             Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
 
