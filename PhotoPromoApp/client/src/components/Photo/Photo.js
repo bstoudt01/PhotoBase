@@ -4,7 +4,7 @@ import { Card, Button, Col, Row, CardImg, Modal, Form, Image } from "react-boots
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
-import GalleryOption from "./AddPhotoGalleryOption";
+import AddPhotoGalleryOption from "./AddPhotoGalleryOption";
 export default function Photo({ photo }) {
 
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
@@ -15,6 +15,7 @@ export default function Photo({ photo }) {
     const imageName = getImageName(photo.photoLocation);
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+    const [userGalleries, setUserGalleries] = useState();
     const [checked, setChecked] = useState(photo.isPublic);
     const handleClick = () => {
         setChecked(!checked)
@@ -80,7 +81,7 @@ export default function Photo({ photo }) {
     }
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
-
+        setUserGalleries(galleries)
     }, []);
 
 
@@ -127,17 +128,21 @@ export default function Photo({ photo }) {
                                                 <Form.Check.Label>{`Make this Public?`}</Form.Check.Label>
                                                 <Form.Control.Feedback>Thanks for Sharing</Form.Control.Feedback>
                                             </Form.Check>
-                                            <Form.Group controlId="galleryId">
-                                                <Form.Label>Gallery Name</Form.Label>
-                                                <Form.Control as="select" onChange={handleFieldChange}>
-                                                    <option id={parseInt(photo.gallery.id)} defaultValue={photo.gallery.name} >{photo.gallery.name}</option>
-                                                    {
-                                                        galleries.map(g => {
-                                                            <GalleryOption key={g.id} gallery={g} />
-                                                        })
-                                                    }
-                                                </Form.Control>
-                                            </Form.Group>
+
+                                            {galleries != undefined ?
+                                                <Form.Group controlId="galleryId">
+                                                    <Form.Label>Gallery Name</Form.Label>
+                                                    <Form.Control as="select" onChange={handleIntFieldChange}>
+                                                        <option id={photo.gallery.id} value={photo.gallery.id} >{photo.gallery.name}</option>
+                                                        {
+                                                            galleries.map(g =>
+                                                                <AddPhotoGalleryOption key={g.id} id={g.id} gallery={g} />
+
+                                                            )
+                                                        }
+                                                    </Form.Control>
+                                                </Form.Group>
+                                                : null}
                                             <Form.Group>
                                                 <Button type="submit" onClick={hideModal}>Submit</Button>
                                             </Form.Group>
@@ -155,9 +160,9 @@ export default function Photo({ photo }) {
                                         <Modal.Header>
                                             <Modal.Title>{photo.name}</Modal.Title>
                                         </Modal.Header>
-                                        <Form>
+                                        <Form onSubmit={handleDelete}>
                                             <Form.Group controlId="photoName">
-                                                <Button onClick={handleDelete} >Confirm Delete</Button>
+                                                <Button type="submit" onClick={hideModal} >Confirm Delete</Button>
                                             </Form.Group>
                                         </Form>
                                         <Modal.Footer>

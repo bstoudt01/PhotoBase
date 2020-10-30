@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,13 @@ namespace PhotoPromo.Controllers
     {
 
         private readonly IPhotoRepository _photoRepository;
-        public PhotoController(IPhotoRepository photoRepository)
+        private readonly IUserProfileRepository _userProfileRepository;
+
+        public PhotoController(IPhotoRepository photoRepository, IUserProfileRepository userProfileRepository)
         {
             _photoRepository = photoRepository;
+            _userProfileRepository = userProfileRepository;
+
         }
 
 
@@ -25,7 +30,13 @@ namespace PhotoPromo.Controllers
         [HttpGet("UserProfile/{UserProfileId}")]
         public IActionResult GetAllByUser(int userProfileId)
         {
-            return Ok(_photoRepository.GetAllPhotosByUserProfileId(userProfileId));
+            var currentUserProfile = GetCurrentUserProfile();
+            var allPhotosByUserId = _photoRepository.GetAllPhotosByUserProfileId(userProfileId);
+            if (currentUserProfile.Id != userProfileId)
+            {
+                return Unauthorized();
+            }
+            return Ok(allPhotosByUserId);
         }
 
         //Get All Photo by GalleryId
@@ -33,7 +44,17 @@ namespace PhotoPromo.Controllers
         [HttpGet("Gallery/{GalleryId}")]
         public IActionResult GetAllByGallery(int galleryId)
         {
-            return Ok(_photoRepository.GetPhotosByGalleryId(galleryId));
+            var currentUserProfile = GetCurrentUserProfile();
+            var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
+            if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
+            {
+                return Unauthorized();
+            }
+            if (allPhotosByGallery == null)
+            {
+                return NoContent();
+            }
+            return Ok(allPhotosByGallery);
         }
 
         //Get Single Photo by Id
@@ -41,7 +62,20 @@ namespace PhotoPromo.Controllers
         [HttpGet("{Id}")]
         public IActionResult GetSingleById(int id)
         {
-            return Ok(_photoRepository.GetSinglePhotobyId(id));
+            var currentUserProfile = GetCurrentUserProfile();
+            var singlePhoto = _photoRepository.GetSinglePhotobyId(id);
+
+            if (currentUserProfile.Id != singlePhoto.UserProfileId)
+            {
+                return Unauthorized();
+            }
+            if (id == singlePhoto.Id)
+            {
+
+                return NotFound();
+
+            }
+            return Ok(singlePhoto);
         }
 
         //Post Photo
@@ -49,6 +83,18 @@ namespace PhotoPromo.Controllers
         [HttpPost]
         public IActionResult Post(Photo photo)
         {
+            var currentUserProfile = GetCurrentUserProfile();
+
+            if (currentUserProfile.Id != photo.UserProfileId)
+            {
+                return Unauthorized();
+            }
+            if (photo == null)
+            {
+
+                return BadRequest();
+
+            }
             photo.ResolutionLevel = 300;
             
             _photoRepository.Add(photo);
@@ -58,36 +104,58 @@ namespace PhotoPromo.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Photo photo)
         {
-            //var currentUserProfile = GetCurrentUserProfile();
+            var currentUserProfile = GetCurrentUserProfile();
 
-            //if (currentUserProfile.UserType.Name != "Admin")
-            //{
-            //    return Unauthorized();
-            //}
-            //if (category == null)
-            //{
+            if (currentUserProfile.Id != photo.UserProfileId)
+            {
+                return Unauthorized();
+            }
+            if (photo == null)
+            {
 
-            //    return NotFound();
+                return BadRequest();
 
-            //}
-            //if (id != category.Id)
-            //{
-            //    return BadRequest();
-            //}
+            }
+            if (id != photo.Id)
+            {
+                return BadRequest();
+            }
             _photoRepository.Update(photo);
             return Ok(photo);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, Photo photo)
         {
+            var currentUserProfile = GetCurrentUserProfile();
+
+
+            if (currentUserProfile.Id != photo.UserProfileId)
+            {
+                return Unauthorized();
+            }
+            if (photo == null)
+            {
+
+                return BadRequest();
+
+            }
+            if (id != photo.Id)
+            {
+                return BadRequest();
+            }
+
             _photoRepository.Delete(id);
 
             return Ok(id);
         }
 
-
-
-
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
         }
+
+
+    }
 }

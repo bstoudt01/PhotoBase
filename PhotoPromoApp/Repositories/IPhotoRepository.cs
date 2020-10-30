@@ -10,7 +10,9 @@ namespace PhotoPromo.Repositories
         List<Photo> GetPhotosByGalleryId(int galleryId);
         
         Photo GetSinglePhotobyId(int id);
-        
+        Photo GetRandomSinglePhoto();
+
+
         void Add(Photo photo);
         
         void Update(Photo photo);

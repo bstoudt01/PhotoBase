@@ -150,8 +150,8 @@ namespace PhotoPromoApp.Controllers
 
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
         //Returns image with requested width but not necesarily height
-        [HttpGet("unique/{photoId}/{width}/{height}/{userId}")]
-        public IActionResult GetPublic(string photoId, string width, string height, string userId)
+        [HttpGet("custom/{photoId}/{width}/{height}/{userId}")]
+        public IActionResult GetCustomImage(string photoId, string width, string height, string userId)
         {
 
             if (photoId != null)
@@ -204,7 +204,66 @@ namespace PhotoPromoApp.Controllers
         }
 
 
-        
+
+        //Get Random Image this is marked as "IsPublic" by photographer in custom size
+        //Creates image sized similar to user requests, to keep aspect ratio of the image the same
+        [HttpGet("random/{width}/{height}")]
+        public IActionResult GetRandomCustomImageByPublic( string width, string height, string userId)
+        { 
+            Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
+
+
+            if (randomPublicPhoto != null)
+            {
+                var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
+                //Locate File by Name assoicated with Photo.Id
+                //Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
+                //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
+
+                //Locate File by locating the index of last directory call
+                int index1 = randomPublicPhoto.PhotoLocation.LastIndexOf('\\');
+                if (index1 != -1)
+                {
+                    //assign varialbe the file name pulled from  the file location 
+                    string imageName = randomPublicPhoto.PhotoLocation.Substring(index1 + 1);
+                    // use the "high_" quality encoded image
+                    var highResImage = imageName.Insert(0, "high_");
+                    var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
+                    var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
+
+                    //Create Image instance from openRead fileStream path
+                    using Image image = Image.Load(imageFileStream);
+                    {
+                        int customWidth = Convert.ToInt32(width);
+                        if (image.Width >= customWidth)
+                        {
+
+                            //declare the image to be a custom size
+                            string FileName = "custom_" + imageName;
+                            //handle keeping aspect ratio by declaring a newHeight that matches the custom width
+                            var divisor = image.Width / customWidth;
+                            var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+
+                            //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
+                            //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
+                            image.Mutate(x => x.Resize(customWidth, newHeight));
+
+                            //Save the mutated file to the assigned path using the assigned file name
+                            image.Save(savedImagePath + FileName);
+
+                            //Load image and return to user
+                            var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
+                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                            return File(NewimageFileStream, "image/jpeg");
+                        }
+                    }
+                }
+            }
+            return NoContent();
+        }
+
+
+
         //using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
         //{
         //    string FileName = "high_" + file.FileName;

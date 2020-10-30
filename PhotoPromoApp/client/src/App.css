@@ -22,6 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  
 }
 
 .App-link {
@@ -50,4 +51,8 @@
   img {
     width: 100%;
     height: 100%;
+}
+.fixNavbar {
+/* position: fixed; Set the navbar to fixed position */
+  /* top: 0; */
 }

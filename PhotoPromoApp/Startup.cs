@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PhotoPromo.Repositories;
-using SixLabors.ImageSharp.Web.DependencyInjection;
 
 namespace PhotoPromoApp
 {
@@ -33,14 +26,14 @@ namespace PhotoPromoApp
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<IPhotoRepository, PhotoRepository>();
 
-            // Add the default service and options.
-            services.AddImageSharp();
+            IdentityModelEventSource.ShowPII = true;
 
             //Add firebase Token Handler
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
             var googleTokenUrl = $"https://securetoken.google.com/{firebaseProjectId}";
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
                 .AddJwtBearer(options =>
                 {
                     options.Authority = googleTokenUrl;
@@ -51,6 +44,7 @@ namespace PhotoPromoApp
                         ValidateAudience = true,
                         ValidAudience = firebaseProjectId,
                         ValidateLifetime = true
+
                     };
                 });
             services.AddControllers();
@@ -68,7 +62,7 @@ namespace PhotoPromoApp
 
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
@@ -77,8 +71,7 @@ namespace PhotoPromoApp
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            // Add the image processing middleware.
-            app.UseImageSharp();
+            
         }
     }
 }

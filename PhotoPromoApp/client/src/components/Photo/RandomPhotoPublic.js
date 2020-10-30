@@ -5,17 +5,18 @@ import { Card, Button, Col, Row, CardImg, Modal, Form, Image, Container } from "
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { WindowViewContex } from "../WindowViewHandler";
-export default function SinglePhotoThirdParty() {
+export default function RandomPhotoPublic() {
     const { activeUser } = useContext(UserProfileContext);
-    const { getImageUrl, getSingleImageThirdParty, singleImage3rdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId, getUniquePublicPhoto, getImageId } = useContext(ImageContext);
+    const { getRandomPublicImage } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
     const { setShowNavbar } = useContext(WindowViewContex);
 
-    const { photoId, width, height, userId } = useParams();
-    const imageParams = { photoId, width, height, userId }
+    const { width, height } = useParams();
+    const imageParams = { width, height }
 
-    const imageId = getSingleImageThirdParty(imageParams);
+    const imageId = getRandomPublicImage(imageParams);
     useEffect(() => {
+
         setShowNavbar(false)
 
         // setPublicPhotoId(photoId);
