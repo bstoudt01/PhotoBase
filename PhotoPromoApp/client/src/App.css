@@ -22,6 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  
 }
 
 .App-link {
@@ -35,4 +36,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.imgPreview {
+  text-align: center;
+  margin: 5px 15px;
+  max-height: 10%;
+  max-width: 30%;
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  border-top: 5px solid gray;
+  border-bottom: 5px solid gray;
+}
+  img {
+    width: 100%;
+    height: 100%;
+}
+.fixNavbar {
+/* position: fixed; Set the navbar to fixed position */
+  /* top: 0; */
 }

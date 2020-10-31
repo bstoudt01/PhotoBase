@@ -6,17 +6,13 @@ import "firebase/auth";
 export const UserProfileContext = createContext();
 
 export function UserProfileProvider(props) {
+
     const apiUrl = "/api/userprofile";
-
     const userProfile = sessionStorage.getItem("userProfile");
-
     const activeUser = JSON.parse(userProfile);
 
     const [isLoggedIn, setIsLoggedIn] = useState(userProfile != null);
-
     const [isFirebaseReady, setIsFirebaseReady] = useState(false);
-
-
     const [allUserProfiles, setAllUserProfiles] = useState([]);
     const [singleUserProfile, setSingleUserProfile] = useState({ userType: {} });
     const [deactivatedUsers, setDeactivatedUsers] = useState([]);

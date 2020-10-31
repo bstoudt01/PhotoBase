@@ -24,7 +24,7 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                                SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                                      g.Name AS GalleryName,
+                                      g.Name AS GalleryName, g.Id AS currentGalleryId,
                                       up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                                FROM Photo p
                                     LEFT JOIN Gallery g ON p.GalleryId = g.Id
@@ -52,6 +52,7 @@ namespace PhotoPromo.Repositories
 
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile
@@ -88,7 +89,7 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                              g.Name AS GalleryName,
+                              g.Name AS GalleryName, g.Id AS currentGalleryId,
                               up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                         FROM Photo p
                             LEFT JOIN Gallery g ON p.GalleryId = g.Id
@@ -115,6 +116,7 @@ namespace PhotoPromo.Repositories
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile
@@ -151,7 +153,7 @@ namespace PhotoPromo.Repositories
                 {
                     cmd.CommandText = @"
                        SELECT p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
-                              g.Name AS GalleryName,
+                              g.Name AS GalleryName, g.Id AS currentGalleryId,
                               up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
                         FROM Photo p
                             LEFT JOIN Gallery g ON p.GalleryId = g.Id
@@ -177,6 +179,7 @@ namespace PhotoPromo.Repositories
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
                             Gallery = new Gallery
                             {
+                                Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
                                 Name = reader.GetString(reader.GetOrdinal("GalleryName")),
                             },
                             UserProfile = new UserProfile
@@ -210,7 +213,57 @@ namespace PhotoPromo.Repositories
 
         //Random Image for Public Use
         //public Photo GetRandomImage {}
+        public Photo GetRandomSinglePhoto()
+        {
 
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT TOP 1 *, p.Id, p.[Name] AS PhotoName, p.PhotoLocation, p.Attribute, p.ResolutionLevel, p.CreatedDateTime, p.IsPublic, p.GalleryId, p.UserProfileId,
+                              up.FirstName, up.LastName, up.DisplayName, up.Email, up.LogoLocation
+                            FROM photo p
+                            LEFT JOIN UserProfile up on p.UserProfileId = up.Id
+                            Where p.IsPublic='true' 
+                        ORDER BY NEWID()";
+
+                    var reader = cmd.ExecuteReader();
+                    Photo photo = null;
+
+                    if (reader.Read())
+                    {
+                        photo = new Photo
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("PhotoName")),
+                            PhotoLocation = Path.GetFullPath(reader.GetString(reader.GetOrdinal("PhotoLocation"))),
+                            Attribute = reader.GetString(reader.GetOrdinal("Attribute")),
+                            ResolutionLevel = reader.GetInt32(reader.GetOrdinal("ResolutionLevel")),
+                            CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
+                            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
+                            GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
+                            UserProfile = new UserProfile
+                            {
+                                FirstName = DbUtils.GetString(reader, "FirstName"),
+                                LastName = DbUtils.GetString(reader, "LastName"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                LogoLocation = DbUtils.GetString(reader, "LogoLocation"),
+                            }
+                        };
+
+                    }
+
+                    reader.Close();
+
+                    return photo;
+                }
+            }
+
+
+        }
         public void Add(Photo photo)
         {
             using (var conn = Connection)

@@ -6,18 +6,25 @@ import { Card, Button, Col, Row, Form } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
-    const { updateGallery, deleteGallery, getAllGalleriesByUser } = useContext(GalleryContext);
-    const { getAllPhotosByGallery, photosByGallery } = useContext(PhotoContext);
-    const [isOpen, setIsOpen] = React.useState(false);
+    const { updateGallery, deleteGallery, getAllGalleriesByUser, galleryUpdated } = useContext(GalleryContext);
+    const { photosByGallery } = useContext(PhotoContext);
     const [updatedName, setUpdatedName] = useState();
 
-    const showModal = () => {
-        setIsOpen(true);
+    const [updateIsOpen, setUpdateIsOpen] = useState(false);
+    const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+
+    const showDeleteModal = (e) => {
+        setDeleteIsOpen(true);
+    };
+
+    const showUpdateModal = (e) => {
+        setUpdateIsOpen(true);
     };
 
     const hideModal = () => {
-        setIsOpen(false);
-        getAllGalleriesByUser(activeUser.id);
+        setUpdateIsOpen(false);
+        setDeleteIsOpen(false);
+        // getAllGalleriesByUser(activeUser.id);
     };
 
     const handleUpdateGallery = (e) => {
@@ -30,36 +37,37 @@ export default function Gallery({ gallery }) {
         }
 
         updateGallery(newGallery)
-
+        getAllGalleriesByUser(activeUser.id);
     };
 
     const handleDeleteGallery = (e) => {
         e.preventDefault();
-        //return id from category context
-        //return updated name from state of
-        //updateCategory({ id: category.id, name: categoryText.name })
-        deleteGallery(gallery);
-    }
 
-    useEffect(() => {
-        getAllPhotosByGallery(gallery.id)
-    }, []);
+        deleteGallery(gallery);
+        getAllGalleriesByUser(activeUser.id);
+
+    }
+    // useEffect(() => {
+    //     getAllGalleriesByUser(activeUser.id);
+    // }, [galleryUpdated]);
 
     return (
         <Col>
             <Card body>
                 <Row>
                     <Col sm="9">
-                        <strong>{gallery.name}</strong>
+                        <Button variant="secondary" href={`/gallery/${gallery.id}`}><strong>{gallery.name}</strong></Button>
                     </Col>
+
+                    {/* UPDATE GALLERY MODAL */}
                     {gallery.id != 1 ?
                         <Col>
-                            <Button varient="primary" onClick={showModal}>Edit</Button>
-                            <Modal show={isOpen} onHide={hideModal}>
+                            <Button id="showModalEditButton" varient="primary" onClick={showUpdateModal}>Edit</Button>
+                            <Modal id="editModal" show={updateIsOpen} onHide={hideModal}>
+
                                 <Modal.Header>
                                     <Modal.Title>{gallery.name}</Modal.Title>
                                 </Modal.Header>
-                                {/* <Modal.Body>asdfasdf</Modal.Body> */}
                                 <Form onSubmit={handleUpdateGallery}>
 
 
@@ -79,17 +87,17 @@ export default function Gallery({ gallery }) {
                             </Modal>
                         </Col>
                         : null}
-                    {/* {photosByGallery.length != 0 ? null :
+
+                    {/* DELETE GALLERY MODAL */}
+                    {photosByGallery.length != 0 ? null :
                         <Col>
-                            <Button varient="primary" onClick={showModal}>Delete</Button>
-                            <Modal show={isOpen} onHide={hideModal}>
+                            <Button id="showModalDeleteButton" varient="primary" onClick={showDeleteModal}>Delete</Button>
+                            <Modal id="deleteModal" show={deleteIsOpen} onHide={hideModal}>
                                 <Modal.Header>
                                     <Modal.Title>{gallery.name}</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>asdfasdf</Modal.Body>
                                 <Form onSubmit={handleDeleteGallery}>
-
-
                                     <Col sm="9">
                                         <strong>{gallery.name}</strong>
                                     </Col>
@@ -103,7 +111,8 @@ export default function Gallery({ gallery }) {
                                 </Modal.Footer>
                             </Modal>
                         </Col>
-                    } */}
+                    }
+
                 </Row>
             </Card >
         </Col >
