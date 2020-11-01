@@ -119,16 +119,16 @@ export default function Photo({ photo }) {
 
 
     return (
-        <Col xs={6} lg={3} >
+        <  Col xs={6} lg={4} >
             <Card body >
-                <Row>
-                    <Col>
+                <Row >
+                    <Col >
                         {photo.photoLocation === "" || photo.photoLocation === null ?
                             <Row>
                                 <div />
                             </Row>
                             :
-                            <Row>
+                            <Row >
                                 <OverlayTrigger
                                     id="photoDetails"
                                     // key={placement}
@@ -220,9 +220,7 @@ export default function Photo({ photo }) {
                                         <Modal.Body><strong>Attribute: {photo.attribute}</strong> <br />
                                             <strong>Gallery: {photo.gallery.name}</strong> < br />
                                             <strong>Is Public: {photo.isPublic ? "YES" : "NO"}</strong></Modal.Body>
-                                        {/* <Modal.Body></Modal.Body>
-                                        <Modal.Body></Modal.Body> */}
-                                        <input id="input" valuetype="text" defaultValue={`http://localhost:3000/image/${photo.id}/200/300/${photo.userProfileId}`} />
+                                        <input id="input" valuetype="text" defaultValue={`http://localhost:3000/image/${photo.id}/600/${photo.userProfileId}`} />
                                         <Button id="copy" onClick={thirdPartyLink}>Share</Button>
 
                                         <Image src={imageName} alt={photo.name} fluid />

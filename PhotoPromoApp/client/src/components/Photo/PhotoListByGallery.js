@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import Photo from "./Photo";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 export default function PhotoListByGallery() {
@@ -19,11 +19,15 @@ export default function PhotoListByGallery() {
                 <Row className="justify-content-center">
                     <Button type="button" href={`/image/add`}>Add Image</Button>
                 </Row>
-                <Col >
-                    {photosByGallery != null || photosByGallery != undefined ? photosByGallery.map(p =>
-                        <Photo key={p.id} photo={p} />
-                    ) : <section>EMPTY</section>}
-                </Col>
+                <ListGroup>
+                    <Row xs={6} lg={4}>
+
+                        {photosByGallery != null || photosByGallery != undefined ? photosByGallery.map(p =>
+                            <Photo key={p.id} photo={p} />
+                        ) : <section>EMPTY</section>}
+
+                    </Row>
+                </ListGroup>
             </Col>
         </Container>
     );

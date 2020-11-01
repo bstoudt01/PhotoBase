@@ -80,6 +80,7 @@ export const ImageProvider = (props) => {
                 throw new Error("Unauthorized");
             }));
 
+
     const getImageName = (imageName) => {
         if (imageName !== undefined || imageName != null) {
             const getName = `${apiUrl}/${imageName}`
@@ -87,6 +88,8 @@ export const ImageProvider = (props) => {
             return (getName)
         }
     };
+
+
     const getImageId = (imageId) => {
 
         if (imageId !== undefined || imageId != null) {
