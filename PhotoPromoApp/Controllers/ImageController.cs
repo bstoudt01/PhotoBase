@@ -9,9 +9,11 @@ using System;
 using SixLabors.ImageSharp.Advanced;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhotoPromoApp.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ImageController : ControllerBase
@@ -40,7 +42,7 @@ namespace PhotoPromoApp.Controllers
                     int newHeight = 0;
                     if (image.Width > maxWidthLowRes)
                     {
-                    //saves image with width of 1440, height is determined by imagesharp to keep aspect ratio (set height to 0)
+                        //saves image with width of 1440, height is determined by imagesharp to keep aspect ratio (set height to 0)
 
                         using (Image lowResCopy = image.Clone(x => x.Resize(maxWidthLowRes, newHeight)))
                         {
@@ -61,13 +63,17 @@ namespace PhotoPromoApp.Controllers
                         //    lowResCopy.Save(savedImagePath + FileName);
                         //}
                     }
+                }
+                using Image imageCopy = Image.Load(file.OpenReadStream());
+                {
 
                     //24 MP 3:2
                     //High Resolution Image Encoder
+                    int newHeight = 0;
                     int maxWidthHighRes = 6016;
-                    if (image.Width > maxWidthHighRes)
+                    if (imageCopy.Width > maxWidthHighRes)
                     {
-                        using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
+                        using (Image highResCopy = imageCopy.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
                         {
                             string FileName = "high_" + file.FileName;
                             highResCopy.Save(savedImagePath + FileName);
@@ -76,10 +82,12 @@ namespace PhotoPromoApp.Controllers
                     else
                     {
                         string FileName = "high_" + file.FileName;
-                        image.Save(savedImagePath + FileName);
+                        imageCopy.Save(savedImagePath + FileName);
                        
                     }
                 }
+
+
             }
             catch
             {
@@ -118,8 +126,9 @@ namespace PhotoPromoApp.Controllers
         [HttpGet("{imageName}")]
         public IActionResult GetName(string imageName)
         {
+
             if (imageName != null) { 
-            var imageNewName = "high_" + imageName;   
+            var imageNewName = "low_" + imageName;   
             var highResImagePath = Path.Combine(_webhost.WebRootPath, "images/", imageNewName);
                 if ((System.IO.File.Exists(highResImagePath)))
                 {
@@ -150,11 +159,11 @@ namespace PhotoPromoApp.Controllers
             }
             return NoContent();
         }
-
+            
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
         //Returns image with requested width but not necesarily height
-        [HttpGet("custom/{photoId}/{width}/{height}/{userId}")]
-        public IActionResult GetCustomImage(string photoId, string width, string height, string userId)
+        [HttpGet("custom/{photoId}/{width}/{userId}")]
+        public IActionResult GetCustomImage(string photoId, string width, string userId)
         {
 
             if (photoId != null)
@@ -163,7 +172,9 @@ namespace PhotoPromoApp.Controllers
                 //Locate File by Name assoicated with Photo.Id
                 Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
                 //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-
+                if (publicPhoto.UserProfileId != Int32.Parse(userId)) {
+                    return NoContent();
+                } 
                 //Locate File by locating the index of last directory call
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
                 if (index1 != -1)
@@ -210,8 +221,8 @@ namespace PhotoPromoApp.Controllers
 
         //Get Random Image this is marked as "IsPublic" by photographer in custom size
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
-        [HttpGet("random/{width}/{height}")]
-        public IActionResult GetRandomCustomImageByPublic( string width, string height)
+        [HttpGet("random/{width}")]
+        public IActionResult GetRandomCustomImageByPublic( string width)
         { 
             Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
 

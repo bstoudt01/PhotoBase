@@ -3,14 +3,15 @@ import { useParams } from "react-router-dom";
 import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { WindowViewContext } from "../WindowViewHandler";
+import "../.././App.css"
 export default function SinglePhotoThirdParty() {
 
     const { getSingleImageThirdParty } = useContext(ImageContext);
     const { setShowNavbar } = useContext(WindowViewContext);
 
-    const { photoId, width, height, userId } = useParams();
+    const { photoId, width, userId } = useParams();
 
-    const imageParams = { photoId, width, height, userId }
+    const imageParams = { photoId, width, userId }
 
     const imageId = getSingleImageThirdParty(imageParams);
 
@@ -23,10 +24,10 @@ export default function SinglePhotoThirdParty() {
     return (
         <Container>
 
-            {imageId === "" || imageId === null ?
-                <Image />
+            {imageId === "" || imageId === null || imageId === undefined ?
+                <div>Sorry It looks like there is a mistake in you request</div>
                 :
-                <div ><Image src={imageId} alt="singleImage" /></div>
+                <div ><Image style={{ width: "auto" }} src={imageId} alt="singleImage" /></div>
             }
         </Container>
 

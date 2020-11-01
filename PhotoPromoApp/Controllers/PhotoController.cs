@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using PhotoPromo.Repositories;
 
 namespace PhotoPromo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PhotoController : ControllerBase
@@ -51,7 +53,7 @@ namespace PhotoPromo.Controllers
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
             var noGalleryContent = "no content";
-            if(allPhotosByGallery.Count == 0)
+            if (allPhotosByGallery.Count == 0)
             {
                 return Ok(noGalleryContent);
             }

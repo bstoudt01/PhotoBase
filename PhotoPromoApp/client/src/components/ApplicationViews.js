@@ -69,13 +69,13 @@ export default function ApplicationViews(props) {
                 to avoid incorrect images being displayed, This is not a secure practice just a quality standard  */}
 
                     {/* User-specific Photo including width by height resolution */}
-                    <Route exact path="/image/:photoId/:width/:heigt/:userId" >
+                    <Route exact path="/image/:photoId/:width/:userId" >
                         < SinglePhotoThirdParty />
                     </Route>
 \
                      {/* Random Public Photo including HxW resolution, 
                      this will eventualy include logo placed on image ( create copy with logo on image upload) */}
-                    <Route exact path="/image/random/:width/:height" >
+                    <Route exact path="/image/random/:width" >
                         < RandomPhotoPublic />
                     </Route>
                 </Switch>

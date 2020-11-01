@@ -7,8 +7,8 @@ export default function RandomPhotoPublic() {
     const { getRandomPublicImage } = useContext(ImageContext);
     const { setShowNavbar } = useContext(WindowViewContext);
 
-    const { width, height } = useParams();
-    const imageParams = { width, height }
+    const { width } = useParams();
+    const imageParams = { width }
 
     const imageId = getRandomPublicImage(imageParams);
     useEffect(() => {

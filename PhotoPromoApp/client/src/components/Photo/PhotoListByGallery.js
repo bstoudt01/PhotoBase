@@ -14,16 +14,16 @@ export default function PhotoListByGallery() {
 
     return (
         <Container>
-            <Col >
+            <Col>
 
                 <Row className="justify-content-center">
                     <Button type="button" href={`/image/add`}>Add Image</Button>
                 </Row>
-                <section >
+                <Col >
                     {photosByGallery != null || photosByGallery != undefined ? photosByGallery.map(p =>
                         <Photo key={p.id} photo={p} />
                     ) : <section>EMPTY</section>}
-                </section>
+                </Col>
             </Col>
         </Container>
     );

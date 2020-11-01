@@ -7,7 +7,7 @@ import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
     const { updateGallery, deleteGallery, getAllGalleriesByUser, galleryUpdated } = useContext(GalleryContext);
-    const { photosByGallery } = useContext(PhotoContext);
+    const { photosByGallery, getAllPhotosByGallery } = useContext(PhotoContext);
     const [updatedName, setUpdatedName] = useState();
 
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
@@ -33,9 +33,9 @@ export default function Gallery({ gallery }) {
             id: gallery.id,
             name: updatedName,
             userProfileId: gallery.userProfileId
-        }
+        };
 
-        updateGallery(newGallery)
+        updateGallery(newGallery);
         getAllGalleriesByUser(activeUser.id);
     };
 
@@ -45,7 +45,7 @@ export default function Gallery({ gallery }) {
         deleteGallery(gallery);
         getAllGalleriesByUser(activeUser.id);
 
-    }
+    };
 
     return (
         <Col>
@@ -85,7 +85,7 @@ export default function Gallery({ gallery }) {
                         : null}
 
                     {/* DELETE GALLERY MODAL */}
-                    {photosByGallery.length != 0 ? null :
+                    {gallery.photoCount == 0 ?
                         <Col>
                             <Button id="showModalDeleteButton" varient="primary" onClick={showDeleteModal}>Delete</Button>
                             <Modal id="deleteModal" show={deleteIsOpen} onHide={hideModal}>
@@ -107,6 +107,7 @@ export default function Gallery({ gallery }) {
                                 </Modal.Footer>
                             </Modal>
                         </Col>
+                        : <div></div>
                     }
 
                 </Row>

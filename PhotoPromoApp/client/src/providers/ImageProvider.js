@@ -100,7 +100,7 @@ export const ImageProvider = (props) => {
 
         if (imageParams !== undefined) {
 
-            const get3rdParty = `${apiUrl}/custom/${imageParams.photoId}/${imageParams.width}/${imageParams.height}/${imageParams.userId}`
+            const get3rdParty = `${apiUrl}/custom/${imageParams.photoId}/${imageParams.width}/${imageParams.userId}`
 
             return (get3rdParty)
 
@@ -156,7 +156,7 @@ export const ImageProvider = (props) => {
 
         if (imageParams !== undefined) {
 
-            const getRandomPublicImage = `${apiUrl}/random/${imageParams.width}/${imageParams.height}`
+            const getRandomPublicImage = `${apiUrl}/random/${imageParams.width}`
 
             return (getRandomPublicImage)
         }

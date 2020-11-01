@@ -88,7 +88,7 @@ export default function AddPhoto() {
         debugger
         addImage(formData);
 
-        addPhoto(newPhoto)
+        addPhoto(newPhoto).then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
         // .then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
     };
     useEffect(() => {

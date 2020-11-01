@@ -11,8 +11,11 @@ namespace PhotoPromo.Models
 
         public string Name { get; set; }
 
+        public int PhotoCount { get; set; }
+
         public int UserProfileId { get; set; }
 
         public UserProfile UserProfile { get; set; }
+
     }
 }
