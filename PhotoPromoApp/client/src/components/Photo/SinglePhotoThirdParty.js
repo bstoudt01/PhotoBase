@@ -16,15 +16,17 @@ export default function SinglePhotoThirdParty() {
 
     useEffect(() => {
         setShowNavbar(false)
+
     }, []);
 
 
     return (
         <Container>
+
             {imageId === "" || imageId === null ?
                 <Image />
                 :
-                <Image src={imageId} alt="singleImage" fluid />
+                <div ><Image src={imageId} alt="singleImage" /></div>
             }
         </Container>
 

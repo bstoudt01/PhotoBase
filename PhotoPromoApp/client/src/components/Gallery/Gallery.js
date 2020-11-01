@@ -24,7 +24,6 @@ export default function Gallery({ gallery }) {
     const hideModal = () => {
         setUpdateIsOpen(false);
         setDeleteIsOpen(false);
-        // getAllGalleriesByUser(activeUser.id);
     };
 
     const handleUpdateGallery = (e) => {
@@ -47,9 +46,6 @@ export default function Gallery({ gallery }) {
         getAllGalleriesByUser(activeUser.id);
 
     }
-    // useEffect(() => {
-    //     getAllGalleriesByUser(activeUser.id);
-    // }, [galleryUpdated]);
 
     return (
         <Col>

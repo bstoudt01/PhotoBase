@@ -177,6 +177,8 @@ namespace PhotoPromo.Repositories
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
                             IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+
                             Gallery = new Gallery
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("currentGalleryId")),
@@ -244,6 +246,7 @@ namespace PhotoPromo.Repositories
                             CreatedDateTime = reader.GetDateTime(reader.GetOrdinal("CreatedDateTime")),
                             IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic")),
                             GalleryId = reader.GetInt32(reader.GetOrdinal("GalleryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             UserProfile = new UserProfile
                             {
                                 FirstName = DbUtils.GetString(reader, "FirstName"),

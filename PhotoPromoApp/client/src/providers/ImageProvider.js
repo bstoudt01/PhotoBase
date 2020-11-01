@@ -14,7 +14,6 @@ export const ImageProvider = (props) => {
     const [publicPhotoUserId, setPublicPhotoUserId] = useState();
     const [publicPhotoWidth, setPublicPhotoWidth] = useState();
     const [publicPhotoHeight, setPublicPhotoHeight] = useState();
-    const [galleryUpdated, setGalleryUpdated] = useState(false);
 
 
 

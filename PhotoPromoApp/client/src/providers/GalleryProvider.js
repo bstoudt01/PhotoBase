@@ -14,6 +14,7 @@ export function GalleryProvider(props) {
     const [galleries, setGalleries] = useState([]);
     const [gallery, setGallery] = useState([]);
     const [galleryUpdated, setGalleryUpdated] = useState(false);
+
     const { getToken } = useContext(UserProfileContext);
 
     const getAllGalleriesByUser = (userProfileId) =>
@@ -53,7 +54,7 @@ export function GalleryProvider(props) {
                 body: JSON.stringify(gallery)
             }).then(resp => {
                 if (resp.ok) {
-                    return resp.json();
+                    return resp.json()
                 }
                 throw new Error("Unauthorized");
             }));
@@ -70,8 +71,6 @@ export function GalleryProvider(props) {
 
             }).then(resp => {
                 if (resp.ok) {
-                    // setGalleryUpdated(!galleryUpdated);
-
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
@@ -89,13 +88,12 @@ export function GalleryProvider(props) {
                 body: JSON.stringify(deletedGallery)
             }).then(resp => {
                 if (resp.ok) {
-                    // setGalleryUpdated(!galleryUpdated)
-                    return resp.json();
+                    return resp.json()
                 }
                 throw new Error("Unauthorized");
             }));
     return (
-        <GalleryContext.Provider value={{ getToken, galleries, gallery, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery, deleteGallery, setGalleries }}>
+        <GalleryContext.Provider value={{ getToken, galleries, gallery, galleryUpdated, getAllGalleriesByUser, getSingleGallery, addGallery, updateGallery, deleteGallery, setGalleries }}>
             {props.children}
         </GalleryContext.Provider>
     );

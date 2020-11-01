@@ -34,7 +34,7 @@ export default function GalleryList() {
 
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
-    }, [galleryUpdated]);
+    }, []);
     return (
         <>
             <Container>

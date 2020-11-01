@@ -91,38 +91,41 @@ namespace PhotoPromoApp.Controllers
 
 
 
-        [HttpDelete("{fileName}")]
-        public IActionResult deletefile(string fileName)
-        {
-            string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_"+fileName);
-            string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_"+fileName);
-            string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_" + fileName);
+        //ADDED INTO PHOTO DELETE
+        //[HttpDelete("{fileName}")]
+        //public IActionResult Delete(string fileName)
+        //{
+        //    string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_"+fileName);
+        //    string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_"+fileName);
+        //    string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "custom_" + fileName);
 
 
-            if ((System.IO.File.Exists(_highResImageToBeDeleted)))
-            {
-                System.IO.File.Delete(_highResImageToBeDeleted);
-            }
-            if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
-            {
-                System.IO.File.Delete(_lowResImageToBeDeleted);
-            }
-            if ((System.IO.File.Exists(_customImageToBeDeleted)))
-            {
-                System.IO.File.Delete(_customImageToBeDeleted);
-            }
-            return Ok();
-        }
+        //    if ((System.IO.File.Exists(_highResImageToBeDeleted)))
+        //    {
+        //        System.IO.File.Delete(_highResImageToBeDeleted);
+        //    }
+        //    if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
+        //    {
+        //        System.IO.File.Delete(_lowResImageToBeDeleted);
+        //    }
+        //    if ((System.IO.File.Exists(_customImageToBeDeleted)))
+        //    {
+        //        System.IO.File.Delete(_customImageToBeDeleted);
+        //    }
+        //    return Ok();
+        //}
 
         [HttpGet("{imageName}")]
         public IActionResult GetName(string imageName)
         {
             if (imageName != null) { 
             var imageNewName = "high_" + imageName;   
-            var path = Path.Combine(_webhost.WebRootPath, "images/", imageNewName);
-
-            var imageFileStream = System.IO.File.OpenRead(path);
-            return File(imageFileStream, "image/jpeg");
+            var highResImagePath = Path.Combine(_webhost.WebRootPath, "images/", imageNewName);
+                if ((System.IO.File.Exists(highResImagePath)))
+                {
+                    var imageFileStream = System.IO.File.OpenRead(highResImagePath);
+                    return File(imageFileStream, "image/jpeg");
+                }
             } return NoContent();
         }
 

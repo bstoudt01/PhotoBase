@@ -1,6 +1,7 @@
 import React, { useState, createContext, useContext } from "react";
 
 import { useHistory } from "react-router-dom";
+import { ImageContext } from "./ImageProvider";
 
 import { UserProfileContext } from "./UserProfileProvider";
 
@@ -14,8 +15,9 @@ export function PhotoProvider(props) {
     const [photosByUser, setPhotosByUser] = useState([]);
     const [photosByGallery, setPhotosByGallery] = useState([]);
     const [photo, setPhoto] = useState([]);
+    const [photoUpdated, setPhotoUpdated] = useState(false);
 
-
+    const { deleteImage } = useContext(ImageContext);
     const { getToken } = useContext(UserProfileContext);
 
     const getAllPhotosByUser = (userProfileId) =>
@@ -36,7 +38,8 @@ export function PhotoProvider(props) {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setPhotosByGallery));
+                .then(setPhotosByGallery)
+                .then(setPhotoUpdated(!photoUpdated)));
 
     const getSinglePhoto = (id) =>
         getToken().then((token) =>
@@ -105,7 +108,7 @@ export function PhotoProvider(props) {
             }));
 
     return (
-        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
+        <PhotoContext.Provider value={{ getToken, photoUpdated, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
             {props.children}
         </PhotoContext.Provider>
     );

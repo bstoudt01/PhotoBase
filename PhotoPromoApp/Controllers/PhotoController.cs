@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhotoPromo.Models;
@@ -14,12 +16,14 @@ namespace PhotoPromo.Controllers
     [ApiController]
     public class PhotoController : ControllerBase
     {
-
+        private readonly IWebHostEnvironment _webhost;
         private readonly IPhotoRepository _photoRepository;
         private readonly IUserProfileRepository _userProfileRepository;
 
-        public PhotoController(IPhotoRepository photoRepository, IUserProfileRepository userProfileRepository)
+        public PhotoController(IPhotoRepository photoRepository, IWebHostEnvironment webhost, IUserProfileRepository userProfileRepository)
         {
+            _webhost = webhost;
+
             _photoRepository = photoRepository;
             _userProfileRepository = userProfileRepository;
 
@@ -46,6 +50,11 @@ namespace PhotoPromo.Controllers
         {
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
+            var noGalleryContent = "no content";
+            if(allPhotosByGallery.Count == 0)
+            {
+                return Ok(noGalleryContent);
+            }
             if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
             {
                 return Unauthorized();
@@ -128,25 +137,39 @@ namespace PhotoPromo.Controllers
         public ActionResult Delete(int id, Photo photo)
         {
             var currentUserProfile = GetCurrentUserProfile();
+            var singlePhoto = _photoRepository.GetSinglePhotobyId(id);
+
+            string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_" + photo.PhotoLocation);
+            string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_" + photo.PhotoLocation);
+            string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "custom_" + photo.PhotoLocation);
 
 
-            if (currentUserProfile.Id != photo.UserProfileId)
+            if (currentUserProfile.Id != singlePhoto.UserProfileId)
             {
                 return Unauthorized();
             }
-            if (photo == null)
+            if (singlePhoto == null)
             {
 
                 return BadRequest();
 
-            }
-            if (id != photo.Id)
-            {
-                return BadRequest();
             }
 
             _photoRepository.Delete(id);
 
+
+            if ((System.IO.File.Exists(_highResImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_highResImageToBeDeleted);
+            }
+            if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_lowResImageToBeDeleted);
+            }
+            if ((System.IO.File.Exists(_customImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_customImageToBeDeleted);
+            }
             return Ok(id);
         }
 

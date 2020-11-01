@@ -3,6 +3,7 @@ import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { Card, Button, Col, Row, Image, Form, CardImg } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import GalleryOption from "./AddPhotoGalleryOption";
 import { ImageContext } from "../../providers/ImageProvider";
 import "../../App.css"
@@ -17,6 +18,7 @@ export default function AddPhoto() {
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
     const [checked, setChecked] = useState(false);
     const handleClick = () => setChecked(!checked)
+    const history = useHistory();
 
     //TRY to fix this, currently not getting file info from state from event input, instead using queryselector
     const [imageFile, setImageFile] = useState(null);
@@ -86,8 +88,8 @@ export default function AddPhoto() {
         debugger
         addImage(formData);
 
-        addPhoto(newPhoto);
-
+        addPhoto(newPhoto)
+        // .then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
     };
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);

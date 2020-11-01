@@ -52,7 +52,20 @@
     width: 100%;
     height: 100%;
 }
-.fixNavbar {
-/* position: fixed; Set the navbar to fixed position */
-  /* top: 0; */
+
+/* .custom-modal-style {
+  width: 2000px;
+  min-height: 100vr;
+  } */
+
+  .modal-full {
+    min-width: 20%;
+    margin-left: 80;
+}
+
+.modal-content  {
+    min-height: 50vh;
+    min-width: 50vw;
+    max-width: 80vw;
+
 }
