@@ -5,7 +5,7 @@ import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 export default function PhotoListByGallery() {
-    const { getAllPhotosByGallery, photosByGallery, loadPhotoList, photoUpdated } = useContext(PhotoContext);
+    const { getAllPhotosByGallery, photosByGallery, photoUpdated } = useContext(PhotoContext);
 
     const { id } = useParams();
 
@@ -13,6 +13,7 @@ export default function PhotoListByGallery() {
 
         getAllPhotosByGallery(id);
     }, [photoUpdated]);
+
 
     return (
         <Container>
@@ -31,6 +32,6 @@ export default function PhotoListByGallery() {
                     </Row>
                 </ListGroup>
             </Col>
-        </Container>
+        </Container >
     );
 }

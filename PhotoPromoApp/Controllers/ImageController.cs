@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Processing;
 using System;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
+using System.Linq;
 
 namespace PhotoPromoApp.Controllers
 {
@@ -128,14 +129,18 @@ namespace PhotoPromoApp.Controllers
         public IActionResult GetCustomImage(string photoId, string width, string userId)
         {
 
-            if (photoId != null)
+            if (photoId != null & photoId.All(char.IsDigit) & userId.All(char.IsDigit))
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
                 //Locate File by Name assoicated with Photo.Id
                 Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
+
                 //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-                if (publicPhoto.UserProfileId != Int32.Parse(userId)) {
-                    return NoContent();
+                if (publicPhoto == null || publicPhoto.UserProfileId != Int32.Parse(userId)) {
+                    var UserIdStockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
+                    var UserIdStockImageFileStream = System.IO.File.OpenRead(UserIdStockImagePath);
+
+                    return File(UserIdStockImageFileStream, "image/jpeg");
                 } 
                 //Locate File by locating the index of last directory call
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
@@ -172,11 +177,21 @@ namespace PhotoPromoApp.Controllers
                             var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
                             var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
                             return File(NewimageFileStream, "image/jpeg");
+                        } else
+                        {
+
+                            //Load highest resolution image available and return to user
+                            var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
+                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                            return File(NewimageFileStream, "image/jpeg");
                         }
                     }
                 }
             }
-            return NoContent();
+            var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
+            var StockImageFileStream = System.IO.File.OpenRead(StockImagePath);
+
+            return File(StockImageFileStream, "image/jpeg");
         }
 
 
@@ -189,7 +204,7 @@ namespace PhotoPromoApp.Controllers
             Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
 
 
-            if (randomPublicPhoto != null)
+            if (randomPublicPhoto != null & width.All(char.IsDigit))
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
                 //Locate File by Name assoicated with Photo.Id
@@ -232,10 +247,21 @@ namespace PhotoPromoApp.Controllers
                             var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
                             return File(NewimageFileStream, "image/jpeg");
                         }
+                        else
+                        {
+
+                            //Load highest resolution image available and return to user
+                            var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
+                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                            return File(NewimageFileStream, "image/jpeg");
+                        }   
                     }
                 }
             }
-            return NoContent();
+            var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
+            var StockImageFileStream = System.IO.File.OpenRead(StockImagePath);
+
+            return File(StockImageFileStream, "image/jpeg");
         }
 
 

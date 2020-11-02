@@ -8,10 +8,10 @@ import AddPhotoGalleryOption from "./AddPhotoGalleryOption";
 
 export default function Photo({ photo }) {
 
-    const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
+    const { galleries } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
     const { getImageName } = useContext(ImageContext);
-    const { newlyUpdatedPhoto, loadSinglePhoto, deletePhoto, updatePhoto, getAllPhotosByGallery, photoLoaded, photoUpdated, setPhotoUpdated, getSinglePhoto } = useContext(PhotoContext);
+    const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 
     const [photoToUpdate, setPhotoToUpdate] = useState(photo)
     const [updateIsOpen, setUpdateIsOpen] = useState(false);

@@ -6,7 +6,7 @@ import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
 
-    const { updateGallery, deleteGallery, getAllGalleriesByUser } = useContext(GalleryContext);
+    const { updateGallery, deleteGallery } = useContext(GalleryContext);
 
     const [updatedName, setUpdatedName] = useState();
     const [updateIsOpen, setUpdateIsOpen] = useState(false);

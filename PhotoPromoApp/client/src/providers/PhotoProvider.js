@@ -13,12 +13,8 @@ export function PhotoProvider(props) {
     const [photosByGallery, setPhotosByGallery] = useState([]);
     const [newlyUpdatedPhoto, setNewlyUpdatedPhoto] = useState({});
 
-    //triggers after delete photo runs, placed in Watch [] useEffect on PhotoList
-    const [loadPhotoList, setLoadPhotoList] = useState(false);
-    //triggersted by delete photo, triggers loadPhotoList
-    const [photoDeleted, setPhotoDeleted] = useState(true);
 
-    const [loadSinglePhoto, setLoadSinglePhoto] = useState(true);
+
 
     const [photoUpdated, setPhotoUpdated] = useState(false);
     const [photoLoaded, setPhotoLoaded] = useState(false);
@@ -132,7 +128,7 @@ export function PhotoProvider(props) {
 
 
     return (
-        <PhotoContext.Provider value={{ getToken, photoUpdated, loadPhotoList, loadSinglePhoto, addPhoto, photosByGallery, photosByUser, newlyUpdatedPhoto, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
+        <PhotoContext.Provider value={{ getToken, photoUpdated, addPhoto, photosByGallery, photosByUser, newlyUpdatedPhoto, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
             {props.children}
         </PhotoContext.Provider>
     );

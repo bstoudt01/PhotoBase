@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
-import { Navbar, Nav, Dropdown, ButtonGroup, Button, Col } from 'react-bootstrap';
+import { Navbar, Nav, Dropdown, ButtonGroup, Button, Col, Form, NavDropdown } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { GalleryContext } from "../providers/GalleryProvider";
-
+import { PhotoContext } from "../providers/PhotoProvider";
 
 const Header = () => {
-  const { getAllGalleriesByUser, galleries, galleryLoaded } = useContext(GalleryContext);
+  const { getAllGalleriesByUser, galleries, galleryUpdated } = useContext(GalleryContext);
   const { isLoggedIn, logout, activeUser } = useContext(UserProfileContext);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -19,12 +19,12 @@ const Header = () => {
     if (activeUser != null) {
       getAllGalleriesByUser(activeUser.id);
     }
-  }, []);
-
+  }, [galleryUpdated]);
 
 
   return (
     <>
+
       <div className="fixNavbar">
         <div className="row">
           <div className="col-md-12">
@@ -43,16 +43,15 @@ const Header = () => {
                       <Nav.Item>
                         <Button href="/image/add">Add Image</Button>
                       </Nav.Item>
-                      <Dropdown as={ButtonGroup}>
-                        <Button variant="success" href="/gallery">Galleries</Button>
-
-                        <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
-                        <Dropdown.Menu>
+                      <div className="dropdown">
+                        <Button className="dropbtn" href="/gallery">Gallery</Button>
+                        <div className="dropdown-content">
+                          <a>Select a gallery</a>
                           {galleries ? galleries.map(g =>
-                            <Dropdown.Item key={g.id} href={`/gallery/${g.id}`}>{g.name}</Dropdown.Item>
+                            <a key={g.id} href={`/gallery/${g.id}`}>{g.name}</a>
                           ) : null}
-                        </Dropdown.Menu>
-                      </Dropdown>
+                        </div>
+                      </div>
                     </>
                   }
 

@@ -12,7 +12,7 @@ export function GalleryProvider(props) {
     const history = useHistory();
 
     const [galleries, setGalleries] = useState([]);
-    const [gallery, setGallery] = useState([]);
+    const [gallery, setGallery] = useState({});
     const [galleryUpdated, setGalleryUpdated] = useState(false);
     const [galleryLoaded, setGalleryLoaded] = useState(false);
     const { getToken } = useContext(UserProfileContext);
@@ -24,15 +24,8 @@ export function GalleryProvider(props) {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-                // .then(response => { if response.ok { setGalleryUpdate} reutrn response.kson})
             }).then((resp) => resp.json()).then(setGalleries)
         );
-
-    // if (resp.ok) {
-    //     setGalleries(resp.json())
-    //     //setGalleryUpdated(!galleryUpdated)
-    //     return resp.json().then(setGalleries);
-    // }
 
     //useeffect watching galleries , if galleries is uppdateed change galleryLoaded
     //galleryLoaded is NOT placed in a useEffect on gallery list
@@ -84,13 +77,8 @@ export function GalleryProvider(props) {
                 },
                 body: JSON.stringify(updatedGallery)
 
-            }).then(resp => {
-                if (resp.ok) {
-                    setGalleryUpdated(!galleryUpdated)
-                    return resp.json();
-                }
-                throw new Error("Unauthorized");
-            }));
+            }).then((resp) => resp.json()).then(setGalleryUpdated(!galleryUpdated))
+        );
 
 
     const deleteGallery = (deletedGallery) =>

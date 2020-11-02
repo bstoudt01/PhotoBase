@@ -23,8 +23,7 @@ export default function RandomPhotoPublic() {
             {imageId === "" || imageId === null ?
                 <Image />
                 :
-
-                <Image src={imageId} alt="singleImage" fluid />
+                <Image style={{ width: "auto" }} src={imageId} alt="singleImage" fluid />
 
             }
         </Container>
