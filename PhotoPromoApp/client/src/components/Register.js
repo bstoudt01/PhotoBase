@@ -33,7 +33,7 @@ export default function Register() {
 
 
   return (
-    <Col>
+    <Col xs="3">
 
       <Form onSubmit={registerClick}>
         <fieldset>

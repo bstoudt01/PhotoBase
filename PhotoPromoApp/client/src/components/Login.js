@@ -19,8 +19,7 @@ export default function Login() {
 
   return (
 
-    <Col>
-
+    <Col xs="3" className="align-self-center mr-3">
       <Form onSubmit={loginSubmit}>
         <fieldset>
           <Form.Group>

@@ -6,6 +6,7 @@ import { PhotoProvider } from './providers/PhotoProvider';
 import { ImageProvider } from './providers/ImageProvider';
 import { WindowViewHandler } from './components/WindowViewHandler';
 import { TopLevelView } from "./components/TopLevelView";
+// import NotFoundPage from "./components/NotFoundPage";
 function App() {
 
   return (
@@ -17,6 +18,7 @@ function App() {
             <PhotoProvider>
               <WindowViewHandler >
                 <TopLevelView />
+                {/* <Route path="*" component={NotFoundPage} /> */}
                 {/* <Header /> */}
                 {/* <ApplicationViews /> */}
               </WindowViewHandler>

@@ -11,7 +11,7 @@ import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
 import Home from "./Home";
 import AddPhotoMultiple from "./Photo/AddPhotoMultiple";
 import RandomPhotoPublic from "./Photo/RandomPhotoPublic";
-
+import NotFoundPage from "./NotFoundPage";
 
 export default function ApplicationViews(props) {
     const { isLoggedIn } = useContext(UserProfileContext);
@@ -77,6 +77,11 @@ export default function ApplicationViews(props) {
                      this will eventualy include logo placed on image ( create copy with logo on image upload) */}
                     <Route exact path="/image/random/:width" >
                         < RandomPhotoPublic />
+                    </Route>
+
+
+                    <Route >
+                        <NotFoundPage />
                     </Route>
                 </Switch>
             </main>

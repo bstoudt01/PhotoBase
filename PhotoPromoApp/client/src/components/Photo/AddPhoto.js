@@ -90,7 +90,7 @@ export default function AddPhoto() {
         }
         debugger
         addImage(formData);
-
+        //add await async to history push? 
         addPhoto(newPhoto).then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
     };
     useEffect(() => {

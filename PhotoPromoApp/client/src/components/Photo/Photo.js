@@ -214,7 +214,7 @@ export default function Photo({ photo }) {
 
                                 {/* VIEW IMAGE/FILE DETAILS MODAL */}
                                 <Button id="showModalEditButton" varient="primary" onClick={showDetailsModal}>Details</Button>
-                                <Modal aria-labelledby="contained-modal-title-vcenter" centered size="lg" animation
+                                <Modal aria-labelledby="contained-modal-title-vcenter" centered size="lg"
                                     id="editModal" show={detailsIsOpen} onHide={hideModal}>
                                     <Modal.Header className="modal-content">
                                         <Modal.Title>{photo.name}</Modal.Title>

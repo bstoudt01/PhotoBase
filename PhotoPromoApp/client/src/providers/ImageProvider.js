@@ -6,7 +6,7 @@ export const ImageContext = createContext();
 export const ImageProvider = (props) => {
 
     const apiUrl = "/api/image";
-
+    const [newImage, setNewImage] = useState({});
     const { getToken } = useContext(UserProfileContext);
 
 
@@ -75,6 +75,24 @@ export const ImageProvider = (props) => {
                 }
                 throw new Error("Unauthorized");
             }));
+
+
+    // const getImageName = (imageName) =>
+    //     getToken().then((token) =>
+    //         fetch(`${apiUrl}/${imageName}`, {
+    //             method: "GET",
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //                 .then((response) => {
+    //                     return response.text();
+    //                 })
+    //                 .then((data) => {
+    //                     setNewImage(data.json())
+
+    //                 })
+    //         })
+    //     );
 
 
     const getImageName = (imageName) => {
@@ -162,7 +180,7 @@ export const ImageProvider = (props) => {
     };
 
     return (
-        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty }}>
+        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty, newImage }}>
             {props.children}
         </ImageContext.Provider>
     );
