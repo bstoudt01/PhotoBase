@@ -6,7 +6,7 @@ import { GalleryContext } from "../providers/GalleryProvider";
 
 
 const Header = () => {
-  const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
+  const { getAllGalleriesByUser, galleries, galleryLoaded } = useContext(GalleryContext);
   const { isLoggedIn, logout, activeUser } = useContext(UserProfileContext);
 
   const [isOpen, setIsOpen] = useState(false);

@@ -11,15 +11,15 @@ export default function Photo({ photo }) {
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
     const { getImageName } = useContext(ImageContext);
-    const { deletePhoto, updatePhoto, getAllPhotosByGallery } = useContext(PhotoContext);
+    const { newlyUpdatedPhoto, loadSinglePhoto, deletePhoto, updatePhoto, getAllPhotosByGallery, photoLoaded, photoUpdated, setPhotoUpdated, getSinglePhoto } = useContext(PhotoContext);
 
     const [photoToUpdate, setPhotoToUpdate] = useState(photo)
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
     const [detailsIsOpen, setDetailsIsOpen] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [checked, setChecked] = useState(photo.isPublic);
-    const [isDeleted, setIsDeleted] = useState(false);
-    const [imageName, setImageName] = useState();
+
 
     const handleClick = () => {
 
@@ -84,6 +84,7 @@ export default function Photo({ photo }) {
 
     const handleUpdate = (e) => {
         e.preventDefault();
+        setIsUpdating(!isUpdating);
 
         const stateToChange = { ...photoToUpdate };
 
@@ -93,33 +94,29 @@ export default function Photo({ photo }) {
 
         updatePhoto(photoToUpdate);
 
-        getAllPhotosByGallery(photo.galleryId);
     };
 
 
-    const handleDelete = () => {
+    const handleDelete = (e) => {
+        e.preventDefault();
 
         deletePhoto(photo);
 
-        setIsDeleted(true);
     };
 
-    const imageHandler = () => {
+    const imageName = getImageName(photo.photoLocation);
 
-        if (isDeleted === false) {
+    // useEffect(() => {
 
-            const updatedImageName = getImageName(photo.photoLocation);
+    //     if (isUpdating) {
+    //         debugger
+    //         getSinglePhoto(photo.id);
+    //         photo = newlyUpdatedPhoto;
+    //     }
 
-            setImageName(updatedImageName)
-        }
-    };
 
-    useEffect(() => {
+    // }, [loadSinglePhoto]);
 
-        imageHandler();
-
-        getAllGalleriesByUser(activeUser.id);
-    }, []);
 
 
     return (

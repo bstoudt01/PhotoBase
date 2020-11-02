@@ -38,7 +38,7 @@ export default function Gallery({ gallery }) {
 
         updateGallery(newGallery);
 
-        getAllGalleriesByUser(activeUser.id);
+        // getAllGalleriesByUser(activeUser.id);
     };
 
     const handleDeleteGallery = (e) => {
@@ -46,7 +46,7 @@ export default function Gallery({ gallery }) {
 
         deleteGallery(gallery);
 
-        getAllGalleriesByUser(activeUser.id);
+        // getAllGalleriesByUser(activeUser.id);
     };
 
     return (

@@ -5,14 +5,14 @@ import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 export default function PhotoListByGallery() {
-    const { getAllPhotosByGallery, photosByGallery } = useContext(PhotoContext);
+    const { getAllPhotosByGallery, photosByGallery, loadPhotoList, photoUpdated } = useContext(PhotoContext);
 
     const { id } = useParams();
 
     useEffect(() => {
 
         getAllPhotosByGallery(id);
-    }, []);
+    }, [photoUpdated]);
 
     return (
         <Container>

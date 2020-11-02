@@ -6,7 +6,7 @@ import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap";
 
 
 export default function GalleryList() {
-    const { getAllGalleriesByUser, galleries, addGallery } = useContext(GalleryContext);
+    const { getAllGalleriesByUser, galleries, addGallery, galleryUpdated, galleryLoaded } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
 
     const [addName, setAddName] = useState();
@@ -30,15 +30,14 @@ export default function GalleryList() {
         };
 
         addGallery(newGallery);
-
-        getAllGalleriesByUser(activeUser.id);
+        // getAllGalleriesByUser(activeUser.id);
 
     };
 
     useEffect(() => {
 
         getAllGalleriesByUser(activeUser.id);
-    }, []);
+    }, [galleryUpdated]);
 
     return (
         <>

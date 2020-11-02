@@ -49,18 +49,18 @@ namespace PhotoPromo.Controllers
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
             var noGalleryContent = "no content";
 
-            if (allPhotosByGallery.Count == 0)
-            {
-                return Ok(noGalleryContent);
-            }
-            if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
-            {
-                return Unauthorized();
-            }
-            if (allPhotosByGallery == null)
-            {
-                return NoContent();
-            }
+            //if (allPhotosByGallery.Count == 0)
+            //{
+            //    return NoContent();
+            //}
+            //if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
+            //{
+            //    return Unauthorized();
+            //}
+            //if (allPhotosByGallery == null)
+            //{
+            //    return NoContent();
+            //}
 
             return Ok(allPhotosByGallery);
         }
@@ -77,7 +77,7 @@ namespace PhotoPromo.Controllers
             {
                 return Unauthorized();
             }
-            if (id == singlePhoto.Id)
+            if (id != singlePhoto.Id)
             {
                 return NotFound();
             }

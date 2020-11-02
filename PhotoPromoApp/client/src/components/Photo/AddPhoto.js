@@ -67,10 +67,9 @@ export default function AddPhoto() {
             UserProfileId: activeUser.id
         }
 
-        addImage(formData);
-
+        addImage(formData)
+        addPhoto(newPhoto).then(() => history.push(`/gallery`));
         //add await async to history push? 
-        addPhoto(newPhoto).then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
     };
 
     useEffect(() => {
