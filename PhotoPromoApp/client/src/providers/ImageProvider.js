@@ -9,11 +9,7 @@ export const ImageProvider = (props) => {
 
     const { getToken } = useContext(UserProfileContext);
 
-    const [singleImageThirdParty, setSingleImageThirdParty] = useState();
-    const [publicPhotoId, setPublicPhotoId] = useState();
-    const [publicPhotoUserId, setPublicPhotoUserId] = useState();
-    const [publicPhotoWidth, setPublicPhotoWidth] = useState();
-    const [publicPhotoHeight, setPublicPhotoHeight] = useState();
+
 
 
 
@@ -166,7 +162,7 @@ export const ImageProvider = (props) => {
     };
 
     return (
-        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty, singleImageThirdParty, setPublicPhotoId, setPublicPhotoWidth, setPublicPhotoHeight, setPublicPhotoUserId }}>
+        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty }}>
             {props.children}
         </ImageContext.Provider>
     );

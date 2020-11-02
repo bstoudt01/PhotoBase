@@ -60,10 +60,11 @@
 
   .modal-full {
     min-width: 20%;
-    margin-left: 80;
+    /* margin-left: 80; */
 }
 
 .modal-content  {
+  
     min-height: 50vh;
     min-width: 50vw;
     max-width: 80vw;

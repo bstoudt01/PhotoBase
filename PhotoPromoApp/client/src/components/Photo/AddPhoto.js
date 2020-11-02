@@ -24,17 +24,20 @@ export default function AddPhoto() {
     const [imageFile, setImageFile] = useState(null);
 
     const onChangeHandler = event => {
-        debugger
+        setImagePreviewUrl(null);
         console.log(event.target.files[0])
         var files = event.target.files
         let reader = new FileReader();
-        reader.onloadend = () => {
-            setImagePreviewUrl(reader.result)
+        if (files[0] != undefined || files[0] != null) {
+            reader.onloadend = () => {
+                setImagePreviewUrl(reader.result)
+            }
+            debugger
+            reader.readAsDataURL(files[0])
+            //if (this.maxSelectFile(event) && this.checkMimeType(event)) {
+            // if return true allow to setState
+            setImageFile(event.target.files[0])
         }
-        reader.readAsDataURL(files[0])
-        //if (this.maxSelectFile(event) && this.checkMimeType(event)) {
-        // if return true allow to setState
-        setImageFile(event.target.files[0])
         //}
     }
 
@@ -89,7 +92,6 @@ export default function AddPhoto() {
         addImage(formData);
 
         addPhoto(newPhoto).then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
-        // .then(() => history.push(`/gallery/${parseInt(imageGalleryId)}`))
     };
     useEffect(() => {
         getAllGalleriesByUser(activeUser.id);
@@ -98,45 +100,50 @@ export default function AddPhoto() {
 
 
     return (
-        <Col>
-            <Card body>
+        <Col >
+            <Card body >
                 <Row>
                     <Col>
                         <Form onSubmit={handleAddPhoto} >
                             <Form.Group>
                                 {/* <Form.File id="imageFile" label="Add Image" onChange={(e) => setImageFile(e.target.files[0])} /> */}
-
-                                <Form.File id="imageFile" label="Add Image" onChange={onChangeHandler} />
-                                {imagePreviewUrl ? (
-                                    <Image src={imagePreviewUrl} className="imgPreview" />
-                                ) : (
-                                        <div className="previewText">Please select an Image for Preview</div>
-                                    )}
-
+                                <Col sm={3}>
+                                    <Form.File id="imageFile" label="Add Image" onChange={onChangeHandler} />
+                                </Col>
+                                <Col sm={7} >
+                                    {imagePreviewUrl ? (
+                                        <Image src={imagePreviewUrl} className="imgPreview" />
+                                    ) : (
+                                            <div className="previewText">Please select an Image for Preview</div>
+                                        )}
+                                </Col>
                             </Form.Group>
-                            <Form.Group controlId="imageName">
-                                <Form.Label>Name: </Form.Label>
-                                <Form.Control type="text" placeholder="Photo Name" onChange={e => setImageName(e.target.value)} />
-                            </Form.Group>
+                            <Col xs="3">
+                                <Form.Group controlId="imageName">
+                                    <Form.Label>Name: </Form.Label>
+                                    <Form.Control type="text" placeholder="Photo Name" onChange={e => setImageName(e.target.value)} />
+                                </Form.Group>
+                            </Col>
+                            <Col xs="3">
+                                <Form.Group controlId="imageName">
+                                    <Form.Label>Attribute: </Form.Label>
+                                    <Form.Control type="text" placeholder="Taken by...." onChange={e => setImageAttribute(e.target.value)} />
+                                </Form.Group>
+                            </Col>
+                            <Col xs="3">
+                                <Form.Group controlId="imageGallery">
+                                    <Form.Label>Gallery Name</Form.Label>
+                                    <Form.Control as="select" onChange={e => setImageGalleryId(e.target.value)}>
+                                        <option>Select Gallery</option>
+                                        {
+                                            galleries.map(g =>
+                                                <GalleryOption key={g.id} gallery={g} />
 
-                            <Form.Group controlId="imageName">
-                                <Form.Label>Attribute: </Form.Label>
-                                <Form.Control type="text" placeholder="Taken by...." onChange={e => setImageAttribute(e.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group controlId="imageGallery">
-                                <Form.Label>Gallery Name</Form.Label>
-                                <Form.Control as="select" onChange={e => setImageGalleryId(e.target.value)}>
-                                    <option>Select Gallery</option>
-                                    {
-                                        galleries.map(g =>
-                                            <GalleryOption key={g.id} gallery={g} />
-
-                                        )
-                                    }
-                                </Form.Control>
-                            </Form.Group>
-
+                                            )
+                                        }
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
 
                             <div className="mb-3">
                                 <Form.Check type="checkbox" id="public">
