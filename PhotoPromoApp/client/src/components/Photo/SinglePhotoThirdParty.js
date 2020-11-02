@@ -16,8 +16,8 @@ export default function SinglePhotoThirdParty() {
     const imageId = getSingleImageThirdParty(imageParams);
 
     useEffect(() => {
-        setShowNavbar(false)
 
+        setShowNavbar(false)
     }, []);
 
 

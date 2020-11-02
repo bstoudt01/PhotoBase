@@ -3,20 +3,19 @@ import { NavLink as RRNavLink } from "react-router-dom";
 import { Navbar, Nav, Dropdown, ButtonGroup, Button, Col } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { GalleryContext } from "../providers/GalleryProvider";
-import { WindowViewContext } from "./WindowViewHandler";
 
 
-
-//export default function Header() {
 const Header = () => {
   const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
-
   const { isLoggedIn, logout, activeUser } = useContext(UserProfileContext);
+
   const [isOpen, setIsOpen] = useState(false);
+
   const toggle = () => setIsOpen(!isOpen);
 
 
   useEffect(() => {
+
     if (activeUser != null) {
       getAllGalleriesByUser(activeUser.id);
     }
@@ -38,11 +37,11 @@ const Header = () => {
               <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggle} />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto" navbar>
-                  { /* When isLoggedIn === true, we will render the Home link */}
+
                   {isLoggedIn &&
                     <>
                       <Nav.Item>
-                        <Nav.Link href="/image/add">Add Image</Nav.Link>
+                        <Button href="/image/add">Add Image</Button>
                       </Nav.Item>
                       <Dropdown as={ButtonGroup}>
                         <Button variant="success" href="/gallery">Galleries</Button>
@@ -56,6 +55,7 @@ const Header = () => {
                       </Dropdown>
                     </>
                   }
+
                   {!isLoggedIn &&
                     <>
                       <Nav.Item>
@@ -67,7 +67,6 @@ const Header = () => {
                     </>
                   }
                 </Nav>
-
 
                 {
                   isLoggedIn &&

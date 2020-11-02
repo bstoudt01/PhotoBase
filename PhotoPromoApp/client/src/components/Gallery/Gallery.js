@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
-import { PhotoContext } from "../../providers/PhotoProvider";
 import { Card, Button, Col, Row, Form } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
     const { activeUser } = useContext(UserProfileContext);
-    const { updateGallery, deleteGallery, getAllGalleriesByUser, galleryUpdated } = useContext(GalleryContext);
-    const { photosByGallery, getAllPhotosByGallery } = useContext(PhotoContext);
-    const [updatedName, setUpdatedName] = useState();
 
+    const { updateGallery, deleteGallery, getAllGalleriesByUser } = useContext(GalleryContext);
+
+    const [updatedName, setUpdatedName] = useState();
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
 
@@ -22,7 +21,9 @@ export default function Gallery({ gallery }) {
     };
 
     const hideModal = () => {
+
         setUpdateIsOpen(false);
+
         setDeleteIsOpen(false);
     };
 
@@ -36,6 +37,7 @@ export default function Gallery({ gallery }) {
         };
 
         updateGallery(newGallery);
+
         getAllGalleriesByUser(activeUser.id);
     };
 
@@ -43,8 +45,8 @@ export default function Gallery({ gallery }) {
         e.preventDefault();
 
         deleteGallery(gallery);
-        getAllGalleriesByUser(activeUser.id);
 
+        getAllGalleriesByUser(activeUser.id);
     };
 
     return (
@@ -56,7 +58,7 @@ export default function Gallery({ gallery }) {
                     </Col>
 
                     {/* UPDATE GALLERY MODAL */}
-                    {gallery.id != 1 ?
+                    {gallery.id !== 1 ?
                         <Col>
                             <Button id="showModalEditButton" varient="primary" onClick={showUpdateModal}>Edit</Button>
                             <Modal id="editModal" show={updateIsOpen} onHide={hideModal}>
@@ -85,7 +87,7 @@ export default function Gallery({ gallery }) {
                         : null}
 
                     {/* DELETE GALLERY MODAL */}
-                    {gallery.photoCount == 0 ?
+                    {gallery.photoCount === 0 ?
                         <Col>
                             <Button id="showModalDeleteButton" varient="primary" onClick={showDeleteModal}>Delete</Button>
                             <Modal id="deleteModal" show={deleteIsOpen} onHide={hideModal}>
@@ -97,7 +99,6 @@ export default function Gallery({ gallery }) {
                                     <Col sm="9">
                                         <strong>{gallery.name}</strong>
                                     </Col>
-
                                     <Form.Group>
                                         <Button type="submit" onClick={hideModal}>Submit</Button>
                                     </Form.Group>
@@ -109,7 +110,6 @@ export default function Gallery({ gallery }) {
                         </Col>
                         : <div></div>
                     }
-
                 </Row>
             </Card >
         </Col >

@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState } from 'react';
+import React, { useContext, createContext } from 'react';
 import { UserProfileContext } from './UserProfileProvider';
 
 export const ImageContext = createContext();
@@ -6,40 +6,7 @@ export const ImageContext = createContext();
 export const ImageProvider = (props) => {
 
     const apiUrl = "/api/image";
-    const [newImage, setNewImage] = useState({});
     const { getToken } = useContext(UserProfileContext);
-
-
-
-
-
-    // var productsToReturn = [];
-    // const addImagemultple = (file).map(singleFile => {
-    //     //create a promise for each API call
-    //     return new Promise((resolve, reject) => {
-    //         fetch(apiUrl, {
-    //             method: "POST",
-    //             body: singleFile,
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             },
-    //         }).then((err, res, body) => {
-    //             if (err) { reject(err) }
-    //             //call the resolve function which is passed to the executor                             //function passed to the promise
-    //             resolve(body)
-    //         })
-    //     })
-    // })
-    // Promise.all(requests).then((body) => {
-    //     //this gets called when all the promises have resolved/rejected.
-    //     body.forEach(res => {
-    //         if (res)
-    //             productsToReturn.push(JSON.parse(res).productInfo)
-    //     })
-    // }).catch(err => console.log(err))
-
-
-
 
 
     const addImage = (file) => {
@@ -77,24 +44,6 @@ export const ImageProvider = (props) => {
             }));
 
 
-    // const getImageName = (imageName) =>
-    //     getToken().then((token) =>
-    //         fetch(`${apiUrl}/${imageName}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //                 .then((response) => {
-    //                     return response.text();
-    //                 })
-    //                 .then((data) => {
-    //                     setNewImage(data.json())
-
-    //                 })
-    //         })
-    //     );
-
-
     const getImageName = (imageName) => {
         if (imageName !== undefined || imageName != null) {
             const getName = `${apiUrl}/${imageName}`
@@ -117,54 +66,10 @@ export const ImageProvider = (props) => {
 
         if (imageParams !== undefined) {
 
-            const get3rdParty = `${apiUrl}/custom/${imageParams.photoId}/${imageParams.width}/${imageParams.userId}`
+            const getThirdParty = `${apiUrl}/custom/${imageParams.photoId}/${imageParams.width}/${imageParams.userId}`
 
-            return (get3rdParty)
+            return (getThirdParty)
 
-
-
-            // return fetch(`${apiUrl}/unique/${imageParams.photoId}/${imageParams.width}/${imageParams.height}/${imageParams.userId}`, {
-            //     method: "GET"
-            // }).then(resp => {
-            //     const reader = resp.body.getReader();
-            //     //.then(resp => {
-            //     if (resp.ok) {
-            //         debugger
-
-            //         return new ReadableStream({
-            //             start(controller) {
-            //                 return pump();
-            //                 function pump() {
-            //                     return reader.read().then(({ done, value }) => {
-            //                         // When no more data needs to be consumed, close the stream
-            //                         if (done) {
-            //                             controller.close();
-            //                             return;
-            //                         }
-            //                         // Enqueue the next data chunk into our target stream
-            //                         controller.enqueue(value);
-            //                         return pump();
-            //                     });
-            //                 }
-            //             }
-            //         })
-
-
-            //             // return resp.body.getReader().read().then(({ value, done }) => {
-            //             //     console.log(decoder.decode(value))
-            //             // })
-            //             //.then((resp) => setSingleImage3rdParty(resp.url));
-
-            //             //return resp.json().then((resp) => setSingleImage3rdParty(resp.url));
-            //             .then(stream => new Response(stream))
-            //             .then(response => response.blob())
-            //             .then(blob => URL.createObjectURL(blob))
-            //             .then(url => console.log(image.src = url))
-            //             .catch(err => console.error(err));
-            //     }
-            //history.push("/gallery")
-            //throw new Error("Unauthorized");
-            // })
         }
     };
 
@@ -180,7 +85,7 @@ export const ImageProvider = (props) => {
     };
 
     return (
-        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty, newImage }}>
+        <ImageContext.Provider value={{ getRandomPublicImage, getImageId, getImageName, addImage, deleteImage, getSingleImageThirdParty }}>
             {props.children}
         </ImageContext.Provider>
     );

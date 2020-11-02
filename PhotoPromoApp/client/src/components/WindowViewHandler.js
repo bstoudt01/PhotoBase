@@ -1,9 +1,5 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext } from "react";
 
-import { useHistory } from "react-router-dom";
-
-import Header from "./Header";
-import ApplicationViews from "./ApplicationViews";
 export const WindowViewContext = createContext();
 
 export function WindowViewHandler(props) {

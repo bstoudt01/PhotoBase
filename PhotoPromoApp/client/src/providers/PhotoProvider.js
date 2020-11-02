@@ -1,8 +1,5 @@
 import React, { useState, createContext, useContext } from "react";
-
 import { useHistory } from "react-router-dom";
-import { ImageContext } from "./ImageProvider";
-
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const PhotoContext = createContext();
@@ -17,7 +14,6 @@ export function PhotoProvider(props) {
     const [photo, setPhoto] = useState([]);
     const [photoUpdated, setPhotoUpdated] = useState(false);
 
-    const { deleteImage } = useContext(ImageContext);
     const { getToken } = useContext(UserProfileContext);
 
     const getAllPhotosByUser = (userProfileId) =>

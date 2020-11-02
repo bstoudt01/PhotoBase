@@ -6,10 +6,10 @@ import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap";
 
 
 export default function GalleryList() {
-    const { getAllGalleriesByUser, galleries, addGallery, galleryUpdated } = useContext(GalleryContext);
+    const { getAllGalleriesByUser, galleries, addGallery } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
-    const [addName, setAddName] = useState();
 
+    const [addName, setAddName] = useState();
     const [addIsOpen, setAddIsOpen] = useState(false);
 
     const showAddModal = (e) => {
@@ -23,22 +23,28 @@ export default function GalleryList() {
 
     const handleAddGallery = (e) => {
         e.preventDefault();
+
         const newGallery = {
             name: addName,
             userProfileId: activeUser.id
-        }
-        addGallery(newGallery)
+        };
+
+        addGallery(newGallery);
+
         getAllGalleriesByUser(activeUser.id);
 
     };
 
     useEffect(() => {
+
         getAllGalleriesByUser(activeUser.id);
     }, []);
+
     return (
         <>
             <Container>
                 <Col>
+                    {/* Add Gallery Modal */}
                     <Row>
                         <Button id="showModalAddButton" className="justify-content-center" varient="primary" onClick={showAddModal}>Add Gallery</Button>
                         <Modal id="addModal" show={addIsOpen} onHide={hideModal}>
@@ -60,8 +66,7 @@ export default function GalleryList() {
                         </Modal>
                     </Row>
 
-
-
+                    {/* List Galleries */}
                     <section>
                         {galleries ? galleries.map(g =>
                             < Gallery key={g.id} gallery={g} />

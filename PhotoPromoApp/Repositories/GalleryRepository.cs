@@ -39,7 +39,6 @@ namespace PhotoPromo.Repositories
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("Name")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-
                         });
                     }
 
@@ -64,7 +63,7 @@ namespace PhotoPromo.Repositories
                 {
                     // get id and name from gallery table or return it based on name spelling in descending order
                     cmd.CommandText = @"
-                       SELECT Count(p.Id) AS PhotoCount, g.[Name], g.Id, g.UserProfileId
+                        SELECT Count(p.Id) AS PhotoCount, g.[Name], g.Id, g.UserProfileId
                         FROM Gallery g 
                         LEFT JOIN PHOTO p ON g.id = p.GalleryId
                         WHERE g.UserProfileId = @id
@@ -86,7 +85,6 @@ namespace PhotoPromo.Repositories
                             Name = reader.GetString(reader.GetOrdinal("Name")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             PhotoCount = reader.GetInt32(reader.GetOrdinal("PhotoCount"))
-
                         });
                     }
 
@@ -147,7 +145,7 @@ namespace PhotoPromo.Repositories
                         INSERT INTO Gallery ([Name], UserProfileId)
                         OUTPUT INSERTED.ID
                         VALUES (@Name, @UserProfileId)";
-                    //After the SQL String is declared we place the expected values in a comand that adds values to paramaters by passing through the SQL @Values
+
                     cmd.Parameters.AddWithValue("@Name", gallery.Name);
                     cmd.Parameters.AddWithValue("@UserProfileId", gallery.UserProfileId);
 

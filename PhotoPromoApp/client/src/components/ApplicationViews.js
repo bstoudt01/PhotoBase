@@ -9,7 +9,6 @@ import AddPhoto from "./Photo/AddPhoto";
 import SinglePhoto from "./Photo/SinglePhoto";
 import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
 import Home from "./Home";
-import AddPhotoMultiple from "./Photo/AddPhotoMultiple";
 import RandomPhotoPublic from "./Photo/RandomPhotoPublic";
 import NotFoundPage from "./NotFoundPage";
 
@@ -24,8 +23,9 @@ export default function ApplicationViews(props) {
                 <Switch>
                     {/* Register and Login Public Routes */}
                     <Route exact path="/">
-                        {isLoggedIn ? <GalleryList /> : <Redirect to="/Home" />}
+                        <Home />
                     </Route>
+
                     <Route exact path="/home">
                         <Home />
                     </Route>
@@ -49,10 +49,6 @@ export default function ApplicationViews(props) {
 
                     <Route exact path="/image/add">
                         {isLoggedIn ? <AddPhoto /> : <Redirect to="/Login" />}
-                    </Route>
-
-                    <Route exact path="/image/addmany">
-                        {isLoggedIn ? <AddPhotoMultiple /> : <Redirect to="/Login" />}
                     </Route>
 
                     <Route exact path="/image/:id">

@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using PhotoPromoApp.ImageHandlers;
 using System;
-using SixLabors.ImageSharp.Advanced;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
-using Microsoft.AspNetCore.Authorization;
 
 namespace PhotoPromoApp.Controllers
 {
@@ -43,25 +40,17 @@ namespace PhotoPromoApp.Controllers
                     if (image.Width > maxWidthLowRes)
                     {
                         //saves image with width of 1440, height is determined by imagesharp to keep aspect ratio (set height to 0)
-
                         using (Image lowResCopy = image.Clone(x => x.Resize(maxWidthLowRes, newHeight)))
                         {
                             string FileName = "low_" + file.FileName;
                             lowResCopy.Save(savedImagePath + FileName);
                         }
-
                     }
                     else
                     {
                         //saves image with actual width and height
                         string FileName = "low_" + file.FileName;
                         image.Save(savedImagePath + FileName);
-
-                        //using (Image lowResCopy = image.Clone(x => x.Resize(image.Width, image.Height)))
-                        //{
-                        //    string FileName = "low_" + file.FileName;
-                        //    lowResCopy.Save(savedImagePath + FileName);
-                        //}
                     }
                 }
                 using Image imageCopy = Image.Load(file.OpenReadStream());
@@ -83,10 +72,8 @@ namespace PhotoPromoApp.Controllers
                     {
                         string FileName = "high_" + file.FileName;
                         imageCopy.Save(savedImagePath + FileName);
-                       
                     }
                 }
-
 
             }
             catch
@@ -97,31 +84,6 @@ namespace PhotoPromoApp.Controllers
             return Ok();
         }
 
-
-
-        //ADDED INTO PHOTO DELETE
-        //[HttpDelete("{fileName}")]
-        //public IActionResult Delete(string fileName)
-        //{
-        //    string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_"+fileName);
-        //    string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_"+fileName);
-        //    string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "custom_" + fileName);
-
-
-        //    if ((System.IO.File.Exists(_highResImageToBeDeleted)))
-        //    {
-        //        System.IO.File.Delete(_highResImageToBeDeleted);
-        //    }
-        //    if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
-        //    {
-        //        System.IO.File.Delete(_lowResImageToBeDeleted);
-        //    }
-        //    if ((System.IO.File.Exists(_customImageToBeDeleted)))
-        //    {
-        //        System.IO.File.Delete(_customImageToBeDeleted);
-        //    }
-        //    return Ok();
-        //}
 
         [HttpGet("{imageName}")]
         public IActionResult GetName(string imageName)
@@ -277,74 +239,5 @@ namespace PhotoPromoApp.Controllers
         }
 
 
-
-        //using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
-        //{
-        //    string FileName = "high_" + file.FileName;
-        //    highResCopy.Save(savedImagePath + FileName);
-        //}
-
-        //working by photoId, other paramatesr are note used yet
-        //[HttpGet("unique/{photoId}/{width}/{height}/{userId}")]
-        //public IActionResult GetPublic(string photoId, string width, string height, string userId)
-        //{
-
-        //    if (photoId != null)
-        //    {
-        //        var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
-
-        //        Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
-        //        //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-
-
-
-
-        //        int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
-        //        if (index1 != -1)
-        //        {
-        //            string imageName = publicPhoto.PhotoLocation.Substring(index1+1);
-        //            var highResImage = imageName.Insert(0, "high_");
-        //            var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
-        //            var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
-
-        //            using Image image = Image.Load(imageFileStream);
-        //            {
-        //                using (Image lowResCopy = image.Clone(x => x.Resize(image.Width / 2, image.Height / 2)
-        //                            //more sizing options
-        //                        )
-        //                    )//close out lowResCopy method
-
-        //                {
-        //                    // copy.Save(outStream);
-        //                    string FileName = "reallylow_" + imageName;
-        //                    int originalWidth = lowResCopy.Width;
-        //                    int originalHeight = lowResCopy.Height;
-        //                    double metaVR = lowResCopy.Metadata.VerticalResolution;
-
-        //                    Console.WriteLine(FileName, "filename");
-        //                    Console.WriteLine(imageName, "imageName");
-        //                    double metaHR = lowResCopy.Metadata.HorizontalResolution;
-        //                    //int maxWidth = 500;
-        //                    //if (originalWidth > maxWidth)
-        //                    //{
-        //                    //    int newHeight = maxWidth * originalHeight;
-        //                    //    newHeight /= originalWidth;
-
-        //                    //    copy.Mutate(i => i.Resize(maxWidth, newHeight));
-        //                    //}
-
-        //                    lowResCopy.Save(savedImagePath + FileName);
-        //                    var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
-        //                    var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-        //                    return File(NewimageFileStream, "image/jpeg");
-        //                }
-
-        //            }
-        //        }
-        //    }
-        //    return NoContent();
-        //}
-
     }
-
 }

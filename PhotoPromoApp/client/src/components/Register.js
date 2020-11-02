@@ -15,17 +15,21 @@ export default function Register() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [facebookUserId, setFacebookUserId] = useState();
-  const [logoLocation, setLogoLocation] = useState();
-  const [imageName, setImageName] = useState();
+
 
   const registerClick = (e) => {
-    debugger
     e.preventDefault();
+
     if (password && password !== confirmPassword) {
+
       alert("Passwords don't match. Do better.");
+
     } else {
+
       const userProfile = { firstName, lastName, displayName, company, email, facebookUserId };
+
       register(userProfile, password)
+
         .then(() => history.push("/"));
     }
   };
@@ -34,7 +38,6 @@ export default function Register() {
 
   return (
     <Col xs="3">
-
       <Form onSubmit={registerClick}>
         <fieldset>
           <Form.Group>
