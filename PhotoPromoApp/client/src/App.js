@@ -6,6 +6,7 @@ import { PhotoProvider } from './providers/PhotoProvider';
 import { ImageProvider } from './providers/ImageProvider';
 import { WindowViewHandler } from './components/WindowViewHandler';
 import { TopLevelView } from "./components/TopLevelView";
+
 function App() {
 
   return (
@@ -17,8 +18,6 @@ function App() {
             <PhotoProvider>
               <WindowViewHandler >
                 <TopLevelView />
-                {/* <Header /> */}
-                {/* <ApplicationViews /> */}
               </WindowViewHandler>
             </PhotoProvider>
           </GalleryProvider>

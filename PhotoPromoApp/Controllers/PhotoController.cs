@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
 
 namespace PhotoPromo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PhotoController : ControllerBase
     {
-
+        private readonly IWebHostEnvironment _webhost;
         private readonly IPhotoRepository _photoRepository;
         private readonly IUserProfileRepository _userProfileRepository;
 
-        public PhotoController(IPhotoRepository photoRepository, IUserProfileRepository userProfileRepository)
+        public PhotoController(IPhotoRepository photoRepository, IWebHostEnvironment webhost, IUserProfileRepository userProfileRepository)
         {
+            _webhost = webhost;
             _photoRepository = photoRepository;
             _userProfileRepository = userProfileRepository;
-
         }
 
 
@@ -32,10 +31,12 @@ namespace PhotoPromo.Controllers
         {
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByUserId = _photoRepository.GetAllPhotosByUserProfileId(userProfileId);
+
             if (currentUserProfile.Id != userProfileId)
             {
                 return Unauthorized();
             }
+
             return Ok(allPhotosByUserId);
         }
 
@@ -46,14 +47,21 @@ namespace PhotoPromo.Controllers
         {
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
-            if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
-            {
-                return Unauthorized();
-            }
-            if (allPhotosByGallery == null)
-            {
-                return NoContent();
-            }
+            var noGalleryContent = "no content";
+
+            //if (allPhotosByGallery.Count == 0)
+            //{
+            //    return NoContent();
+            //}
+            //if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
+            //{
+            //    return Unauthorized();
+            //}
+            //if (allPhotosByGallery == null)
+            //{
+            //    return NoContent();
+            //}
+
             return Ok(allPhotosByGallery);
         }
 
@@ -69,12 +77,11 @@ namespace PhotoPromo.Controllers
             {
                 return Unauthorized();
             }
-            if (id == singlePhoto.Id)
+            if (id != singlePhoto.Id)
             {
-
                 return NotFound();
-
             }
+
             return Ok(singlePhoto);
         }
 
@@ -91,10 +98,9 @@ namespace PhotoPromo.Controllers
             }
             if (photo == null)
             {
-
                 return BadRequest();
-
             }
+
             photo.ResolutionLevel = 300;
             
             _photoRepository.Add(photo);
@@ -124,29 +130,41 @@ namespace PhotoPromo.Controllers
             return Ok(photo);
         }
 
+        //Delete Photo row from table then Delete Image files from storage directory
         [HttpDelete("{id}")]
         public ActionResult Delete(int id, Photo photo)
         {
             var currentUserProfile = GetCurrentUserProfile();
+            var singlePhoto = _photoRepository.GetSinglePhotobyId(id);
 
+            string _highResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "high_" + photo.PhotoLocation);
+            string _lowResImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "low_" + photo.PhotoLocation);
+            string _customImageToBeDeleted = Path.Combine(_webhost.WebRootPath, "images/", "custom_" + photo.PhotoLocation);
 
-            if (currentUserProfile.Id != photo.UserProfileId)
+            if (currentUserProfile.Id != singlePhoto.UserProfileId)
             {
                 return Unauthorized();
             }
-            if (photo == null)
-            {
-
-                return BadRequest();
-
-            }
-            if (id != photo.Id)
+            if (singlePhoto == null)
             {
                 return BadRequest();
             }
 
             _photoRepository.Delete(id);
 
+
+            if ((System.IO.File.Exists(_highResImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_highResImageToBeDeleted);
+            }
+            if ((System.IO.File.Exists(_lowResImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_lowResImageToBeDeleted);
+            }
+            if ((System.IO.File.Exists(_customImageToBeDeleted)))
+            {
+                System.IO.File.Delete(_customImageToBeDeleted);
+            }
             return Ok(id);
         }
 

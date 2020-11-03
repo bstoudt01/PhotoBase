@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
@@ -7,8 +7,8 @@ export default function RandomPhotoPublic() {
     const { getRandomPublicImage } = useContext(ImageContext);
     const { setShowNavbar } = useContext(WindowViewContext);
 
-    const { width, height } = useParams();
-    const imageParams = { width, height }
+    const { width } = useParams();
+    const imageParams = { width }
 
     const imageId = getRandomPublicImage(imageParams);
     useEffect(() => {
@@ -23,8 +23,7 @@ export default function RandomPhotoPublic() {
             {imageId === "" || imageId === null ?
                 <Image />
                 :
-
-                <Image src={imageId} alt="singleImage" fluid />
+                <Image style={{ width: "auto" }} src={imageId} alt="singleImage" fluid />
 
             }
         </Container>

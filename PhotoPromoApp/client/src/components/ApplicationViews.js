@@ -9,9 +9,8 @@ import AddPhoto from "./Photo/AddPhoto";
 import SinglePhoto from "./Photo/SinglePhoto";
 import SinglePhotoThirdParty from "./Photo/SinglePhotoThirdParty";
 import Home from "./Home";
-import AddPhotoMultiple from "./Photo/AddPhotoMultiple";
 import RandomPhotoPublic from "./Photo/RandomPhotoPublic";
-
+import NotFoundPage from "./NotFoundPage";
 
 export default function ApplicationViews(props) {
     const { isLoggedIn } = useContext(UserProfileContext);
@@ -24,8 +23,9 @@ export default function ApplicationViews(props) {
                 <Switch>
                     {/* Register and Login Public Routes */}
                     <Route exact path="/">
-                        {isLoggedIn ? <GalleryList /> : <Redirect to="/Home" />}
+                        <Home />
                     </Route>
+
                     <Route exact path="/home">
                         <Home />
                     </Route>
@@ -51,10 +51,6 @@ export default function ApplicationViews(props) {
                         {isLoggedIn ? <AddPhoto /> : <Redirect to="/Login" />}
                     </Route>
 
-                    <Route exact path="/image/addmany">
-                        {isLoggedIn ? <AddPhotoMultiple /> : <Redirect to="/Login" />}
-                    </Route>
-
                     <Route exact path="/image/:id">
                         {isLoggedIn ? <SinglePhoto /> : <Redirect to="/Login" />}
                     </Route>
@@ -69,14 +65,19 @@ export default function ApplicationViews(props) {
                 to avoid incorrect images being displayed, This is not a secure practice just a quality standard  */}
 
                     {/* User-specific Photo including width by height resolution */}
-                    <Route exact path="/image/:photoId/:width/:heigt/:userId" >
+                    <Route exact path="/image/:photoId/:width/:userId" >
                         < SinglePhotoThirdParty />
                     </Route>
 \
                      {/* Random Public Photo including HxW resolution, 
                      this will eventualy include logo placed on image ( create copy with logo on image upload) */}
-                    <Route exact path="/image/random/:width/:height" >
+                    <Route exact path="/image/random/:width" >
                         < RandomPhotoPublic />
+                    </Route>
+
+
+                    <Route >
+                        <NotFoundPage />
                     </Route>
                 </Switch>
             </main>

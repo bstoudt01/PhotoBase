@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
@@ -20,14 +15,6 @@ namespace PhotoPromo.Controllers
         {
             _userProfileRepository = userProfileRepository;
         }
-
-
-        //REPO METHODS NOT YET ADDED TO CONTROLLER
-        //void DeactivateProfile(int id);
-        //List<UserProfile> GetAllDeactivatedUserProfiles();
-        //List<UserProfile> GetAllUserProfiles();
-        //void ReactivateProfile(int id);
-
 
 
         //Get User by UserProfile.FirebaseId
@@ -52,7 +39,6 @@ namespace PhotoPromo.Controllers
 
 
         //Create new UserProfile
-        //Added  userTypeId  for when post returns userProfile, also set to default to 2 "user" in the database when creating a new instance, but I needed that info here 
         [HttpPost]
         public IActionResult Post(UserProfile userProfile)
         {

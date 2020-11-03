@@ -1,7 +1,5 @@
-import React, { useState, createContext, useContext } from "react";
-
+import React, { useState, createContext, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const PhotoContext = createContext();
@@ -13,8 +11,13 @@ export function PhotoProvider(props) {
 
     const [photosByUser, setPhotosByUser] = useState([]);
     const [photosByGallery, setPhotosByGallery] = useState([]);
-    const [photo, setPhoto] = useState([]);
+    const [newlyUpdatedPhoto, setNewlyUpdatedPhoto] = useState({});
 
+
+
+
+    const [photoUpdated, setPhotoUpdated] = useState(false);
+    const [photoLoaded, setPhotoLoaded] = useState(false);
 
     const { getToken } = useContext(UserProfileContext);
 
@@ -35,8 +38,20 @@ export function PhotoProvider(props) {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then(resp => resp.json())
-                .then(setPhotosByGallery));
+            }).then((resp) => {
+                resp.json().then(setPhotosByGallery)
+                // if (resp.ok) {
+                //     //(setPhotoUpdated(!photoUpdated));
+                //     return resp.json().then(setPhotosByGallery);
+                // }
+            }));
+
+    //when photo is deleted this useEffect is triggered during the http DELETE fetch
+    //when loadPhotoList changes, the useEffect on PhootListByGallery is triggered and getAllPhotosByGallery is run again
+    useEffect(() => {
+        setPhotoLoaded(!photoLoaded);
+    }, [photosByGallery]);
+
 
     const getSinglePhoto = (id) =>
         getToken().then((token) =>
@@ -47,12 +62,14 @@ export function PhotoProvider(props) {
                 }
             }).then(resp => {
                 if (resp.ok) {
-                    return resp.json().then(setPhoto);
+                    return resp.json().then(setNewlyUpdatedPhoto);
                 }
-                history.push("/photo")
-                throw new Error("Unauthorized");
+                //history.push("/photo")
+                // throw new Error("Unauthorized");
             }));
 
+    //when Photo Updates it triggers this useEffect which changes loadSinglePhoto
+    //loadsinglePhoto triggers a useEffect on Photo.js that has a conditional inside of it... if the update button has been clicked the conditontional is true and it runs, if not, notthing happens
     const addPhoto = (photo) =>
         getToken().then((token) =>
             fetch(`${apiUrl}`,
@@ -64,6 +81,7 @@ export function PhotoProvider(props) {
                     },
                     body: JSON.stringify(photo)
                 }).then(resp => {
+                    setPhotoUpdated(!photoUpdated)
                     if (resp.ok) {
                         return resp.json();
                     }
@@ -83,7 +101,10 @@ export function PhotoProvider(props) {
 
             }).then(resp => {
                 if (resp.ok) {
+                    (setPhotoUpdated(!photoUpdated));
+
                     return resp.json();
+                    // .then(() => setPhotoUpdated(!photoUpdated));
                 }
                 throw new Error("Unauthorized");
             }));
@@ -99,13 +120,15 @@ export function PhotoProvider(props) {
                 body: JSON.stringify(deletedPhoto)
             }).then(resp => {
                 if (resp.ok) {
+                    (setPhotoUpdated(!photoUpdated));
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
             }));
 
+
     return (
-        <PhotoContext.Provider value={{ getToken, addPhoto, photosByGallery, photosByUser, photo, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
+        <PhotoContext.Provider value={{ getToken, photoUpdated, addPhoto, photosByGallery, photosByUser, newlyUpdatedPhoto, getAllPhotosByUser, getAllPhotosByGallery, getSinglePhoto, updatePhoto, deletePhoto }}>
             {props.children}
         </PhotoContext.Provider>
     );

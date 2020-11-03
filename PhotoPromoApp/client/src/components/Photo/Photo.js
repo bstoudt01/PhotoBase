@@ -1,22 +1,28 @@
 import React, { useContext, useState, useEffect } from "react";
 import { UserProfileContext } from "../../providers/UserProfileProvider";
-import { Card, Button, Col, Row, Modal, Form, Image } from "react-bootstrap";
+import { Card, Button, Col, Row, Modal, Form, Image, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import AddPhotoGalleryOption from "./AddPhotoGalleryOption";
+
 export default function Photo({ photo }) {
 
-    const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
+    const { galleries } = useContext(GalleryContext);
     const { activeUser } = useContext(UserProfileContext);
-    const { getImageName, deleteImage } = useContext(ImageContext);
+    const { getImageName } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
+
     const [photoToUpdate, setPhotoToUpdate] = useState(photo)
-    const imageName = getImageName(photo.photoLocation);
     const [updateIsOpen, setUpdateIsOpen] = useState(false);
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
+    const [detailsIsOpen, setDetailsIsOpen] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [checked, setChecked] = useState(photo.isPublic);
+
+
     const handleClick = () => {
+
         setChecked(!checked)
 
         const stateToChange = { ...photoToUpdate };
@@ -25,6 +31,7 @@ export default function Photo({ photo }) {
 
         setPhotoToUpdate(stateToChange);
     }
+
     const showDeleteModal = (e) => {
         setDeleteIsOpen(true);
     };
@@ -33,11 +40,29 @@ export default function Photo({ photo }) {
         setUpdateIsOpen(true);
     };
 
-    const hideModal = () => {
-        setUpdateIsOpen(false);
-        setDeleteIsOpen(false);
+    const showDetailsModal = (e) => {
+        setDetailsIsOpen(true);
     };
 
+    const hideModal = () => {
+
+        setUpdateIsOpen(false);
+
+        setDeleteIsOpen(false);
+
+        setDetailsIsOpen(false);
+    };
+
+    const thirdPartyLink = () => {
+
+        var copyText = document.querySelector("#input");
+
+        copyText.select();
+
+        document.execCommand("copy");
+
+        alert("Copied Link To Share: " + copyText.value);
+    };
 
     const handleFieldChange = (e) => {
 
@@ -55,12 +80,12 @@ export default function Photo({ photo }) {
         stateToChange[e.target.id] = parseInt(e.target.value);
 
         setPhotoToUpdate(stateToChange);
-
     };
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        debugger
+        setIsUpdating(!isUpdating);
+
         const stateToChange = { ...photoToUpdate };
 
         stateToChange[photo.Id] = parseInt(photo.id);
@@ -68,40 +93,59 @@ export default function Photo({ photo }) {
         setPhotoToUpdate(stateToChange);
 
         updatePhoto(photoToUpdate);
+
     };
 
 
-    const handleDelete = () => {
-        debugger
-        //deletePhoto(photo).then((resp) => { if (resp.ok) { return (deleteImage(photo)) } else { return console.log("broken") } });
-        deleteImage(photo)
-        // debugger
+    const handleDelete = (e) => {
+        e.preventDefault();
+
         deletePhoto(photo);
-    }
-    useEffect(() => {
-        getAllGalleriesByUser(activeUser.id);
-    }, []);
+
+    };
+
+    const imageName = getImageName(photo.photoLocation);
+
+    // useEffect(() => {
+
+    //     if (isUpdating) {
+    //         debugger
+    //         getSinglePhoto(photo.id);
+    //         photo = newlyUpdatedPhoto;
+    //     }
+
+
+    // }, [loadSinglePhoto]);
+
 
 
     return (
-        <Col xs={6} lg={3} >
+        <  Col xs={6} lg={4} >
             <Card body >
-                <Row>
-                    <Col>
-                        <Row>
-                            <strong>{photo.name}</strong>
-                            {/* <Image src={photo.photoLocation}></Image> */}
-                        </Row>
-
+                <Row >
+                    <Col >
+                        {/* Photo / Image and Tooltip to highlight properties */}
                         {photo.photoLocation === "" || photo.photoLocation === null ?
                             <Row>
-                                <Image />
+                                <div />
                             </Row>
                             :
-                            <Row>
-                                <Image src={imageName} alt={photo.name} fluid />
+                            <Row >
+                                <OverlayTrigger
+                                    id="photoDetails"
+                                    overlay={
+                                        <Tooltip id={`tooltip-${photo.id}`}>
+                                            Name: <strong>{photo.name}</strong> <br />
+                                            Attribute: <strong>{photo.attribute}</strong> < br />
+                                            Is Public: <strong>{photo.isPublic ? "YES" : "NO"}</strong>
+                                        </Tooltip>
+                                    }
+                                >
+                                    <Image src={imageName} alt={photo.name} fluid />
+                                </OverlayTrigger>
                             </Row>
                         }
+
                         {photo != null ?
                             <Row>
                                 {/* UPDATE IMAGE/FILE MODAL */}
@@ -127,7 +171,7 @@ export default function Photo({ photo }) {
                                                 <Form.Control.Feedback>Thanks for Sharing</Form.Control.Feedback>
                                             </Form.Check>
 
-                                            {galleries != undefined ?
+                                            {galleries !== undefined ?
                                                 <Form.Group controlId="galleryId">
                                                     <Form.Label>Gallery Name</Form.Label>
                                                     <Form.Control as="select" onChange={handleIntFieldChange}>
@@ -168,6 +212,26 @@ export default function Photo({ photo }) {
                                         </Modal.Footer>
                                     </Modal>
                                 </>
+
+                                {/* DETAILS VIEW IMAGE/FILE MODAL */}
+                                <Button id="showModalEditButton" varient="primary" onClick={showDetailsModal}>Details</Button>
+                                <Modal aria-labelledby="contained-modal-title-vcenter" centered size="lg"
+                                    id="editModal" show={detailsIsOpen} onHide={hideModal}>
+                                    <Modal.Header className="modal-content">
+                                        <Modal.Title>{photo.name}</Modal.Title>
+                                        <Modal.Body>
+                                            <strong>Attribute: {photo.attribute}</strong> <br />
+                                            <strong>Gallery: {photo.gallery.name}</strong> < br />
+                                            <strong>Is Public: {photo.isPublic ? "YES" : "NO"}</strong>
+                                        </Modal.Body>
+                                        <input id="input" valuetype="text" defaultValue={`http://localhost:3000/image/${photo.id}/600/${photo.userProfileId}`} />
+                                        <Button id="copy" onClick={thirdPartyLink}>Share</Button>
+                                        <Image src={imageName} alt={photo.name} fluid />
+                                    </Modal.Header>
+                                    <Modal.Footer className="modal-full">
+                                        <Button variant="secondary" onClick={hideModal}>Cancel</Button>
+                                    </Modal.Footer>
+                                </Modal>
                             </ Row >
                             : null}
                     </Col>

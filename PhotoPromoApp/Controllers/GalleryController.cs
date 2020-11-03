@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
 
 namespace PhotoPromo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GalleryController : ControllerBase
@@ -22,7 +20,6 @@ namespace PhotoPromo.Controllers
         {
             _galleryRepository = galleryRepository;
             _userProfileRepository = userProfileRepository;
-
         }
 
 
@@ -57,10 +54,9 @@ namespace PhotoPromo.Controllers
             }
             if (id == singleGallery.Id)
             {
-
                 return NotFound();
-
             }
+
             return Ok(singleGallery);
         }
 
@@ -77,12 +73,11 @@ namespace PhotoPromo.Controllers
             }
             if (gallery == null)
             {
-
                 return NotFound();
-
             }
 
             _galleryRepository.Add(gallery);
+
             return CreatedAtAction(nameof(GetSingleById), new { id = gallery.Id }, gallery);
         }
 
@@ -98,15 +93,15 @@ namespace PhotoPromo.Controllers
             }
             if (gallery == null)
             {
-
                 return NotFound();
-
             }
             if (id != gallery.Id)
             {
                 return BadRequest();
             }
+
             _galleryRepository.Update(gallery);
+            
             return Ok(gallery);
         }
 
@@ -146,7 +141,6 @@ namespace PhotoPromo.Controllers
             {
                 Console.Write("UhOh There was an Exception...", ex);
                 return BadRequest();
-
             }
         }
 
