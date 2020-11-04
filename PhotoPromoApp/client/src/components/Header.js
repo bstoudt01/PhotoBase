@@ -55,18 +55,20 @@ const Header = () => {
                     </>
                   }
 
-                  {!isLoggedIn &&
-                    <>
+                </Nav>
+
+                {!isLoggedIn &&
+                  <>
+                    <Nav navbar>
                       <Nav.Item>
                         <Nav.Link tag={RRNavLink} href="/login">Login</Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
                         <Nav.Link tag={RRNavLink} href="/register">Register</Nav.Link>
                       </Nav.Item>
-                    </>
-                  }
-                </Nav>
-
+                    </Nav>
+                  </>
+                }
                 {
                   isLoggedIn &&
                   <>

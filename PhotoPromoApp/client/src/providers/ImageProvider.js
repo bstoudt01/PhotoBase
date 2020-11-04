@@ -20,7 +20,7 @@ export const ImageProvider = (props) => {
             }).then(resp => {
 
                 if (resp.ok) {
-                    return resp;
+                    return;
                 }
                 throw new Error("Image Upload Failed.")
             }))
@@ -47,7 +47,6 @@ export const ImageProvider = (props) => {
     const getImageName = (imageName) => {
         if (imageName !== undefined || imageName != null) {
             const getName = `${apiUrl}/${imageName}`
-
             return (getName)
         }
     };

@@ -38,6 +38,7 @@
   }
 }
 
+/* Add Photo Img Preview */
 .imgPreview {
   text-align: center;
   margin: 5px 15px;
@@ -53,22 +54,14 @@
     height: 100%;
 }
 
-/* .custom-modal-style {
-  width: 2000px;
-  min-height: 100vr;
-  } */
-
+/* Attached to Photo Details Modal, affects all modals */
   .modal-full {
     min-width: 20%;
-    /* margin-left: 80; */
 }
 
+/* Attached to Photo Details Modal, affects all modals */
 .modal-content  {
-  
-    min-height: 50vh;
-    min-width: 50vw;
     max-width: 80vw;
-
 }
 
 /* Dropdown Button */
@@ -112,3 +105,30 @@
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+/* Homepage */
+.marginBottom {
+  margin-bottom: 2em;
+}
+
+/* Homepage */
+.marginTop {
+  margin-top: 2em;
+}
+
+/* Homepage */
+.homePageRandomImage {
+  border: 5px solid #555;}
+
+
+/* Images on Blank Pages w/out Navbars */
+.centerImage {
+
+  /* padding-top: 10%;  */
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+
+ }

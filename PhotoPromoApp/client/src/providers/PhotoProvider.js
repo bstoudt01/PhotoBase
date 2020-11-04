@@ -40,13 +40,10 @@ export function PhotoProvider(props) {
                 }
             }).then((resp) => {
                 resp.json().then(setPhotosByGallery)
-                // if (resp.ok) {
-                //     //(setPhotoUpdated(!photoUpdated));
-                //     return resp.json().then(setPhotosByGallery);
-                // }
             }));
 
-    //when photo is deleted this useEffect is triggered during the http DELETE fetch
+    //watchin state...
+    //when photo is deleted this useEffect is triggered during the http DELETE fetch, that useEffect changes 
     //when loadPhotoList changes, the useEffect on PhootListByGallery is triggered and getAllPhotosByGallery is run again
     useEffect(() => {
         setPhotoLoaded(!photoLoaded);
@@ -64,8 +61,6 @@ export function PhotoProvider(props) {
                 if (resp.ok) {
                     return resp.json().then(setNewlyUpdatedPhoto);
                 }
-                //history.push("/photo")
-                // throw new Error("Unauthorized");
             }));
 
     //when Photo Updates it triggers this useEffect which changes loadSinglePhoto
@@ -85,7 +80,6 @@ export function PhotoProvider(props) {
                     if (resp.ok) {
                         return resp.json();
                     }
-                    throw new Error("Unauthorized");
                 }));
 
 
@@ -104,7 +98,6 @@ export function PhotoProvider(props) {
                     (setPhotoUpdated(!photoUpdated));
 
                     return resp.json();
-                    // .then(() => setPhotoUpdated(!photoUpdated));
                 }
                 throw new Error("Unauthorized");
             }));

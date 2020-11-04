@@ -3,28 +3,26 @@ import { useParams } from "react-router-dom";
 import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { WindowViewContext } from "../WindowViewHandler";
-import "../../App.css";
-export default function RandomPhotoPublic() {
+export default function RandomPhotoSpotlight(spotlightImage) {
     const { getRandomPublicImage } = useContext(ImageContext);
     const { setShowNavbar } = useContext(WindowViewContext);
 
-    const { width } = useParams();
-    const imageParams = { width }
+    //   const imageParams = 200;
 
-    const imageId = getRandomPublicImage(imageParams);
-    useEffect(() => {
+    //    const imageId = getRandomPublicImage(imageParams);
+    // useEffect(() => {
 
-        setShowNavbar(false)
+    //     setShowNavbar(false)
 
-    }, []);
+    // }, []);
 
 
     return (
         <Container>
-            {imageId === "" || imageId === null ?
+            {spotlightImage === "" || spotlightImage === null ?
                 <Image />
                 :
-                <Image className="centerImage" style={{ width: "auto" }} src={imageId} alt="singleImage" fluid />
+                <Image style={{ width: "auto" }} src={spotlightImage} alt="singleImage" fluid />
 
             }
         </Container>

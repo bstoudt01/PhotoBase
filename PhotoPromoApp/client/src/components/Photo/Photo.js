@@ -19,7 +19,7 @@ export default function Photo({ photo }) {
     const [detailsIsOpen, setDetailsIsOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [checked, setChecked] = useState(photo.isPublic);
-
+    const [imageState, setImageState] = useState();
 
     const handleClick = () => {
 
@@ -84,6 +84,9 @@ export default function Photo({ photo }) {
 
     const handleUpdate = (e) => {
         e.preventDefault();
+        if (photoToUpdate.name === "") {
+            alert("Name Field Required")
+        }
         setIsUpdating(!isUpdating);
 
         const stateToChange = { ...photoToUpdate };
@@ -103,20 +106,14 @@ export default function Photo({ photo }) {
         deletePhoto(photo);
 
     };
+    const handleGetImage = () => {
 
-    const imageName = getImageName(photo.photoLocation);
+        setImageState(getImageName(photo.photoLocation));
+    }
 
-    // useEffect(() => {
-
-    //     if (isUpdating) {
-    //         debugger
-    //         getSinglePhoto(photo.id);
-    //         photo = newlyUpdatedPhoto;
-    //     }
-
-
-    // }, [loadSinglePhoto]);
-
+    useEffect(() => {
+        handleGetImage()
+    }, [])
 
 
     return (
@@ -141,7 +138,7 @@ export default function Photo({ photo }) {
                                         </Tooltip>
                                     }
                                 >
-                                    <Image src={imageName} alt={photo.name} fluid />
+                                    <Image src={imageState} alt={photo.name} fluid />
                                 </OverlayTrigger>
                             </Row>
                         }
@@ -151,15 +148,14 @@ export default function Photo({ photo }) {
                                 {/* UPDATE IMAGE/FILE MODAL */}
                                 <>
                                     <Button id="showModalEditButton" varient="primary" onClick={showUpdateModal}>Edit</Button>
-                                    <Modal id="editModal" show={updateIsOpen} onHide={hideModal}>
-                                        <Modal.Header>
+                                    <Modal id="editModal" centered show={updateIsOpen} onHide={hideModal}>
+                                        <Modal.Header className="modal-content-sm"  >
                                             <Modal.Title>{photo.name}</Modal.Title>
                                         </Modal.Header>
-                                        {/* <Modal.Body>asdfasdf</Modal.Body> */}
                                         <Form onSubmit={handleUpdate}>
                                             <Form.Group controlId="name">
                                                 <Form.Label>Name: </Form.Label>
-                                                <Form.Control type="text" defaultValue={photo.name} onChange={handleFieldChange} />
+                                                <Form.Control required type="text" defaultValue={photo.name} onChange={handleFieldChange} />
                                             </Form.Group>
                                             <Form.Group controlId="attribute">
                                                 <Form.Label>Attribute: </Form.Label>
@@ -189,7 +185,7 @@ export default function Photo({ photo }) {
                                                 <Button type="submit" onClick={hideModal}>Submit</Button>
                                             </Form.Group>
                                         </Form>
-                                        <Modal.Footer>
+                                        <Modal.Footer className="modal-full-sm">
                                             <Button variant="secondary" onClick={hideModal}>Cancel</Button>
                                         </Modal.Footer>
                                     </Modal>
@@ -226,7 +222,7 @@ export default function Photo({ photo }) {
                                         </Modal.Body>
                                         <input id="input" valuetype="text" defaultValue={`http://localhost:3000/image/${photo.id}/600/${photo.userProfileId}`} />
                                         <Button id="copy" onClick={thirdPartyLink}>Share</Button>
-                                        <Image src={imageName} alt={photo.name} fluid />
+                                        <Image src={imageState} alt={photo.name} fluid />
                                     </Modal.Header>
                                     <Modal.Footer className="modal-full">
                                         <Button variant="secondary" onClick={hideModal}>Cancel</Button>

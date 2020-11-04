@@ -29,16 +29,19 @@ export default function Gallery({ gallery }) {
 
     const handleUpdateGallery = (e) => {
         e.preventDefault();
+        if (updatedName === "") {
+            alert("Gallery Name Required or Cancel to avoid change")
+            e.preventDefault();
+        } else {
+            const newGallery = {
+                id: gallery.id,
+                name: updatedName,
+                userProfileId: gallery.userProfileId
+            };
 
-        const newGallery = {
-            id: gallery.id,
-            name: updatedName,
-            userProfileId: gallery.userProfileId
-        };
+            updateGallery(newGallery);
+        }
 
-        updateGallery(newGallery);
-
-        // getAllGalleriesByUser(activeUser.id);
     };
 
     const handleDeleteGallery = (e) => {
@@ -46,17 +49,20 @@ export default function Gallery({ gallery }) {
 
         deleteGallery(gallery);
 
-        // getAllGalleriesByUser(activeUser.id);
+
     };
 
     return (
         <Col>
             <Card body>
                 <Row>
-                    <Col sm="9">
+                    <Col sm="2">
                         <Button variant="secondary" href={`/gallery/${gallery.id}`}><strong>{gallery.name}</strong></Button>
                     </Col>
+                    <Col sm="7">
+                        <p>Photos in Gallery {gallery.photoCount}</p>
 
+                    </Col>
                     {/* UPDATE GALLERY MODAL */}
                     {gallery.id !== 1 ?
                         <Col>

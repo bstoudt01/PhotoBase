@@ -27,7 +27,7 @@ export default function SinglePhotoThirdParty() {
             {imageId === "" || imageId === null || imageId === undefined ?
                 <div>Sorry It looks like there is a mistake in you request</div>
                 :
-                <div ><Image style={{ width: "auto" }} src={imageId} alt="singleImage" /></div>
+                <div ><Image className="centerImage" style={{ width: "auto" }} src={imageId} alt="singleImage" /></div>
             }
         </Container>
 

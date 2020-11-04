@@ -41,32 +41,16 @@ namespace PhotoPromo.Controllers
         }
 
         //Get All Photo by GalleryId
-        //implement checking userId before get photos from wisdomgrace / dog go
         [HttpGet("Gallery/{GalleryId}")]
         public IActionResult GetAllByGallery(int galleryId)
         {
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
-            var noGalleryContent = "no content";
-
-            //if (allPhotosByGallery.Count == 0)
-            //{
-            //    return NoContent();
-            //}
-            //if (currentUserProfile.Id != allPhotosByGallery[0].UserProfileId)
-            //{
-            //    return Unauthorized();
-            //}
-            //if (allPhotosByGallery == null)
-            //{
-            //    return NoContent();
-            //}
 
             return Ok(allPhotosByGallery);
         }
 
         //Get Single Photo by Id
-        //implement checking userId before get photos from wisdomgrace / dog go
         [HttpGet("{Id}")]
         public IActionResult GetSingleById(int id)
         {
@@ -102,6 +86,10 @@ namespace PhotoPromo.Controllers
             }
 
             photo.ResolutionLevel = 300;
+            if (photo.Attribute == null)
+            {
+                photo.Attribute = " ";
+            }
             
             _photoRepository.Add(photo);
             return CreatedAtAction(nameof(GetSingleById), new { id = photo.Id }, photo);
