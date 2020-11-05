@@ -1,6 +1,6 @@
 # PhotoBase - A Place Where Photos Go To Live!
 
-<h3> Created By Brett Stoudt  <br/> <h4>Front End Developemnt Capstone - Cohort 41, Nashville Software School</h4> </h3>
+<h3> Created By Brett Stoudt  <br/> <h4>Server Side Developemnt Capstone - Cohort 41, Nashville Software School</h4> </h3>
 
 ## About PhotoBase
 Expanding your reach can be hard work, right? PhotoBase expands the reach of professional
