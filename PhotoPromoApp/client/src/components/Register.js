@@ -20,7 +20,8 @@ export default function Register() {
 
 
   const registerClick = (e) => {
-    debugger
+    e.preventDefault();
+
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -33,13 +34,6 @@ export default function Register() {
     }
     else {
       setValidated(true);
-      debugger
-      if (company === "") {
-        setCompany("NA");
-      }
-      if (facebookUserId === "") {
-        setFacebookUserId("NA")
-      }
 
       const userProfile = { firstName, lastName, displayName, company, email, facebookUserId };
 

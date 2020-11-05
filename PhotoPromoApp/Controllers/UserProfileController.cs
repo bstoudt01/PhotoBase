@@ -42,8 +42,16 @@ namespace PhotoPromo.Controllers
         [HttpPost]
         public IActionResult Post(UserProfile userProfile)
         {
-
+            if (userProfile.FacebookUserId == null )
+            {
+                userProfile.FacebookUserId = "NA";
+            }
+            if (userProfile.Company == null )
+            {
+                userProfile.Company = "NA";
+            }
             userProfile.UserTypeId = 2;
+
             _userProfileRepository.Add(userProfile);
             return CreatedAtAction(
                 nameof(GetUserProfile),
