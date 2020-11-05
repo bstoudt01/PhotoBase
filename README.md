@@ -42,10 +42,10 @@ from gallery list view
 
 4. Add Photo
 from Add Photo users can add the image thet would like to upload and input info about the photo.
-- Upload photo Image file, view file via the image preview <b>Required<b>
+- Upload photo Image file, view file via the image preview <b>Required</b>
 - Name of photo <b>Required</b>
 - Attribute who the photo was taken by or other information
-- Choose a Gallery from your gallery options <b>Required<b>
+- Choose a Gallery from your gallery options <b>Required</b>
 - Determine if the photo will be free use or private, it is private by default.
 - Add Photo
 
