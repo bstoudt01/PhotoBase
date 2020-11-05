@@ -13,6 +13,7 @@ import RandomPhotoPublic from "./Photo/RandomPhotoPublic";
 import NotFoundPage from "./NotFoundPage";
 
 export default function ApplicationViews(props) {
+
     const { isLoggedIn } = useContext(UserProfileContext);
 
 

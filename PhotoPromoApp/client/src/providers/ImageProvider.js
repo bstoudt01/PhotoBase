@@ -47,7 +47,6 @@ export const ImageProvider = (props) => {
     const getImageName = (imageName) => {
         if (imageName !== undefined || imageName != null) {
             const getName = `${apiUrl}/${imageName}`
-
             return (getName)
         }
     };

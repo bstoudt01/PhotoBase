@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
-import { Navbar, Nav, Dropdown, ButtonGroup, Button, Col, Form, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, Button, Col } from 'react-bootstrap';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { GalleryContext } from "../providers/GalleryProvider";
-import { PhotoContext } from "../providers/PhotoProvider";
 
 const Header = () => {
+
+  // bootstrap dropdown was loosing the data after any component was refreshed (from a useEffect ?) 
+  //work around was using the classic css style dropdown
   const { getAllGalleriesByUser, galleries, galleryUpdated } = useContext(GalleryContext);
   const { isLoggedIn, logout, activeUser } = useContext(UserProfileContext);
 
@@ -55,18 +57,20 @@ const Header = () => {
                     </>
                   }
 
-                  {!isLoggedIn &&
-                    <>
+                </Nav>
+
+                {!isLoggedIn &&
+                  <>
+                    <Nav navbar>
                       <Nav.Item>
                         <Nav.Link tag={RRNavLink} href="/login">Login</Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
                         <Nav.Link tag={RRNavLink} href="/register">Register</Nav.Link>
                       </Nav.Item>
-                    </>
-                  }
-                </Nav>
-
+                    </Nav>
+                  </>
+                }
                 {
                   isLoggedIn &&
                   <>

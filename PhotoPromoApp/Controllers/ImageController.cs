@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace PhotoPromoApp.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class ImageController : ControllerBase
@@ -53,17 +53,17 @@ namespace PhotoPromoApp.Controllers
                         string FileName = "low_" + file.FileName;
                         image.Save(savedImagePath + FileName);
                     }
-                }
-                using Image imageCopy = Image.Load(file.OpenReadStream());
-                {
+//                }
+               // using Image imageCopy = Image.Load(file.OpenReadStream());
+                //{
 
                     //24 MP 3:2
                     //High Resolution Image Encoder
-                    int newHeight = 0;
+                    //int newHeight = 0;
                     int maxWidthHighRes = 6016;
-                    if (imageCopy.Width > maxWidthHighRes)
+                    if (image.Width > maxWidthHighRes)
                     {
-                        using (Image highResCopy = imageCopy.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
+                        using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
                         {
                             string FileName = "high_" + file.FileName;
                             highResCopy.Save(savedImagePath + FileName);
@@ -72,7 +72,7 @@ namespace PhotoPromoApp.Controllers
                     else
                     {
                         string FileName = "high_" + file.FileName;
-                        imageCopy.Save(savedImagePath + FileName);
+                        image.Save(savedImagePath + FileName);
                     }
                 }
 
@@ -90,15 +90,16 @@ namespace PhotoPromoApp.Controllers
         public IActionResult GetName(string imageName)
         {
 
-            if (imageName != null) { 
-            var imageNewName = "low_" + imageName;   
-            var highResImagePath = Path.Combine(_webhost.WebRootPath, "images/", imageNewName);
-                if ((System.IO.File.Exists(highResImagePath)))
+            if (imageName != null)
+            {
+                var lowResImage = "low_" + imageName;
+                var lowResImagePath = Path.Combine(_webhost.WebRootPath, "images/", lowResImage);
+                if ((System.IO.File.Exists(lowResImagePath)))
                 {
-                    var imageFileStream = System.IO.File.OpenRead(highResImagePath);
-                    return File(imageFileStream, "image/jpeg");
+                    return File("images/" + lowResImage, "image/jpeg");                    
                 }
-            } return NoContent();
+            }
+            return NoContent();
         }
 
 
@@ -107,7 +108,6 @@ namespace PhotoPromoApp.Controllers
         {
             if (imageId != null)
             {
-                var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
 
                 Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(imageId));
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
@@ -115,33 +115,40 @@ namespace PhotoPromoApp.Controllers
                 {
                     string imageName = publicPhoto.PhotoLocation.Substring(index1 + 1);
                     var highResImage = imageName.Insert(0, "high_");
-                    var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
-                    var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
-                    return File(imageFileStream, "image/jpeg");
+                    var highResImagePath = Path.Combine(_webhost.WebRootPath, "images/", highResImage);
+                    if ((System.IO.File.Exists(highResImagePath)))
+                    {
+                        return File("images/" + highResImage, "image/jpeg");
+                    }
+
                 }
             }
             return NoContent();
         }
-            
+
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
         //Returns image with requested width but not necesarily height
         [HttpGet("custom/{photoId}/{width}/{userId}")]
         public IActionResult GetCustomImage(string photoId, string width, string userId)
         {
 
-            if (photoId != null & photoId.All(char.IsDigit) & userId.All(char.IsDigit))
+            if (photoId != null && photoId.All(char.IsDigit) && userId.All(char.IsDigit) && width.All(char.IsDigit))
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
                 //Locate File by Name assoicated with Photo.Id
                 Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
 
                 //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-                if (publicPhoto == null || publicPhoto.UserProfileId != Int32.Parse(userId)) {
-                    var UserIdStockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
-                    var UserIdStockImageFileStream = System.IO.File.OpenRead(UserIdStockImagePath);
+                if (publicPhoto == null || publicPhoto.UserProfileId != Int32.Parse(userId))
+                {
+                    //var UserIdStockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
+                    //var UserIdStockImageFileStream = System.IO.File.OpenRead(UserIdStockImagePath);
 
-                    return File(UserIdStockImageFileStream, "image/jpeg");
-                } 
+                    //return File(UserIdStockImageFileStream, "image/jpeg");
+                    return File("stockimages/" + "404_not_found.webp", "image/jpeg");
+
+
+                }
                 //Locate File by locating the index of last directory call
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
                 if (index1 != -1)
@@ -151,47 +158,50 @@ namespace PhotoPromoApp.Controllers
                     // use the "high_" quality image uploaded
                     var highResImage = imageName.Insert(0, "high_");
                     var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
-                    var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
 
-                    //Create Image instance from openRead fileStream path
-                    using Image image = Image.Load(imageFileStream);
+                    using (var imageFileStream = System.IO.File.OpenRead(pathbyfullprop))
                     {
-                        int customWidth = Convert.ToInt32(width);
-                        if (image.Width >= customWidth)
+
+                        //Create Image instance from openRead fileStream path
+                        using Image image = Image.Load(imageFileStream);
                         {
+                            int customWidth = Convert.ToInt32(width);
+                            if (image.Width >= customWidth)
+                            {
 
-                            //declare the image to be a custom size
-                            string FileName = "custom_" + imageName;
-                            //handle keeping aspect ratio by declaring a newHeight that matches the custom width
-                            var divisor = image.Width / customWidth;
-                            var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                                //declare the image to be a custom size
+                                string FileName = "custom_" + imageName;
+                                //handle keeping aspect ratio by declaring a newHeight that matches the custom width
+                                //var divisor = image.Width / customWidth;
+                                //var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                                int newHeight = 0;
+                                //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
+                                //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
+                                image.Mutate(x => x.Resize(customWidth, newHeight));
 
-                            //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
-                            //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
-                            image.Mutate(x => x.Resize(customWidth, newHeight));
+                                //Save the mutated file to the assigned path using the assigned file name
+                                image.Save(savedImagePath + FileName);
 
-                            //Save the mutated file to the assigned path using the assigned file name
-                            image.Save(savedImagePath + FileName);
+                                //Load image and return to user
+                                var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
+                                var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                                return File(NewimageFileStream, "image/jpeg");
+                            }
+                            else
+                            {
 
-                            //Load image and return to user
-                            var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
-                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                            return File(NewimageFileStream, "image/jpeg");
-                        } else
-                        {
-
-                            //Load highest resolution image available and return to user
-                            var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
-                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                            return File(NewimageFileStream, "image/jpeg");
+                                //Load highest resolution image available and return to user
+                                var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
+                                var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+                                return File(NewimageFileStream, "image/jpeg");
+                            }
                         }
                     }
                 }
             }
-            var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
-            var StockImageFileStream = System.IO.File.OpenRead(StockImagePath);
+           
+            return File("stockimages/"+"404_not_found.webp", "image/jpeg");
 
-            return File(StockImageFileStream, "image/jpeg");
         }
 
 
@@ -199,12 +209,12 @@ namespace PhotoPromoApp.Controllers
         //Get Random Image this is marked as "IsPublic" by photographer in custom size
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
         [HttpGet("random/{width}")]
-        public IActionResult GetRandomCustomImageByPublic( string width)
-        { 
+        public IActionResult GetRandomCustomImageByPublic(string width)
+        {
             Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
 
 
-            if (randomPublicPhoto != null & width.All(char.IsDigit))
+            if (randomPublicPhoto != null && width.All(char.IsDigit))
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
                 //Locate File by Name assoicated with Photo.Id
@@ -220,48 +230,57 @@ namespace PhotoPromoApp.Controllers
                     // use the "high_" quality encoded image
                     var highResImage = imageName.Insert(0, "high_");
                     var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
-                    var imageFileStream = System.IO.File.OpenRead(pathbyfullprop);
 
-                    //Create Image instance from openRead fileStream path
-                    using Image image = Image.Load(imageFileStream);
+                    using (var imageFileStream = System.IO.File.OpenRead(pathbyfullprop))
                     {
-                        int customWidth = Convert.ToInt32(width);
-                        if (image.Width >= customWidth)
+                        //Create Image instance from openRead fileStream path
+                        using (Image image = Image.Load(imageFileStream))
                         {
+                            int customWidth = Convert.ToInt32(width);
+                            if (image.Width >= customWidth)
+                            {
 
-                            //declare the image to be a custom size
-                            string FileName = "custom_" + imageName;
-                            //handle keeping aspect ratio by declaring a newHeight that matches the custom width
-                            var divisor = image.Width / customWidth;
-                            var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                                //declare the image to be a custom size
+                                string FileName = "custom_" + imageName;
+                                //handle keeping aspect ratio by declaring a newHeight that matches the custom width
+                                //var divisor = image.Width / customWidth;
+                                //var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                                int newHeight = 0;
+                                //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
+                                //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
+                                image.Mutate(x => x.Resize(customWidth, newHeight));
 
-                            //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
-                            //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
-                            image.Mutate(x => x.Resize(customWidth, newHeight));
+                                //Save the mutated file to the assigned path using the assigned file name
+                                image.Save(savedImagePath + FileName);
 
-                            //Save the mutated file to the assigned path using the assigned file name
-                            image.Save(savedImagePath + FileName);
+                                var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
 
-                            //Load image and return to user
-                            var Newpathbyfullprop = Path.Combine(savedImagePath, FileName);
-                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                            return File(NewimageFileStream, "image/jpeg");
+                                var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+
+                                return File(NewimageFileStream, "image/jpeg");
+
+                            }
+                            else
+                            {
+
+                                //Load highest resolution image available and return to user
+                                var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
+                                var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
+
+                                return File(NewimageFileStream, "image/jpeg");
+
+                            }
+
                         }
-                        else
-                        {
-
-                            //Load highest resolution image available and return to user
-                            var Newpathbyfullprop = Path.Combine(savedImagePath, highResImage);
-                            var NewimageFileStream = System.IO.File.OpenRead(Newpathbyfullprop);
-                            return File(NewimageFileStream, "image/jpeg");
-                        }   
                     }
                 }
             }
-            var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
-            var StockImageFileStream = System.IO.File.OpenRead(StockImagePath);
-
-            return File(StockImageFileStream, "image/jpeg");
+            //adjust to include status code of 404
+            //var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
+            //using (var StockImageFileStream = System.IO.File.OpenRead(StockImagePath))
+            
+                return File("stockimages/"+"404_not_found.webp", "image/jpeg");
+            
         }
 
 

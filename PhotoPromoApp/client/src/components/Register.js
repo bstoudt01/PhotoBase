@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
 export default function Register() {
+
   const history = useHistory();
   const { register } = useContext(UserProfileContext);
 
@@ -15,16 +16,30 @@ export default function Register() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [facebookUserId, setFacebookUserId] = useState();
+  const [validated, setValidated] = useState(false);
 
 
   const registerClick = (e) => {
-    e.preventDefault();
-
-    if (password && password !== confirmPassword) {
+    debugger
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    else if (password && password !== confirmPassword) {
 
       alert("Passwords don't match. Do better.");
 
-    } else {
+    }
+    else {
+      setValidated(true);
+      debugger
+      if (company === "") {
+        setCompany("NA");
+      }
+      if (facebookUserId === "") {
+        setFacebookUserId("NA")
+      }
 
       const userProfile = { firstName, lastName, displayName, company, email, facebookUserId };
 
@@ -36,21 +51,22 @@ export default function Register() {
 
 
 
+
   return (
     <Col xs="3">
-      <Form onSubmit={registerClick}>
+      <Form noValidate validated={validated} onSubmit={registerClick}>
         <fieldset>
           <Form.Group>
             <Form.Label htmlFor="firstName">First Name</Form.Label>
-            <Form.Control id="firstName" type="text" onChange={e => setFirstName(e.target.value)} />
+            <Form.Control required id="firstName" type="text" onChange={e => setFirstName(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="lastName">Last Name</Form.Label>
-            <Form.Control id="lastName" type="text" onChange={e => setLastName(e.target.value)} />
+            <Form.Control required id="lastName" type="text" onChange={e => setLastName(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="displayName">Display Name</Form.Label>
-            <Form.Control id="displayName" type="text" onChange={e => setDisplayName(e.target.value)} />
+            <Form.Control required id="displayName" type="text" onChange={e => setDisplayName(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="companyName">Company Name</Form.Label>
@@ -62,15 +78,15 @@ export default function Register() {
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="email">Email</Form.Label>
-            <Form.Control id="email" type="text" onChange={e => setEmail(e.target.value)} />
+            <Form.Control required id="email" type="email" onChange={e => setEmail(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="password">Password</Form.Label>
-            <Form.Control id="password" type="password" onChange={e => setPassword(e.target.value)} />
+            <Form.Control required id="password" type="password" onChange={e => setPassword(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Form.Label htmlFor="confirmPassword">Confirm Password</Form.Label>
-            <Form.Control id="confirmPassword" type="password" onChange={e => setConfirmPassword(e.target.value)} />
+            <Form.Control required id="confirmPassword" type="password" onChange={e => setConfirmPassword(e.target.value)} />
           </Form.Group>
           <Form.Group>
             <Button type="submit">Register</Button>
