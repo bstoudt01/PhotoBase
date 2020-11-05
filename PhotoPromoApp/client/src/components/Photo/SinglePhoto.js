@@ -2,7 +2,9 @@ import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
+
 export default function SinglePhoto() {
+
     const { getImageId } = useContext(ImageContext);
 
 

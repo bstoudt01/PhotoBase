@@ -1,5 +1,4 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const PhotoContext = createContext();
@@ -7,15 +6,10 @@ export const PhotoContext = createContext();
 export function PhotoProvider(props) {
 
     const apiUrl = "/api/photo";
-    const history = useHistory();
 
     const [photosByUser, setPhotosByUser] = useState([]);
     const [photosByGallery, setPhotosByGallery] = useState([]);
     const [newlyUpdatedPhoto, setNewlyUpdatedPhoto] = useState({});
-
-
-
-
     const [photoUpdated, setPhotoUpdated] = useState(false);
     const [photoLoaded, setPhotoLoaded] = useState(false);
 
@@ -42,7 +36,7 @@ export function PhotoProvider(props) {
                 resp.json().then(setPhotosByGallery)
             }));
 
-    //watchin state...
+    //watching state...
     //when photo is deleted this useEffect is triggered during the http DELETE fetch, that useEffect changes 
     //when loadPhotoList changes, the useEffect on PhootListByGallery is triggered and getAllPhotosByGallery is run again
     useEffect(() => {

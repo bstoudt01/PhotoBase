@@ -7,7 +7,9 @@ import { useHistory } from "react-router-dom";
 import GalleryOption from "./AddPhotoGalleryOption";
 import { ImageContext } from "../../providers/ImageProvider";
 import "../../App.css"
+
 export default function AddPhoto() {
+
     const { activeUser } = useContext(UserProfileContext);
     const { getAllGalleriesByUser, galleries } = useContext(GalleryContext);
     const { addPhoto } = useContext(PhotoContext);
@@ -73,7 +75,7 @@ export default function AddPhoto() {
 
 
             addImage(formData)
-            addPhoto(newPhoto).then(() => history.push(`/gallery/${imageGalleryId}`));
+            addPhoto(newPhoto).then(() => history.push(`/gallery`));
             //add await async to history push? 
             // const submitPhoto = addPhoto(newPhoto);
             // const submitImage = async () => { await addImage(formData) };
@@ -139,6 +141,7 @@ export default function AddPhoto() {
                                 </Form.Group>
                             </Col>
 
+                            {/* Select is Public or keep Private */}
                             <div className="mb-3">
                                 <Form.Check type="checkbox" id="public">
                                     <Form.Check.Input type="checkbox" isValid onClick={handleClick} />

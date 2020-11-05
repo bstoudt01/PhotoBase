@@ -4,7 +4,9 @@ import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { WindowViewContext } from "../WindowViewHandler";
 import "../../App.css";
+
 export default function RandomPhotoPublic() {
+
     const { getRandomPublicImage } = useContext(ImageContext);
     const { setShowNavbar } = useContext(WindowViewContext);
 

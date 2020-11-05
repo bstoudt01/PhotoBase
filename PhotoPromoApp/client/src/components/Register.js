@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form, Col } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
 export default function Register() {
+
   const history = useHistory();
   const { register } = useContext(UserProfileContext);
 

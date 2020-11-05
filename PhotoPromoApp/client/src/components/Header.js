@@ -5,6 +5,7 @@ import { UserProfileContext } from "../providers/UserProfileProvider";
 import { GalleryContext } from "../providers/GalleryProvider";
 
 const Header = () => {
+
   // bootstrap dropdown was loosing the data after any component was refreshed (from a useEffect ?) 
   //work around was using the classic css style dropdown
   const { getAllGalleriesByUser, galleries, galleryUpdated } = useContext(GalleryContext);

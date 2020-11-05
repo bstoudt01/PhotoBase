@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { Card, Button, Col, Row, Modal, Form, Image, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { PhotoContext } from "../../providers/PhotoProvider";
@@ -9,7 +8,6 @@ import AddPhotoGalleryOption from "./AddPhotoGalleryOption";
 export default function Photo({ photo }) {
 
     const { galleries } = useContext(GalleryContext);
-    const { activeUser } = useContext(UserProfileContext);
     const { getImageName } = useContext(ImageContext);
     const { deletePhoto, updatePhoto } = useContext(PhotoContext);
 

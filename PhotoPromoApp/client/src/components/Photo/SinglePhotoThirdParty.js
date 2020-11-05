@@ -4,6 +4,7 @@ import { Image, Container } from "react-bootstrap";
 import { ImageContext } from "../../providers/ImageProvider";
 import { WindowViewContext } from "../WindowViewHandler";
 import "../.././App.css"
+
 export default function SinglePhotoThirdParty() {
 
     const { getSingleImageThirdParty } = useContext(ImageContext);
