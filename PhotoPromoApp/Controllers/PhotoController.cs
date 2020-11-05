@@ -46,9 +46,7 @@ namespace PhotoPromo.Controllers
         [HttpGet("Gallery/{GalleryId}")]
         public IActionResult GetAllByGallery(int galleryId)
         {
-            var stopwatch = Stopwatch.StartNew();
-            Thread.Sleep(500);
-            stopwatch.Stop();
+           
             var currentUserProfile = GetCurrentUserProfile();
             var allPhotosByGallery = _photoRepository.GetPhotosByGalleryId(galleryId);
 
