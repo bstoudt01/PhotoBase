@@ -53,17 +53,17 @@ namespace PhotoPromoApp.Controllers
                         string FileName = "low_" + file.FileName;
                         image.Save(savedImagePath + FileName);
                     }
-                }
-                using Image imageCopy = Image.Load(file.OpenReadStream());
-                {
+//                }
+               // using Image imageCopy = Image.Load(file.OpenReadStream());
+                //{
 
                     //24 MP 3:2
                     //High Resolution Image Encoder
-                    int newHeight = 0;
+                    //int newHeight = 0;
                     int maxWidthHighRes = 6016;
-                    if (imageCopy.Width > maxWidthHighRes)
+                    if (image.Width > maxWidthHighRes)
                     {
-                        using (Image highResCopy = imageCopy.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
+                        using (Image highResCopy = image.Clone(x => x.Resize(maxWidthHighRes, newHeight)))
                         {
                             string FileName = "high_" + file.FileName;
                             highResCopy.Save(savedImagePath + FileName);
@@ -72,7 +72,7 @@ namespace PhotoPromoApp.Controllers
                     else
                     {
                         string FileName = "high_" + file.FileName;
-                        imageCopy.Save(savedImagePath + FileName);
+                        image.Save(savedImagePath + FileName);
                     }
                 }
 

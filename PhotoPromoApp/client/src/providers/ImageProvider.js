@@ -20,7 +20,7 @@ export const ImageProvider = (props) => {
             }).then(resp => {
 
                 if (resp.ok) {
-                    return;
+                    return resp;
                 }
                 throw new Error("Image Upload Failed.")
             }))

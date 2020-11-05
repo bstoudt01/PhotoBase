@@ -1,10 +1,8 @@
 import React, { useContext, useState } from "react";
-import { UserProfileContext } from "../../providers/UserProfileProvider";
 import { GalleryContext } from "../../providers/GalleryProvider";
 import { Card, Button, Col, Row, Form } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 export default function Gallery({ gallery }) {
-    const { activeUser } = useContext(UserProfileContext);
 
     const { updateGallery, deleteGallery } = useContext(GalleryContext);
 
