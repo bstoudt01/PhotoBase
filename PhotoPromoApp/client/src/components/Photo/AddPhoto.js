@@ -75,11 +75,7 @@ export default function AddPhoto() {
 
 
             addImage(formData)
-            addPhoto(newPhoto).then(() => history.push(`/gallery/${imageGalleryId}`));
-            //add await async to history push? 
-            // const submitPhoto = addPhoto(newPhoto);
-            // const submitImage = async () => { await addImage(formData) };
-            // Promise.allSettled([submitImage, submitPhoto]).then(() => history.push(`/gallery/${imageGalleryId}`));
+            addPhoto(newPhoto).then(() => history.push(`/gallery`));
         }
     };
 

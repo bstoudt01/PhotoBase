@@ -78,7 +78,7 @@ namespace PhotoPromoApp.Controllers
             }
             catch
             {
-                return Conflict();
+                return File("stockimages/" + "404_not_found.webp", "image/jpeg");
             }
 
             return Ok();
@@ -98,7 +98,7 @@ namespace PhotoPromoApp.Controllers
                     return File("images/" + lowResImage, "image/jpeg");                    
                 }
             }
-            return NoContent();
+            return File("stockimages/" + "404_not_found.webp", "image/jpeg");
         }
 
 
@@ -122,11 +122,11 @@ namespace PhotoPromoApp.Controllers
 
                 }
             }
-            return NoContent();
+            return File("stockimages/" + "404_not_found.webp", "image/jpeg");
         }
 
         //Creates image sized similar to user requests, to keep aspect ratio of the image the same
-        //Returns image with requested width but not necesarily height
+        //Returns image with requested width, height is kept in poroportion using aspect ratios
         [HttpGet("custom/{photoId}/{width}/{userId}")]
         public IActionResult GetCustomImage(string photoId, string width, string userId)
         {
