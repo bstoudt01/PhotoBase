@@ -24,20 +24,22 @@ namespace PhotoPromoApp.Controllers
             _photoRepository = photoRepository;
         }
 
+        //Add Image
+        //pass through two encoders and save results
         [HttpPost]
         public IActionResult Add(IFormFile file)
         {
 
             //where images are stored
             var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
+            int newHeight = 0;
             try
             {
                 using Image image = Image.Load(file.OpenReadStream());
                 {
-                    //1.4 MP 3:2
+                    //First Encode @ 1.4 MP 3:2
                     //Low Resolution Image Encoder
                     int maxWidthLowRes = 1440;
-                    int newHeight = 0;
                     if (image.Width > maxWidthLowRes)
                     {
                         //saves image with width of 1440, height is determined by imagesharp to keep aspect ratio (set height to 0)
@@ -53,13 +55,10 @@ namespace PhotoPromoApp.Controllers
                         string FileName = "low_" + file.FileName;
                         image.Save(savedImagePath + FileName);
                     }
-//                }
-               // using Image imageCopy = Image.Load(file.OpenReadStream());
-                //{
 
-                    //24 MP 3:2
+
+                    //Second Encode @ 24 MP 3:2
                     //High Resolution Image Encoder
-                    //int newHeight = 0;
                     int maxWidthHighRes = 6016;
                     if (image.Width > maxWidthHighRes)
                     {
@@ -85,7 +84,7 @@ namespace PhotoPromoApp.Controllers
             return Ok();
         }
 
-
+        //Get Image By Name
         [HttpGet("{imageName}")]
         public IActionResult GetName(string imageName)
         {
