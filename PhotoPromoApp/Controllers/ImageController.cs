@@ -140,15 +140,10 @@ namespace PhotoPromoApp.Controllers
                 //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
                 if (publicPhoto == null || publicPhoto.UserProfileId != Int32.Parse(userId))
                 {
-                    //var UserIdStockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
-                    //var UserIdStockImageFileStream = System.IO.File.OpenRead(UserIdStockImagePath);
-
-                    //return File(UserIdStockImageFileStream, "image/jpeg");
                     return File("stockimages/" + "404_not_found.webp", "image/jpeg");
-
-
                 }
-                //Locate File by locating the index of last directory call
+
+                //Locate File by locating the index of last folder/directory opened
                 int index1 = publicPhoto.PhotoLocation.LastIndexOf('\\');
                 if (index1 != -1)
                 {
@@ -171,8 +166,7 @@ namespace PhotoPromoApp.Controllers
                                 //declare the image to be a custom size
                                 string FileName = "custom_" + imageName;
                                 //handle keeping aspect ratio by declaring a newHeight that matches the custom width
-                                //var divisor = image.Width / customWidth;
-                                //var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                                
                                 int newHeight = 0;
                                 //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
                                 //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
@@ -205,29 +199,30 @@ namespace PhotoPromoApp.Controllers
 
 
 
-        //Get Random Image this is marked as "IsPublic" by photographer in custom size
-        //Creates image sized similar to user requests, to keep aspect ratio of the image the same
+        //Get Random Image that is marked as "IsPublic" by photographer in custom size
+        //Creates image sized  to user requested height, to keep aspect ratio of the image the same
         [HttpGet("random/{width}")]
         public IActionResult GetRandomCustomImageByPublic(string width)
         {
+            //get random image
             Photo randomPublicPhoto = _photoRepository.GetRandomSinglePhoto();
 
 
             if (randomPublicPhoto != null && width.All(char.IsDigit))
             {
                 var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
-                //Locate File by Name assoicated with Photo.Id
-                //Photo publicPhoto = _photoRepository.GetSinglePhotobyId(Int32.Parse(photoId));
-                //publicPhoto.PhotoLocation holds the entire path, not just the file name, even though the photo table only shows the image filename
-
+               
                 //Locate File by locating the index of last directory call
                 int index1 = randomPublicPhoto.PhotoLocation.LastIndexOf('\\');
                 if (index1 != -1)
                 {
                     //assign varialbe the file name pulled from  the file location 
                     string imageName = randomPublicPhoto.PhotoLocation.Substring(index1 + 1);
+                    
                     // use the "high_" quality encoded image
                     var highResImage = imageName.Insert(0, "high_");
+
+                    //grab full path name to open file with FileStream
                     var pathbyfullprop = Path.Combine(savedImagePath, highResImage);
 
                     using (var imageFileStream = System.IO.File.OpenRead(pathbyfullprop))
@@ -236,15 +231,16 @@ namespace PhotoPromoApp.Controllers
                         using (Image image = Image.Load(imageFileStream))
                         {
                             int customWidth = Convert.ToInt32(width);
+                           
                             if (image.Width >= customWidth)
                             {
 
                                 //declare the image to be a custom size
                                 string FileName = "custom_" + imageName;
-                                //handle keeping aspect ratio by declaring a newHeight that matches the custom width
-                                //var divisor = image.Width / customWidth;
-                                //var newHeight = Convert.ToInt32(Math.Round((decimal)(image.Height / divisor)));
+                              
+                                //handle keeping aspect ratio by declaring a newHeight of 0
                                 int newHeight = 0;
+                                
                                 //Resize the file in hand and save the new version, if this file already has a "custom_" tag it will be overwritten with this new mutation. 
                                 //it would nice to call previously created images instead of making a new one but even better if i did that using a middleware like imagesharp.web
                                 image.Mutate(x => x.Resize(customWidth, newHeight));
@@ -274,9 +270,6 @@ namespace PhotoPromoApp.Controllers
                     }
                 }
             }
-            //adjust to include status code of 404
-            //var StockImagePath = Path.Combine(_webhost.WebRootPath, "stockimages/", "404_not_found.webp");
-            //using (var StockImageFileStream = System.IO.File.OpenRead(StockImagePath))
             
                 return File("stockimages/"+"404_not_found.webp", "image/jpeg");
             
