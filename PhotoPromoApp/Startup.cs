@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PhotoPromo.Repositories;
+using PhotoPromoApp.Services;
 
 namespace PhotoPromoApp
 {
@@ -25,6 +27,10 @@ namespace PhotoPromoApp
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<IPhotoRepository, PhotoRepository>();
+
+            //S3 Object Services 
+            services.AddSingleton<IS3Service, S3Service>();
+            services.AddAWSService<IAmazonS3>();
 
             IdentityModelEventSource.ShowPII = true;
 
