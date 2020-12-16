@@ -27,5 +27,13 @@ namespace PhotoPromoApp.Controllers
             var response = await _service.CreateBucketAsync(bucketName);
             return Ok(response);
         }
+
+        [HttpPost]
+        [Route("AddFile/{bucketName}")]
+        public async Task<IActionResult> AddFile([FromRoute] string bucketName)
+        {
+            await _service.UploadFileAsync(bucketName);
+            return Ok();
+        }
     }
 }
