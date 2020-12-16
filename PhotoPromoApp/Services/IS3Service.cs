@@ -1,4 +1,5 @@
-﻿using PhotoPromoApp.Models;
+﻿using Microsoft.AspNetCore.Http;
+using PhotoPromoApp.Models;
 using System.Threading.Tasks;
 
 namespace PhotoPromoApp.Services
@@ -8,6 +9,6 @@ namespace PhotoPromoApp.Services
         {
         Task<S3Response> CreateBucketAsync(string bucketName);
 
-        Task UploadFileAsync(string bucketName);
+        Task UploadFileAsync(string filePath);
         };
 }

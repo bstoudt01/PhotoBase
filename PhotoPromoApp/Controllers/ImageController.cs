@@ -8,6 +8,8 @@ using System;
 using PhotoPromo.Models;
 using PhotoPromo.Repositories;
 using System.Linq;
+using PhotoPromoApp.Services;
+using System.Threading.Tasks;
 
 namespace PhotoPromoApp.Controllers
 {
@@ -18,21 +20,31 @@ namespace PhotoPromoApp.Controllers
     {
         private readonly IWebHostEnvironment _webhost;
         private readonly IPhotoRepository _photoRepository;
-        public ImageController(IWebHostEnvironment webhost, IPhotoRepository photoRepository)
+
+        private readonly IS3Service _service;
+
+
+        public ImageController(IWebHostEnvironment webhost, IPhotoRepository photoRepository, IS3Service service)
         {
             _webhost = webhost;
             _photoRepository = photoRepository;
+
+            _service = service;
+
         }
+
 
         //Add Image
         //pass through two encoders and save results
         [HttpPost]
-        public IActionResult Add(IFormFile file)
+        public async Task<IActionResult> Add(IFormFile file)
         {
 
             //where images are stored
             var savedImagePath = Path.Combine(_webhost.WebRootPath, "images/");
             int newHeight = 0;
+            string lowResPath = Path.Combine(savedImagePath, "low_"+file.FileName);
+            string highResPath = Path.Combine(savedImagePath, "high_"+file.FileName);
             try
             {
                 using Image image = Image.Load(file.OpenReadStream());
@@ -47,6 +59,8 @@ namespace PhotoPromoApp.Controllers
                         {
                             string FileName = "low_" + file.FileName;
                             lowResCopy.Save(savedImagePath + FileName);
+                           // lowResPath = Path.Combine(savedImagePath, FileName);
+
                         }
                     }
                     else
@@ -54,6 +68,7 @@ namespace PhotoPromoApp.Controllers
                         //saves image with actual width and height
                         string FileName = "low_" + file.FileName;
                         image.Save(savedImagePath + FileName);
+                         //lowResPath = Path.Combine(savedImagePath, FileName);
                     }
 
 
@@ -66,12 +81,14 @@ namespace PhotoPromoApp.Controllers
                         {
                             string FileName = "high_" + file.FileName;
                             highResCopy.Save(savedImagePath + FileName);
+                           // highResPath = Path.Combine(savedImagePath, FileName);
                         }
                     }
                     else
                     {
                         string FileName = "high_" + file.FileName;
                         image.Save(savedImagePath + FileName);
+                      //  highResPath = Path.Combine(savedImagePath, FileName);
                     }
                 }
 
@@ -80,7 +97,8 @@ namespace PhotoPromoApp.Controllers
             {
                 return File("stockimages/" + "404_not_found.webp", "image/jpeg");
             }
-
+            await _service.UploadFileAsync(lowResPath);
+            await _service.UploadFileAsync(highResPath);
             return Ok();
         }
 

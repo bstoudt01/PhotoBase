@@ -29,10 +29,12 @@ namespace PhotoPromoApp.Controllers
         }
 
         [HttpPost]
-        [Route("AddFile/{bucketName}")]
-        public async Task<IActionResult> AddFile([FromRoute] string bucketName)
+        [Route("AddImage")]
+               public async Task<IActionResult> AddFile([FromRoute] string filePath)
+        //public async Task<IActionResult> AddFile(IFormFile file)
         {
-            await _service.UploadFileAsync(bucketName);
+
+            await _service.UploadFileAsync(filePath);
             return Ok();
         }
     }
