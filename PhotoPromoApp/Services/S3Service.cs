@@ -17,6 +17,7 @@ namespace PhotoPromoApp.Services
     public class S3Service: IS3Service
     {
 
+        // user.aws/cred ... easiest way to access is aws commands in terminal
         private readonly IAmazonS3 _client;
 
         public S3Service(IAmazonS3 client)
@@ -132,7 +133,7 @@ namespace PhotoPromoApp.Services
 
         }
 
-        //
+        //completes read and save but throws an exception, maybe need to adjust usings blocks and encapsulate /remove a statement
         public async Task ReadObjectDataAsync(string keyName)
         {
             //change to bucketName
@@ -151,33 +152,40 @@ namespace PhotoPromoApp.Services
                 //hold image response
                     //does this need to be a string??
                 string responseBody;
-                
+
                 //utitlized using blocks since these variables are accessing filestreams
                 //pass the request object into the Get method for S3
                 using (var response = await _client.GetObjectAsync(request))
                 //open responsestream
                 using (var responseStream = response.ResponseStream)
-                //read content we get back from S3 file
-                using (var reader = new StreamReader(responseStream))
+
+                using (FileStream outFile = File.Create($"C:\\S3Temp\\{keyName}"))
                 {
-                    //obecjtTitleIfItExists.. if title doesnt exist it will return  back a null
-                    var title = response.Metadata["x-amz-meta-title"];
-                    var contentType = response.Headers["Content-Type"];
+                    responseStream.CopyTo(outFile);
 
-                    Console.WriteLine($"Obect title {title} ");
-                    Console.WriteLine($"content type {contentType} ");
+                    //read content we get back from S3 file
+                    using (var reader = new StreamReader(responseStream))
+                    {
+                        //obecjtTitleIfItExists.. if title doesnt exist it will return  back a null
+                        //    var title = response.Metadata["x-amz-meta-title"];
+                        var contentType = response.Headers["Content-Type"];
 
-                    //read the response and then handle it outside of the using block
-                    responseBody = reader.ReadToEnd();
+                        //                    Console.WriteLine($"Obect title {title} ");
+                        Console.WriteLine($"content type {contentType} ");
 
+                        //read the response and then handle it outside of the using block
+                        responseBody = reader.ReadToEnd();
+
+                    }
+
+                    //save to file OR read it out and pass it to user, etc.. 
+                    var pathAndFileName = $"C:\\S3Temp\\{keyName}";
+
+
+                    var createText = responseBody;
+
+                    File.WriteAllText(pathAndFileName, createText);
                 }
-
-                //save to file OR read it out and pass it to user, etc.. 
-                var pathAndFileName = $"C:\\S3Temp\\{keyName}";
-
-                var createText = responseBody;
-
-                File.WriteAllText(pathAndFileName, createText);
             }
             catch (AmazonS3Exception e)
             {
