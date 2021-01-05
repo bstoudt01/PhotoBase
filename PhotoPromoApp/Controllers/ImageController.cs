@@ -36,6 +36,8 @@ namespace PhotoPromoApp.Controllers
 
         //Add Image
         //pass through two encoders and save results
+        //send results to S3 Bucket
+        //still need to delete local "saved results" after upload to bucket is complete
         [HttpPost]
         public async Task<IActionResult> Add(IFormFile file)
         {

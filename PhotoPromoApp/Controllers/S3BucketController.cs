@@ -37,5 +37,15 @@ namespace PhotoPromoApp.Controllers
             await _service.UploadFileAsync(filePath);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("GetFile/{keyName}")]
+        public async Task<IActionResult> GetFileFromS3Async([FromRoute] string keyName)
+        {
+            await _service.ReadObjectDataAsync(keyName);
+            
+            return Ok();
+
+        }
     }
 }

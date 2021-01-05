@@ -132,5 +132,62 @@ namespace PhotoPromoApp.Services
 
         }
 
+        //
+        public async Task ReadObjectDataAsync(string keyName)
+        {
+            //change to bucketName
+            const string bucketName = "photobasebuckettest";
+
+            try
+            {
+                //Object request using fileName==keyName and bucketName as object paramaters
+                //Object created using Amazon.SDK.S3 Package 
+                var request = new GetObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName
+                };
+
+                //hold image response
+                    //does this need to be a string??
+                string responseBody;
+                
+                //utitlized using blocks since these variables are accessing filestreams
+                //pass the request object into the Get method for S3
+                using (var response = await _client.GetObjectAsync(request))
+                //open responsestream
+                using (var responseStream = response.ResponseStream)
+                //read content we get back from S3 file
+                using (var reader = new StreamReader(responseStream))
+                {
+                    //obecjtTitleIfItExists.. if title doesnt exist it will return  back a null
+                    var title = response.Metadata["x-amz-meta-title"];
+                    var contentType = response.Headers["Content-Type"];
+
+                    Console.WriteLine($"Obect title {title} ");
+                    Console.WriteLine($"content type {contentType} ");
+
+                    //read the response and then handle it outside of the using block
+                    responseBody = reader.ReadToEnd();
+
+                }
+
+                //save to file OR read it out and pass it to user, etc.. 
+                var pathAndFileName = $"C:\\S3Temp\\{keyName}";
+
+                var createText = responseBody;
+
+                File.WriteAllText(pathAndFileName, createText);
+            }
+            catch (AmazonS3Exception e)
+            {
+                Console.WriteLine("Error encountered ***. Message:'{0}' when reading object", e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when reading object", e.Message);
+
+            }
+        }
     }
 }
